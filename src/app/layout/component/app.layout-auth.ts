@@ -24,31 +24,31 @@ import { MY_ROUTES } from '@routes';
                     <div class="card h-full flex flex-col lg:col-start-2 lg:col-span-4 md:col-start-1 md:col-span-6">
                         <img [src]="environment.PATH_ASSETS + '/auth/images/logo.png'" alt="" class="mx-auto" />
 
-                        <p-message>
-                            <ng-template #icon>
-                                <p class="text-lg font-semibold text-center">Si usted tiene inconvenientes para ingresar al sistema, comuníquese con el Ministerio de Turismo</p>
-                            </ng-template>
-                        </p-message>
+<!--                        <p-message>-->
+<!--                            <ng-template #icon>-->
+<!--                                <p class="text-lg font-semibold text-center">Si usted tiene inconvenientes para ingresar al sistema, comuníquese con el Ministerio de Turismo</p>-->
+<!--                            </ng-template>-->
+<!--                        </p-message>-->
 
                         <router-outlet />
 
-                        <img [src]="environment.PATH_ASSETS + '/auth/images/footer.png'" alt="" class="mx-auto" />
+<!--                        <img [src]="environment.PATH_ASSETS + '/auth/images/footer.png'" alt="" class="mx-auto" />-->
                     </div>
 
                     <div class="card h-full flex flex-col lg:col-start-6 lg:col-span-6 md:col-start-7 md:col-span-6 gap-6">
-                        <div class="font-semibold text-xl text-center">SISTEMA DE TURISMO INTELIGENTE</div>
+                        <div class="font-semibold text-xl text-center">{{environment.APP_NAME}}</div>
 
                         <p-message>
                             <div class="text-sm font-semibold">
                                 <p>
                                     <b>Importante:</b>
-                                    Estimado Usuario, si su establecimiento se encuentra ubicado en el cantón Quito, por favor acérquese a las oficinas de "Quito Turismo" para solicitar su Certificado de Registro Turístico.
+                                    Estimado Usuario, si su ......
                                 </p>
-                                <p><b>Dirección:</b> Parque Bicentenario, terminales del antiguo Aeropuerto de Quito.</p>
-                                <p><b>Teléfono:</b> (02) 2993 300 extensiones 1003, 1035 y 1068</p>
+                                <p><b>Dirección:</b> Nela Martínez y Antonio Castelo.</p>
+                                <p><b>Teléfono:</b> 097 8627 513</p>
                                 <p>
                                     <b>Correo electrónico:</b>
-                                    <a href="mailto:info@quito-turismo.gob.ec"> info&#64;quito-turismo.gob.ec</a>
+                                    <a href="mailto:info@francis-nails.com"> info&#64;francis-nails.com</a>
                                 </p>
                             </div>
                         </p-message>
@@ -57,14 +57,11 @@ import { MY_ROUTES } from '@routes';
                             <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/steps.pdf'">
                                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                     <div class="md:col-span-2 flex flex-col gap-2">
-                                        <!--                                    <img-->
-                                        <!--                                        [src]="environment.PATH_ASSETS+'/images/auth/cinco_pasos.svg'"-->
-                                        <!--                                        alt="cabecera">-->
                                         <i [class]="PrimeIcons.LIST_CHECK" style="font-size: 3rem;color:var(--primary-color)"></i>
                                     </div>
                                     <div class="md:col-span-10 flex flex-col gap-2">
-                                        <h6 class="mb-5" style="color: #01579B">5 PASOS PARA OBTENER UN REGISTRO DE TURISMO</h6>
-                                        <p>Pasos para obtener un certificado de Registro de Turismo.</p>
+                                        <h6 class="mb-5" style="color: #01579B">1 PASO</h6>
+                                        <p>Pasos para poder agendar.....</p>
                                     </div>
                                 </div>
                             </a>
@@ -73,13 +70,11 @@ import { MY_ROUTES } from '@routes';
                             <a target="_blank" [routerLink]="[MY_ROUTES.guessPages.simulator.absolute]">
                                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                     <div class="md:col-span-2 flex flex-col gap-2">
-                                        <!--                                    <img [src]="environment.PATH_ASSETS+'/images/auth/simulador_normativa.svg'"-->
-                                        <!--                                         alt="cabecera">-->
                                         <i [class]="PrimeIcons.DESKTOP" style="font-size: 3rem;color:var(--primary-color)"></i>
                                     </div>
                                     <div class="md:col-span-10 flex flex-col gap-2">
-                                        <h6 class="mb-5" style="color: #01579B">SIMULADOR DE NORMATIVA</h6>
-                                        <p>Permite validar si se cumple o no con los requisitos para acceder a una clasificación y categoría específica.</p>
+                                        <h6 class="mb-5" style="color: #01579B">Reñas</h6>
+                                        <p>Ver reseñas.</p>
                                     </div>
                                 </div>
                             </a>
@@ -94,8 +89,8 @@ import { MY_ROUTES } from '@routes';
                                         <i [class]="PrimeIcons.BOOK" style="font-size: 3rem;color:var(--primary-color)"></i>
                                     </div>
                                     <div class="md:col-span-10 flex flex-col gap-2">
-                                        <h6 class="mb-5" style="color: #01579B">MANUAL</h6>
-                                        <p>Manual de usuario del Sistema de Turismo Inteligente - SITURIN.</p>
+                                        <h6 class="mb-5" style="color: #01579B">Servicios</h6>
+                                        <p>Catalogo de Servicios</p>
                                     </div>
                                 </div>
                             </a>
@@ -104,13 +99,11 @@ import { MY_ROUTES } from '@routes';
                             <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/terms_conditions.pdf'">
                                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                     <div class="md:col-span-2 flex flex-col gap-2">
-                                        <!--                                    <img [src]="environment.PATH_ASSETS+'/images/auth/terminos_condiciones.svg'"-->
-                                        <!--                                         alt="cabecera">-->
                                         <i [class]="PrimeIcons.VERIFIED" style="font-size: 3rem;color:var(--primary-color)"></i>
                                     </div>
                                     <div class="md:col-span-10 flex flex-col gap-2">
                                         <h6 class="mb-5" style="color: #01579B">TÉRMINOS Y CONDICIONES</h6>
-                                        <p>Términos y Condiciones del Sistema de Turismo Inteligente - SITURIN.</p>
+                                        <p>Términos y Condiciones del Sistema</p>
                                     </div>
                                 </div>
                             </a>

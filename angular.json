@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "siturin-frontend": {
+        "francis-nails-frontend": {
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
@@ -17,7 +17,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/siturin-frontend",
+                        "outputPath": "dist/francis-nails-frontend",
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "polyfills": [
@@ -91,13 +91,13 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "buildTarget": "siturin-frontend:build:production"
+                            "buildTarget": "francis-nails-frontend:build:production"
                         },
                         "qa": {
-                            "buildTarget": "siturin-frontend:build:qa"
+                            "buildTarget": "francis-nails-frontend:build:qa"
                         },
                         "development": {
-                            "buildTarget": "siturin-frontend:build:development"
+                            "buildTarget": "francis-nails-frontend:build:development"
                         }
                     },
                     "defaultConfiguration": "development"

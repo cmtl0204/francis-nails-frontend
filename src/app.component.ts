@@ -44,30 +44,30 @@ export class AppComponent implements OnInit {
     protected readonly catalogueHttpService = inject(CatalogueHttpService);
     protected readonly customMessageService = inject(CustomMessageService);
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
-    protected loading: boolean = false;
+    protected loading: boolean = true;
 
     constructor() {}
 
     async ngOnInit() {
-        this.catalogueHttpService
-            .findCache()
-            .pipe(
-                tap(async (response) => {
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response);
-                }),
-                switchMap(() => this.dpaHttpService.findCache()),
-                tap(async (response) => {
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.dpa, response);
-                }),
-                switchMap(() => this.activityHttpService.findCache()),
-                tap(async (response) => {
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.activities, response.data.activities);
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.classifications, response.data.classifications);
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.categories, response.data.categories);
-
-                    this.loading = true;
-                })
-            )
-            .subscribe();
+        // this.catalogueHttpService
+        //     .findCache()
+        //     .pipe(
+        //         tap(async (response) => {
+        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response);
+        //         }),
+        //         switchMap(() => this.dpaHttpService.findCache()),
+        //         tap(async (response) => {
+        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.dpa, response);
+        //         }),
+        //         switchMap(() => this.activityHttpService.findCache()),
+        //         tap(async (response) => {
+        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.activities, response.data.activities);
+        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.classifications, response.data.classifications);
+        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.categories, response.data.categories);
+        //
+        //             this.loading = true;
+        //         })
+        //     )
+        //     .subscribe();
     }
 }

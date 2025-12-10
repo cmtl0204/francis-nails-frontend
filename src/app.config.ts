@@ -7,6 +7,7 @@ import { providePrimeNG } from 'primeng/config';
 import { appRoutes } from './app.routes';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpInterceptorProviders } from '@/interceptors';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -17,6 +18,8 @@ export const appConfig: ApplicationConfig = {
         providePrimeNG({ theme: { preset: Theme, options: { darkModeSelector: '.app-dark' } } }),
 
         MessageService,
-        ConfirmationService
+        ConfirmationService,
+
+        provideAuth(() => getAuth()),
     ]
 };
