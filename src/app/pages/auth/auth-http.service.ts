@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { CatalogueHttpService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
 import { CoreEnum } from '@utils/enums';
 import { ActivityHttpService } from '@/pages/core/shared/services';
+import {Auth, signInWithEmailAndPassword} from "@angular/fire/auth";
 
 @Injectable({
     providedIn: 'root'
@@ -24,51 +25,12 @@ export class AuthHttpService {
     private readonly activityHttpService = inject(ActivityHttpService);
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
 
-    signIn(payload: SignInInterface) {
-        const url = `${this.apiUrl}/sign-in`;
+    private auth = inject(Auth);
 
-        return this.catalogueHttpService.findCache().pipe(
-            tap(async (response) => await this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response)),
-            switchMap(() => this.dpaHttpService.findCache()),
-            tap(async (response) => await this.coreSessionStorageService.setEncryptedValue(CoreEnum.dpa, response)),
-
-            switchMap(() => this.activityHttpService.findCache()),
-            tap(async (response) => {
-                await this.coreSessionStorageService.setEncryptedValue(CoreEnum.activities, response.data.activities);
-                await this.coreSessionStorageService.setEncryptedValue(CoreEnum.classifications, response.data.classifications);
-                await this.coreSessionStorageService.setEncryptedValue(CoreEnum.categories, response.data.categories);
-            }),
-            switchMap(() => this.httpClient.post<SignInResponseInterface>(url, payload)),
-            map((response) => {
-                this.authService.accessToken = response.data.accessToken;
-
-                this.authService.auth = response.data.auth;
-
-                this.authService.roles = response.data.roles;
-
-                if (response.data.roles.length === 1) {
-                    this.authService.role = response.data.roles[0];
-                }
-
-                return response.data;
-            })
-        );
-
-        // return this.httpClient.post<SignInResponseInterface>(url, payload).pipe(
-        //     map((response) => {
-        //         this.authService.accessToken = response.data.accessToken;
-        //
-        //         this.authService.auth = response.data.auth;
-        //
-        //         this.authService.roles = response.data.roles;
-        //
-        //         if (response.data.roles.length === 1) {
-        //             this.authService.role = response.data.roles[0];
-        //         }
-        //
-        //         return response.data;
-        //     })
-        // );
+    async signIn(payload: SignInInterface) {
+        return await signInWithEmailAndPassword(this.auth, payload.username, payload.password).then((userCredential) => {
+          console.log(userCredential);
+        });
     }
 
     signInBackup(payload: SignInInterface) {

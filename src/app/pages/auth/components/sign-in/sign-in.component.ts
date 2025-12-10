@@ -75,10 +75,25 @@ export default class SignInComponent {
         return true;
     }
 
-    private signIn() {
+    private async signIn() {
         this.roleControl.reset();
 
-        this._authHttpService.signIn(this.form.value).subscribe({
+        const response = await this._authHttpService.signIn(this.form.value);
+
+        console.log(response);
+        // if (data.roles.length === 1) {
+        //     this._router.navigateByUrl(MY_ROUTES.dashboards.absolute);
+        //     return;
+        // }
+        //
+        // this.roles = data.roles;
+        //
+        this.isVisibleRoles = true;
+    }
+    private signInBackup() {
+        this.roleControl.reset();
+
+        this._authHttpService.signInBackup(this.form.value).subscribe({
             next: (data) => {
                 if (data.roles.length === 1) {
                     this._router.navigateByUrl(MY_ROUTES.dashboards.absolute);
