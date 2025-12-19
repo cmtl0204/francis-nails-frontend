@@ -90,6 +90,24 @@ export default class SignInComponent {
         //
         this.isVisibleRoles = true;
     }
+
+    protected async signInWithGoogle() {
+        this.roleControl.reset();
+
+        await this._authHttpService.signInWithGoogle();
+
+        this.roles = this._authService.roles;
+
+        if (this.roles.length === 1) {
+            this._router.navigateByUrl(MY_ROUTES.dashboards.absolute);
+            return;
+        }
+
+        this.roleControl.setValidators([Validators.required]);
+
+        this.isVisibleRoles = true;
+    }
+
     private signInBackup() {
         this.roleControl.reset();
 

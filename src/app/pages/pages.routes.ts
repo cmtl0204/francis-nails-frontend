@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
 import { MY_ROUTES } from '@routes';
 
-export default [{ path: MY_ROUTES.corePages.base, loadChildren: () => import('./core/core.routes') }] as Routes;
+export default [
+    { path: MY_ROUTES.corePages.base, loadChildren: () => import('./core/core.routes') },
+    { path: MY_ROUTES.publicPages.base, loadChildren: () => import('./public/public.routes') },
+] as Routes;

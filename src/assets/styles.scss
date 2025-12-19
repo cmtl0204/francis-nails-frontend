@@ -4,7 +4,19 @@
 @use 'primeicons/primeicons.css';
 @use './demo/demo.scss';
 
-.p-inputtext {
-    background-color: #f0f8ff; /* azul claro */
-    color: #000;              /* texto negro */
+.custom-grid-form {
+    @apply grid grid-cols-1 md:grid-cols-12 gap-6;
+}
+
+.custom-field-form {
+    @apply flex flex-col gap-2;
+}
+
+.custom-card-form {
+    background-color: #fff !important;
+    @apply flex flex-col gap-6 rounded-lg shadow-md p-6 bg-surface-100 mb-4;
+}
+
+.custom-section-title-form {
+    @apply text-3xl font-semibold;
 }

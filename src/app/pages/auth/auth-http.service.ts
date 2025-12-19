@@ -10,8 +10,9 @@ import { Observable } from 'rxjs';
 import { CatalogueHttpService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
 import { CoreEnum } from '@utils/enums';
 import { ActivityHttpService } from '@/pages/core/shared/services';
-import {Auth, signInWithEmailAndPassword} from "@angular/fire/auth";
-
+import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+import { Firestore } from '@angular/fire/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 @Injectable({
     providedIn: 'root'
 })
@@ -26,10 +27,40 @@ export class AuthHttpService {
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
 
     private auth = inject(Auth);
+    private firestore = inject(Firestore);
+    private provider = new GoogleAuthProvider();
+
+    async signInWithGoogle() {
+        this.provider.setCustomParameters({ prompt: 'select_account' });
+
+        const userCredentials = await signInWithPopup(this.auth, this.provider);
+
+        console.log(userCredentials);
+
+        const userRef = doc(this.firestore, 'users', userCredentials.user.uid);
+
+        const response = (await getDoc(userRef)).data();
+
+        if (response) {
+            this.authService.accessToken = userCredentials.user.refreshToken;
+
+            this.authService.auth = { id: response['id'], email: response['email'], username: response['username'] };
+
+            this.authService.roles = response['roles'];
+
+            if (response['roles'].length === 1) {
+                this.authService.role = response['roles'][0];
+            }
+        }
+    }
 
     async signIn(payload: SignInInterface) {
         return await signInWithEmailAndPassword(this.auth, payload.username, payload.password).then((userCredential) => {
-          console.log(userCredential);
+            const email = userCredential.user.email!;
+            const id = userCredential.user.uid;
+            const username = userCredential.user.providerData[0].uid;
+            this.authService.auth = { id, email, username };
+            this.authService.accessToken = userCredential.user.refreshToken;
         });
     }
 

@@ -1,0 +1,118 @@
+<p-fluid class="custom-card-form">
+    <form [formGroup]="form" class="custom-grid-form">
+        <!-- title -->
+        <div class="md:col-span-12">
+            <img [src]="environment.PATH_ASSETS + '/logo.png'" alt="Logo">
+        </div>
+
+        <!-- title -->
+        <div class="md:col-span-12 custom-field-form">
+            <div class="custom-section-title-form">Agenda tu cita:</div>
+        </div>
+
+        <!-- name -->
+        <div class="md:col-span-12 custom-field-form">
+            <label
+                appLabel
+                for="name"
+                [required]="nameField"
+                label="Nombre del cliente">
+            </label>
+
+            <input pInputText id="name" formControlName="name">
+
+            <p-message
+                appErrorMessage
+                [errors]="nameField.errors"
+                [touched]="nameField.touched"
+                [dirty]="nameField.dirty" />
+        </div>
+
+        <!-- email -->
+        <div class="md:col-span-12 custom-field-form">
+            <label
+                appLabel
+                for="email"
+                [required]="emailField"
+                label="Correo">
+            </label>
+
+            <input pInputText id="email" formControlName="email">
+
+            <p-message
+                appErrorMessage
+                [errors]="emailField.errors"
+                [touched]="emailField.touched"
+                [dirty]="emailField.dirty" />
+        </div>
+
+        <!-- phone -->
+        <div class="md:col-span-12 custom-field-form">
+            <label
+                appLabel
+                for="phone"
+                [required]="phoneField"
+                label="Teléfono">
+            </label>
+
+            <input pInputText id="phone" formControlName="phone">
+
+            <p-message
+                appErrorMessage
+                [errors]="phoneField.errors"
+                [touched]="phoneField.touched"
+                [dirty]="phoneField.dirty" />
+        </div>
+
+        <!-- service -->
+        <div class="md:col-span-12 custom-field-form">
+            <label
+                appLabel
+                for="service"
+                [required]="serviceField"
+                label="Servicio">
+            </label>
+
+            <p-select
+                id="service"
+                formControlName="service"
+                [options]="services"
+                [filter]="true"
+                appendTo="body"
+                placeholder="Seleccione" />
+
+            <p-message
+                appErrorMessage
+                [errors]="serviceField.errors"
+                [touched]="serviceField.touched"
+                [dirty]="serviceField.dirty" />
+        </div>
+
+        <!-- date -->
+        <div class="md:col-span-12 custom-field-form">
+            <label
+                appLabel
+                for="date"
+                [required]="dateField"
+                label="Fecha de la cita">
+            </label>
+
+            <p-datepicker
+                id="date"
+                formControlName="date"
+                [showIcon]="true"
+                inputId="buttondisplay"
+                [showOnFocus]="false"
+                [showTime]="true"
+                [minDate]="currentDate"
+                appendTo="body">
+            </p-datepicker>
+
+            <p-message
+                appErrorMessage
+                [errors]="dateField.errors"
+                [touched]="dateField.touched"
+                [dirty]="dateField.dirty" />
+        </div>
+    </form>
+</p-fluid>

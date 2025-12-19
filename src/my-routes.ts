@@ -199,6 +199,14 @@ export const MY_ROUTES = {
             }
         }
     },
+    publicPages: {
+        base: 'public',
+        absolute: '/public',
+        appointments: {
+            base: 'appointments',
+            absolute: '/public/appointments'
+        }
+    },
     authPages: {
         base: 'auth',
         signIn: {
