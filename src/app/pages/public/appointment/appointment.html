@@ -114,5 +114,11 @@
                 [touched]="dateField.touched"
                 [dirty]="dateField.dirty" />
         </div>
+
+        <!-- submit -->
+        <div class="md:col-span-12 custom-field-form">
+            <p-button type="submit" label="Agendar cita" [icon]="PrimeIcons.CALENDAR" />
+            <p-button type="button" label="Regresar" severity="warn" [icon]="PrimeIcons.ARROW_LEFT" (onClick)="ladingPage()" />
+        </div>
     </form>
 </p-fluid>

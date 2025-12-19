@@ -13,6 +13,7 @@ import { InputText } from 'primeng/inputtext';
 import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { environment } from '@env/environment';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-appointment',
@@ -24,7 +25,8 @@ import { environment } from '@env/environment';
       ErrorMessageDirective,
       InputText,
       DatePicker,
-      Select
+      Select,
+      Button
   ],
   templateUrl: './appointment.html',
   styleUrl: './appointment.scss',
