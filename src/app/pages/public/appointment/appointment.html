@@ -2,7 +2,7 @@
     <form [formGroup]="form" class="custom-grid-form">
         <!-- title -->
         <div class="md:col-span-12">
-            <img [src]="environment.PATH_ASSETS + '/logo.png'" alt="Logo">
+            <img (click)="ladingPage()" [src]="environment.PATH_ASSETS + '/logo.png'" alt="Logo">
         </div>
 
         <!-- title -->

@@ -93,6 +93,9 @@ export class Appointment implements OnInit{
         return errors;
     }
 
+    ladingPage(){
+        window.location.href = "https://www.francis-nails.com";
+    }
     get nameField(): AbstractControl {
         return this.form.controls['name'];
     }
