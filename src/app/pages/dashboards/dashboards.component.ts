@@ -8,10 +8,11 @@ import { ExternalDashboardComponent } from '@modules/core/roles/external/compone
 import { GadDashboardComponent } from '@modules/core/roles/gad/gad-dashboard/gad-dashboard.component';
 import { TechnicianDashboardComponent } from '@modules/core/roles/technician/technician-dashboard/technician-dashboard.component';
 import { SpecialistDashboardComponent } from '@modules/core/roles/specialist/specialist-dashboard/specialist-dashboard.component';
+import { OwnerDashboardComponent } from '@/pages/core/roles/owner/owner-dashboard/owner-dashboard.component';
 
 @Component({
     selector: 'app-dashboards',
-    imports: [DacDashboardComponent, AdminDashboardComponent, ExternalDashboardComponent, GadDashboardComponent, TechnicianDashboardComponent, SpecialistDashboardComponent],
+    imports: [DacDashboardComponent, AdminDashboardComponent, ExternalDashboardComponent, GadDashboardComponent, TechnicianDashboardComponent, SpecialistDashboardComponent, OwnerDashboardComponent],
     templateUrl: './dashboards.component.html',
     styleUrl: './dashboards.component.scss'
 })

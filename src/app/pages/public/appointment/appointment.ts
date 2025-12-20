@@ -1,122 +1,111 @@
-import { Component, inject, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, effect, inject, OnInit, QueryList, signal, ViewChildren, WritableSignal } from '@angular/core';
 import { PrimeIcons } from 'primeng/api';
-import { CustomMessageService } from '@utils/services/custom-message.service';
-import { CatalogueInterface } from '@utils/interfaces';
-import { CatalogueTypeEnum } from '@utils/enums';
-import { CatalogueService } from '@utils/services/catalogue.service';
-import { Fluid } from 'primeng/fluid';
-import { LabelDirective } from '@utils/directives/label.directive';
-import { Message } from 'primeng/message';
-import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
-import { InputText } from 'primeng/inputtext';
-import { DatePicker } from 'primeng/datepicker';
-import { Select } from 'primeng/select';
-import { environment } from '@env/environment';
+import {  CoreEnum } from '@utils/enums';
+import { CoreSessionStorageService, CustomMessageService } from '@utils/services';
+import { ParkHttpService } from '@modules/core/roles/external/services/park-http.service';
+import { collectFormErrors } from '@utils/helpers/collect-form-errors.helper';
+import { AppointmentForm } from '@/pages/public/appointment/appointment-form/appointment-form';
+import { AppointmentHttpService } from '@/pages/public/appointment/services';
 import { Button } from 'primeng/button';
+import { Fluid } from 'primeng/fluid';
+import { ReactiveFormsModule } from '@angular/forms';
+import { environment } from '@env/environment';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 @Component({
-  selector: 'app-appointment',
-  imports: [
-      ReactiveFormsModule,
-      Fluid,
-      LabelDirective,
-      Message,
-      ErrorMessageDirective,
-      InputText,
-      DatePicker,
-      Select,
-      Button
-  ],
-  templateUrl: './appointment.html',
-  styleUrl: './appointment.scss',
+    selector: 'app-registration',
+    standalone: true,
+    imports: [AppointmentForm, Button, Fluid, ReactiveFormsModule],
+    templateUrl: './appointment.html',
+    styleUrl: './appointment.scss'
 })
-export class Appointment implements OnInit{
-    public dataIn: InputSignal<any> = input<any>();
-    public dataOut: OutputEmitterRef<any> = output<any>();
-
+export class Appointment implements OnInit {
+    submitted = signal(false);
+    protected readonly CoreEnum = CoreEnum;
     protected readonly PrimeIcons = PrimeIcons;
-
-    protected readonly catalogueService = inject(CatalogueService);
-    protected readonly customMessageService = inject(CustomMessageService);
-
-    private readonly formBuilder = inject(FormBuilder);
-    protected form!: FormGroup;
-
-    protected services: string[] = ['Manicura','Depilado de cejas'];
-    protected currentDate = new Date();
+    protected mainData: WritableSignal<Record<string, any>> = signal({});
+    protected modelId?: string;
+    protected dataIn!: any;
+    protected readonly environment = environment;
+    @ViewChildren(AppointmentForm) private appointmentForm!: QueryList<AppointmentForm>;
+    private readonly coreSessionStorageService = inject(CoreSessionStorageService);
+    private readonly parksHttpService = inject(ParkHttpService);
+    private readonly appointmentHttpService = inject(AppointmentHttpService);
+    private readonly customMessageService = inject(CustomMessageService);
 
     constructor() {
-        this.buildForm();
-    }
+        effect(async () => {
+            const process = this.coreSessionStorageService.processSignal();
 
-    async ngOnInit() {
-        await this.loadCatalogues();
-        this.loadData();
-    }
+            if (!process) return;
 
-    loadData() {
-        if (this.dataIn()) {
-            this.form.patchValue(this.dataIn());
-        }
-    }
+            const candidates = [process.classification, process.category];
+            const regulated = candidates.find((c) => c?.hasRegulation);
 
-    async loadCatalogues() {
-        // this.services = await this.catalogueService.findByType(CatalogueTypeEnum.activities_geographic_area);
-    }
-
-    buildForm() {
-        this.form = this.formBuilder.group({
-            name: [null, [Validators.required]],
-            email: [null, [Validators.email]],
-            phone: [null, [Validators.required]],
-            service: [null, [Validators.required]],
-            date: [null, [Validators.required]],
-        });
-
-        this.watchFormChanges();
-    }
-
-    watchFormChanges() {
-        this.form.valueChanges.subscribe((_) => {
-            this.dataOut.emit(this.form.value);
+            if (regulated) {
+                this.modelId = regulated.id;
+            }
         });
     }
 
-    getFormErrors(): string[] {
-        const errors: string[] = [];
-
-        if(this.nameField.invalid) errors.push('Nombre del cliente');
-
-        if (errors.length > 0) {
-            this.form.markAllAsTouched();
-        }
-
-        return errors;
+    async ngOnInit(): Promise<void> {
+        await this.loadDataIn();
     }
 
     ladingPage(){
         window.location.href = "https://www.francis-nails.com";
     }
-    get nameField(): AbstractControl {
-        return this.form.controls['name'];
+
+    protected saveForm(data: any, objectName?: string) {
+        this.mainData.update((currentData) => {
+            let newData = { ...currentData };
+
+            if (objectName) {
+                // Actualiza una sub-propiedad de forma inmutable
+                newData[objectName] = {
+                    ...(newData[objectName] ?? {}),
+                    ...data
+                };
+            } else {
+                // Actualiza el objeto principal
+                newData = { ...currentData, ...data };
+            }
+
+            return newData;
+        });
     }
 
-    get emailField(): AbstractControl {
-        return this.form.controls['email'];
+    protected async onSubmit() {
+        if (this.checkFormErrors()) {
+            await this.saveProcess();
+        }
     }
 
-    get phoneField(): AbstractControl {
-        return this.form.controls['phone'];
+    private async loadDataIn() {
+        this.dataIn = await this.coreSessionStorageService.getEncryptedValue(CoreEnum.step3);
     }
 
-    get serviceField(): AbstractControl {
-        return this.form.controls['service'];
+    private async saveProcess() {
+        this.submitted.update(v => false);
+        await this.appointmentHttpService.createAppointment(this.mainData());
+        this.submitted.update(v => true);
+
+        this.customMessageService.showModalInfo({
+            summary:`Servicio: ${this.mainData()['service']}`,
+            detail:`Fecha: ${format(this.mainData()['date'],'EEEE dd MMMM yyyy HH:mm', { locale: es })}`
+        }
+        )
     }
 
-    get dateField(): AbstractControl {
-        return this.form.controls['date'];
-    }
+    private checkFormErrors() {
+        const errors = collectFormErrors([this.appointmentForm]);
 
-    protected readonly environment = environment;
+        if (errors.length) {
+            this.customMessageService.showFormErrors(errors);
+            return false;
+        }
+
+        return true;
+    }
 }

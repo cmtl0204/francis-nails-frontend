@@ -190,6 +190,18 @@ export const MY_ROUTES = {
                 }
             }
         },
+        owner: {
+            base: 'owner',
+            absolute: '/main/core/owner',
+            dashboard: {
+                base: 'dashboard',
+                absolute: '/main/core/owner/dashboard'
+            },
+            appointments: {
+                base: 'appointments',
+                absolute: '/main/core/owner/appointments'
+            }
+        },
         shared: {
             base: 'shared',
             absolute: '/main/core/shared',

@@ -19,6 +19,7 @@ import { RoleEnum } from '@utils/enums';
                 <li *ngIf="item.separator" class="menu-separator"></li>
             </ng-container>
         </ul>
+
         <div class="mt-auto">
             <hr class="mb-4 mx-4 border-t border-0 border-surface" />
 
@@ -38,7 +39,7 @@ export class AppMenu implements OnInit {
     ngOnInit() {
         this.model = [
             {
-                label: 'MINTUR',
+                label: 'APP',
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
                     ...this.loadMenu,
@@ -58,148 +59,20 @@ export class AppMenu implements OnInit {
 
     get loadMenu(): MenuItem[] {
         switch (this.authService.role.code) {
-            case RoleEnum.EXTERNAL:
-                return this.externalMenu;
-            case RoleEnum.GAD:
-                return this.gadMenu;
-            case RoleEnum.DAC:
-                return this.dacMenu;
-            case RoleEnum.SPECIALIST:
-                return this.specialistMenu;
-            case RoleEnum.TECHNICIAN:
-                return this.technicianMenu;
+            case RoleEnum.OWNER:
+                return this.ownerMenu;
             default:
                 return [];
         }
     }
 
-    get externalMenu(): MenuItem[] {
+    get ownerMenu(): MenuItem[] {
         return [
             {
-                label: 'Simulador Normativa',
-                icon: PrimeIcons.DESKTOP,
-                routerLink: [MY_ROUTES.corePages.shared.simulator.absolute]
+                label: 'Citas',
+                icon: PrimeIcons.CALENDAR,
+                routerLink: [MY_ROUTES.corePages.owner.appointments.absolute]
             },
-            {
-                label: 'Proceso de Acreditación de Actividades Turísticas',
-                icon: PrimeIcons.LIST_CHECK,
-                routerLink: [MY_ROUTES.corePages.external.accreditation.absolute]
-            },
-            {
-                label: 'Manuales de Usuario',
-                icon: PrimeIcons.BOOK,
-                routerLink: [MY_ROUTES.corePages.dac.cadastre.absolute]
-            }
-        ];
-    }
-
-    get gadMenu(): MenuItem[] {
-        return [
-            {
-                label: 'Simulador Normativa',
-                icon: PrimeIcons.DESKTOP,
-                routerLink: [MY_ROUTES.corePages.dac.program.list.absolute]
-            },
-            {
-                label: 'Catastro Turístico (GAD)',
-                icon: PrimeIcons.LIST_CHECK,
-                routerLink: [MY_ROUTES.corePages.gad.cadastre.absolute]
-            },
-            {
-                label: 'Bitácora',
-                icon: PrimeIcons.HISTORY,
-                routerLink: [MY_ROUTES.corePages.gad.project.list.absolute]
-            },
-            {
-                label: 'Manuales de Usuario',
-                icon: PrimeIcons.BOOK,
-                routerLink: [MY_ROUTES.corePages.gad.project.list.absolute]
-            }
-        ];
-    }
-
-    get dacMenu(): MenuItem[] {
-        return [
-            {
-                label: 'Simulador Normativa',
-                icon: PrimeIcons.DESKTOP,
-                routerLink: [MY_ROUTES.corePages.dac.program.list.absolute]
-            },
-            {
-                label: 'Catastro Turístico (DAC)',
-                icon: PrimeIcons.LIST_CHECK,
-                routerLink: [MY_ROUTES.corePages.dac.cadastre.absolute]
-            },
-            {
-                label: 'Bitácora',
-                icon: PrimeIcons.HISTORY,
-                routerLink: [MY_ROUTES.corePages.gad.project.list.absolute]
-            },
-            {
-                label: 'Manuales de Usuario',
-                icon: PrimeIcons.BOOK,
-                routerLink: [MY_ROUTES.corePages.gad.project.list.absolute]
-            }
-        ];
-    }
-
-    get technicianMenu(): MenuItem[] {
-        return [
-            {
-                label: 'Simulador Normativa',
-                icon: PrimeIcons.DESKTOP,
-                routerLink: [MY_ROUTES.corePages.dac.program.list.absolute]
-            },
-            {
-                label: 'Técnico Zonal',
-                icon: PrimeIcons.LIST,
-                routerLink: [MY_ROUTES.corePages.technician.process.absolute]
-            },
-            {
-                label: 'Catastro Turístico',
-                icon: PrimeIcons.LIST_CHECK,
-                routerLink: [MY_ROUTES.corePages.technician.cadastre.absolute]
-            },
-            {
-                label: 'Bitácora',
-                icon: PrimeIcons.HISTORY,
-                routerLink: [MY_ROUTES.corePages.gad.project.list.absolute]
-            },
-            {
-                label: 'Manuales de Usuario',
-                icon: PrimeIcons.BOOK,
-                routerLink: [MY_ROUTES.corePages.gad.project.list.absolute]
-            }
-        ];
-    }
-
-    get specialistMenu(): MenuItem[] {
-        return [
-            {
-                label: 'Simulador Normativa',
-                icon: PrimeIcons.DESKTOP,
-                routerLink: [MY_ROUTES.corePages.dac.program.list.absolute]
-            },
-            {
-                label: 'Especialista Zonal',
-                icon: PrimeIcons.LIST,
-                routerLink: [MY_ROUTES.corePages.gad.project.list.absolute]
-            },
-            {
-                label: 'Catastro Turístico',
-                icon: PrimeIcons.LIST_CHECK,
-                routerLink: [MY_ROUTES.corePages.specialist.cadastre.absolute]
-            },
-            {
-                label: 'Bitácora',
-                icon: PrimeIcons.HISTORY,
-                routerLink: [MY_ROUTES.corePages.gad.project.list.absolute]
-            },
-            {
-                label: 'Manuales de Usuario',
-                icon: PrimeIcons.BOOK,
-                routerLink: [MY_ROUTES.corePages.gad.project.list.absolute]
-            }
         ];
     }
 }

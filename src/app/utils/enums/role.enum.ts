@@ -5,4 +5,5 @@ export enum RoleEnum {
     DAC = 'dac',
     SPECIALIST = 'specialist',
     TECHNICIAN = 'technician',
+    OWNER = 'owner',
 }

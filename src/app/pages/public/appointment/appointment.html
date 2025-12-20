@@ -1,124 +1,21 @@
-<p-fluid class="custom-card-form">
-    <form [formGroup]="form" class="custom-grid-form">
-        <!-- title -->
-        <div class="md:col-span-12">
-            <img (click)="ladingPage()" [src]="environment.PATH_ASSETS + '/logo.png'" alt="Logo">
+<app-appointment-form (dataOut)="saveForm($event)" [submitted]="submitted()"/>
+
+<!-- submit -->
+<p-fluid>
+    <div class="form-wrapper">
+        <div class="custom-card-form">
+            <div class="sm:col-span-12 custom-field-form">
+                @if (mainData()) {
+                    <p-button
+                        label="Agendar cita"
+                        [icon]="PrimeIcons.CALENDAR" (onClick)="onSubmit()" />
+                }
+            </div>
+
+            <div class="sm:col-span-12 custom-field-form">
+                <p-button type="button" label="Regresar" severity="warn" [icon]="PrimeIcons.ARROW_LEFT"
+                          (onClick)="ladingPage()" />
+            </div>
         </div>
-
-        <!-- title -->
-        <div class="md:col-span-12 custom-field-form">
-            <div class="custom-section-title-form">Agenda tu cita:</div>
-        </div>
-
-        <!-- name -->
-        <div class="md:col-span-12 custom-field-form">
-            <label
-                appLabel
-                for="name"
-                [required]="nameField"
-                label="Nombre del cliente">
-            </label>
-
-            <input pInputText id="name" formControlName="name">
-
-            <p-message
-                appErrorMessage
-                [errors]="nameField.errors"
-                [touched]="nameField.touched"
-                [dirty]="nameField.dirty" />
-        </div>
-
-        <!-- email -->
-        <div class="md:col-span-12 custom-field-form">
-            <label
-                appLabel
-                for="email"
-                [required]="emailField"
-                label="Correo">
-            </label>
-
-            <input pInputText id="email" formControlName="email">
-
-            <p-message
-                appErrorMessage
-                [errors]="emailField.errors"
-                [touched]="emailField.touched"
-                [dirty]="emailField.dirty" />
-        </div>
-
-        <!-- phone -->
-        <div class="md:col-span-12 custom-field-form">
-            <label
-                appLabel
-                for="phone"
-                [required]="phoneField"
-                label="Teléfono">
-            </label>
-
-            <input pInputText id="phone" formControlName="phone">
-
-            <p-message
-                appErrorMessage
-                [errors]="phoneField.errors"
-                [touched]="phoneField.touched"
-                [dirty]="phoneField.dirty" />
-        </div>
-
-        <!-- service -->
-        <div class="md:col-span-12 custom-field-form">
-            <label
-                appLabel
-                for="service"
-                [required]="serviceField"
-                label="Servicio">
-            </label>
-
-            <p-select
-                id="service"
-                formControlName="service"
-                [options]="services"
-                [filter]="true"
-                appendTo="body"
-                placeholder="Seleccione" />
-
-            <p-message
-                appErrorMessage
-                [errors]="serviceField.errors"
-                [touched]="serviceField.touched"
-                [dirty]="serviceField.dirty" />
-        </div>
-
-        <!-- date -->
-        <div class="md:col-span-12 custom-field-form">
-            <label
-                appLabel
-                for="date"
-                [required]="dateField"
-                label="Fecha de la cita">
-            </label>
-
-            <p-datepicker
-                id="date"
-                formControlName="date"
-                [showIcon]="true"
-                inputId="buttondisplay"
-                [showOnFocus]="false"
-                [showTime]="true"
-                [minDate]="currentDate"
-                appendTo="body">
-            </p-datepicker>
-
-            <p-message
-                appErrorMessage
-                [errors]="dateField.errors"
-                [touched]="dateField.touched"
-                [dirty]="dateField.dirty" />
-        </div>
-
-        <!-- submit -->
-        <div class="md:col-span-12 custom-field-form">
-            <p-button type="submit" label="Agendar cita" [icon]="PrimeIcons.CALENDAR" />
-            <p-button type="button" label="Regresar" severity="warn" [icon]="PrimeIcons.ARROW_LEFT" (onClick)="ladingPage()" />
-        </div>
-    </form>
+    </div>
 </p-fluid>
