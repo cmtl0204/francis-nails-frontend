@@ -9,6 +9,32 @@
     [style]="{ width: '600px' }">
     <p-fluid class="custom-card-form">
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="custom-grid-form">
+            <!-- status -->
+            <div class="sm:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="status"
+                    [required]="statusField"
+                    label="Estado">
+                </label>
+
+                <p-message>{{statusField.value}}</p-message>
+
+                <p-message
+                    appErrorMessage
+                    [errors]="statusField.errors"
+                    [touched]="statusField.touched"
+                    [dirty]="statusField.dirty" />
+            </div>
+
+            <div class="md:col-span-4 custom-field-form">
+                <p-button label="Confirmar" severity="success" [icon]="PrimeIcons.CHECK" (onClick)="confirm()"/>
+            </div>
+
+            <div class="md:col-span-4 custom-field-form">
+                <p-button label="Cancelar" severity="danger" [icon]="PrimeIcons.BAN" (onClick)="cancel()"/>
+            </div>
+
             <!-- identification -->
             <div class="sm:col-span-12 custom-field-form">
                 <label

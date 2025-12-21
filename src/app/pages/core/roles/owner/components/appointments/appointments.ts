@@ -18,14 +18,22 @@ import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
 import { Button } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
+import { CatalogueInterface } from '@utils/interfaces';
+import { AppointmentStatusPipe } from '@utils/pipes';
+import { AppointmentStatusColorPipe } from '@utils/pipes/appointments-status-color.pipe';
 
 @Component({
     selector: 'app-appointments',
-    imports: [FullCalendarModule, Dialog, DatePicker, ErrorMessageDirective, Fluid, InputText, LabelDirective, Message, ReactiveFormsModule, Select, Textarea, Button],
+    imports: [FullCalendarModule, Dialog, DatePicker, ErrorMessageDirective, Fluid, InputText, LabelDirective, Message, ReactiveFormsModule, Select, Textarea, Button, AppointmentStatusPipe, AppointmentStatusColorPipe],
     templateUrl: './appointments.html',
     styleUrl: './appointments.scss'
 })
 export class Appointments implements OnInit {
+    states: CatalogueInterface[] = [
+        { code: 'pending', name: 'Pendiente' },
+        { code: 'confirmed', name: 'Confirmada' },
+        { code: 'cancelled', name: 'Cancelado' }
+    ];
     options!: CalendarOptions;
     showDialog = false;
     selectedEvent: any;
@@ -133,8 +141,12 @@ export class Appointments implements OnInit {
                 this.emailField.patchValue(customer.email);
                 this.phoneField.patchValue(customer.phone);
                 this.serviceField.patchValue(this.selectedEvent.title);
+                this.statusField.patchValue(this.selectedEvent.extendedProps.status);
                 this.dateField.patchValue(this.selectedEvent.extendedProps.date.toDate());
                 this.notesField.patchValue(this.selectedEvent.extendedProps.notes);
+
+                console.log(this.statusField.value);
+                console.log(this.selectedEvent);
 
                 this.showDialog = true;
             },
@@ -181,10 +193,6 @@ export class Appointments implements OnInit {
                 }
             };
 
-            this.options = {
-                ...this.options,
-                events: this.events,
-            };
             console.log(this.events);
             this.showDialog = false;
             this.form.reset();
@@ -215,5 +223,11 @@ export class Appointments implements OnInit {
         }
 
         return true;
+    }
+
+    confirm() {}
+
+    cancel(){
+
     }
 }
