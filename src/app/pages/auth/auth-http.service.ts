@@ -7,7 +7,7 @@ import { AuthService } from '@modules/auth/auth.service';
 import { SignInResponseInterface } from '@modules/auth/interfaces';
 import { CustomMessageService } from '@utils/services/custom-message.service';
 import { Observable } from 'rxjs';
-import { CatalogueHttpService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
+import { CatalogueHttpService, CoreService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
 import { CoreEnum } from '@utils/enums';
 import { ActivityHttpService } from '@/pages/core/shared/services';
 import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
@@ -25,17 +25,18 @@ export class AuthHttpService {
     protected readonly catalogueHttpService = inject(CatalogueHttpService);
     private readonly activityHttpService = inject(ActivityHttpService);
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
+    private readonly coreService = inject(CoreService);
 
     private auth = inject(Auth);
     private firestore = inject(Firestore);
     private provider = new GoogleAuthProvider();
 
     async signInWithGoogle() {
+        this.coreService.showProcessing();
+
         this.provider.setCustomParameters({ prompt: 'select_account' });
 
         const userCredentials = await signInWithPopup(this.auth, this.provider);
-
-        console.log(userCredentials);
 
         const userRef = doc(this.firestore, 'users', userCredentials.user.uid);
 
@@ -52,6 +53,8 @@ export class AuthHttpService {
                 this.authService.role = response['roles'][0];
             }
         }
+
+        this.coreService.hideProcessing();
     }
 
     async signIn(payload: SignInInterface) {

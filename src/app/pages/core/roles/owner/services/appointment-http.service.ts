@@ -46,7 +46,7 @@ export class AppointmentHttpService {
             },
             service: appointment.service,
             date: appointment.date,
-            state: 'pending',
+            status: 'pending',
             createdAt: new Date(),
             updatedAt: new Date()
         });
@@ -58,14 +58,29 @@ export class AppointmentHttpService {
         return docRef.id;
     }
 
-    async findAppointments() {
+    async updateAppointment(id: string, payload: any) {
+        this.coreService.showProcessing();
 
+        await this.saveCustomer(payload);
+
+        const ref = doc(this.firestore, 'appointments', id);
+
+        await updateDoc(ref, payload);
+
+        this.coreService.hideProcessing();
+    }
+
+    async findAppointments() {
+        this.coreService.showProcessing();
         const q = query(collection(this.firestore, 'appointments'));
         const snap = await getDocs(q);
 
         if (snap.empty) return [];
 
+        this.coreService.hideProcessing();
+
         return snap.docs.map((doc) => ({
+            id: doc.id,
             ...doc.data()
         }));
     }

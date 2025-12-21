@@ -135,6 +135,24 @@
                         [touched]="dateField.touched"
                         [dirty]="dateField.dirty" />
                 </div>
+
+                <!-- notes -->
+                <div class="md:col-span-12 custom-field-form">
+                    <label
+                        appLabel
+                        for="notes"
+                        [required]="notesField"
+                        label="Nota">
+                    </label>
+
+                    <textarea pTextarea id="notes" formControlName="notes" rows="5" cols="30" ></textarea>
+
+                    <p-message
+                        appErrorMessage
+                        [errors]="notesField.errors"
+                        [touched]="notesField.touched"
+                        [dirty]="notesField.dirty" />
+                </div>
             }
         </form>
     </div>

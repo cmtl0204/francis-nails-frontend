@@ -7,26 +7,83 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { AppointmentHttpService } from '@/pages/core/roles/owner/services';
 import { CustomMessageService } from '@utils/services';
 import { Dialog } from 'primeng/dialog';
+import { DatePicker } from 'primeng/datepicker';
+import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
+import { Fluid } from 'primeng/fluid';
+import { InputText } from 'primeng/inputtext';
+import { LabelDirective } from '@utils/directives/label.directive';
+import { Message } from 'primeng/message';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Select } from 'primeng/select';
+import { Textarea } from 'primeng/textarea';
+import { Button } from 'primeng/button';
+import { PrimeIcons } from 'primeng/api';
 
 @Component({
     selector: 'app-appointments',
-    imports: [FullCalendarModule, Dialog],
+    imports: [FullCalendarModule, Dialog, DatePicker, ErrorMessageDirective, Fluid, InputText, LabelDirective, Message, ReactiveFormsModule, Select, Textarea, Button],
     templateUrl: './appointments.html',
     styleUrl: './appointments.scss'
 })
 export class Appointments implements OnInit {
     options!: CalendarOptions;
-    private customMessageService = inject(CustomMessageService);
-    private appointmentHttpService = inject(AppointmentHttpService);
     showDialog = false;
     selectedEvent: any;
-
     serviceColors: Record<string, string> = {
         pending: '#ffff00',
         confirmed: '#00ec00',
         cancelled: '#ef4444',
         completed: '#00008b'
     };
+    events: any[] = [];
+    protected form!: FormGroup;
+    protected services: string[] = ['Manicura', 'Depilado de cejas'];
+    protected currentDate = new Date();
+    protected readonly PrimeIcons = PrimeIcons;
+    protected readonly onsubmit = onsubmit;
+    private customMessageService = inject(CustomMessageService);
+    private appointmentHttpService = inject(AppointmentHttpService);
+    private readonly formBuilder = inject(FormBuilder);
+
+    constructor() {
+        this.buildForm();
+    }
+
+    get idField(): AbstractControl {
+        return this.form.controls['id'];
+    }
+
+    get identificationField(): AbstractControl {
+        return this.form.controls['identification'];
+    }
+
+    get nameField(): AbstractControl {
+        return this.form.controls['name'];
+    }
+
+    get emailField(): AbstractControl {
+        return this.form.controls['email'];
+    }
+
+    get phoneField(): AbstractControl {
+        return this.form.controls['phone'];
+    }
+
+    get serviceField(): AbstractControl {
+        return this.form.controls['service'];
+    }
+
+    get dateField(): AbstractControl {
+        return this.form.controls['date'];
+    }
+
+    get notesField(): AbstractControl {
+        return this.form.controls['notes'];
+    }
+
+    get statusField(): AbstractControl {
+        return this.form.controls['status'];
+    }
 
     async ngOnInit() {
         await this.loadAppointments();
@@ -40,14 +97,15 @@ export class Appointments implements OnInit {
             return;
         }
 
-        const events = appointments.map((a: any) => ({
+        this.events = appointments.map((a: any) => ({
+            id: a.id,
             title: a.service,
             start: a.date?.toDate ? a.date.toDate() : a.date,
-            color: this.serviceColors[a.state] ?? '#2563eb',
-            textColor: '#ffffff',
-            backgroundColor: this.serviceColors[a.status] ?? '#2563eb',
-            borderColor: this.serviceColors[a.status] ?? '#2563eb',
-            extendedProps: { customer: a.name }
+            color: this.serviceColors[a.status] ?? '#2563eb',
+            backgroundColor: this.serviceColors[a.status] ?? '#fff',
+            textColor: '#000',
+            borderColor: this.serviceColors[a.status],
+            extendedProps: { date: a.date, status: a.status, notes: a.notes, customer: { ...a.customer } }
         }));
 
         this.options = {
@@ -60,13 +118,102 @@ export class Appointments implements OnInit {
             },
             selectable: true,
             editable: true,
-            events,
+            events: this.events,
             dateClick: (info) => {
                 console.log('click date', info.dateStr);
             },
             eventClick: (info) => {
-                this.selectedEvent = info.event.extendedProps;
+                this.selectedEvent = info.event;
+
+                const customer = this.selectedEvent.extendedProps.customer;
+
+                this.idField.patchValue(this.selectedEvent.id);
+                this.identificationField.patchValue(customer.identification);
+                this.nameField.patchValue(customer.name);
+                this.emailField.patchValue(customer.email);
+                this.phoneField.patchValue(customer.phone);
+                this.serviceField.patchValue(this.selectedEvent.title);
+                this.dateField.patchValue(this.selectedEvent.extendedProps.date.toDate());
+                this.notesField.patchValue(this.selectedEvent.extendedProps.notes);
+
+                this.showDialog = true;
+            },
+            eventDrop: (info) => {
+                console.log('Evento movido');
+                console.log('ID:', info.event.id);
+                console.log('Nuevo inicio:', info.event.start);
+                console.log('Nuevo fin:', info.event.end);
             }
         };
+    }
+
+    buildForm() {
+        this.form = this.formBuilder.group({
+            id: [null, [Validators.required]],
+            identification: [null, [Validators.required, Validators.minLength(9)]],
+            name: [null, [Validators.required]],
+            email: [null, [Validators.email]],
+            phone: [null, [Validators.required]],
+            service: [null, [Validators.required]],
+            date: [null, [Validators.required]],
+            status: [null, [Validators.required]],
+            notes: [null]
+        });
+    }
+
+    async onSubmit() {
+        if (this.validateForm()) {
+            await this.appointmentHttpService.updateAppointment(this.idField.value, this.form.value);
+            const index = this.events.findIndex((item) => item.id === this.idField.value);
+            this.events[index] = {
+                id: this.idField.value,
+                title: this.serviceField.value,
+                start: this.dateField.value?.toDate ? this.dateField.value.date.toDate() : this.dateField.value.date,
+                color: this.serviceColors[this.statusField.value] ?? '#2563eb',
+                backgroundColor: this.serviceColors[this.statusField.value] ?? '#fff',
+                textColor: '#000',
+                borderColor: this.serviceColors[this.statusField.value],
+                extendedProps: {
+                    date: this.dateField.value,
+                    status: this.statusField.value,
+                    notes: this.notesField.value,
+                    customer: { identification: this.identificationField.value, name: this.nameField.value, email: this.emailField.value, phone: this.phoneField.value }
+                }
+            };
+
+            this.options = {
+                ...this.options,
+                events: this.events,
+            };
+            console.log(this.events);
+            this.showDialog = false;
+            this.form.reset();
+        }
+    }
+
+    validateForm() {
+        const errors = [];
+
+        if (this.identificationField.invalid) errors.push('Indentificación');
+
+        if (this.nameField.invalid) errors.push('Nombre del cliente');
+
+        if (this.emailField.invalid) errors.push('Correo');
+
+        if (this.phoneField.invalid) errors.push('Teléfono');
+
+        if (this.serviceField.invalid) errors.push('Servicio');
+
+        if (this.dateField.invalid) errors.push('Fecha de la cita');
+
+        if (this.notesField.invalid) errors.push('nota');
+
+        if (errors.length > 0) {
+            this.customMessageService.showFormErrors(errors);
+            this.form.markAllAsTouched();
+            return false;
+        }
+
+        return true;
     }
 }

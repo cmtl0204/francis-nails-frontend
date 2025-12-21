@@ -32,6 +32,36 @@ export class AppointmentHttpService {
         return d.data();
     }
 
+    async createAppointment(appointment: any) {
+        this.coreService.showProcessing();
+
+        await this.saveCustomer(appointment);
+
+        const col = collection(this.firestore, 'appointments');
+        const ident = String(appointment.identification).trim();
+
+        const docRef = await addDoc(col, {
+            customer:
+                {
+                    identification: ident,
+                    name: appointment.name ?? null,
+                    email: appointment.email ?? null,
+                    phone: appointment.phone ?? null,
+                },
+            service:appointment.service,
+            date:appointment.date,
+            status:'pending',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        });
+
+        this.coreService.hideProcessing();
+
+        this._customMessageService.showInfo({summary:'Cita Agendada',detail:'Su cita fue agendada correctamente'})
+
+        return docRef.id;
+    }
+
     private async saveCustomer(customer: any) {
         const ident = String(customer.identification).trim();
         const col = collection(this.firestore, 'customers');
@@ -58,35 +88,6 @@ export class AppointmentHttpService {
             createdAt: new Date(),
             updatedAt: new Date(),
         });
-
-        return docRef.id;
-    }
-
-    async createAppointment(appointment: any) {
-        this.coreService.showProcessing();
-
-        await this.saveCustomer(appointment);
-
-        const col = collection(this.firestore, 'appointments');
-        const ident = String(appointment.identification).trim();
-
-        const docRef = await addDoc(col, {
-            customer:
-                {
-                    identification: ident,
-                    name: appointment.name ?? null,
-                    email: appointment.email ?? null,
-                    phone: appointment.phone ?? null,
-                },
-            service:appointment.service,
-            date:appointment.date,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        });
-
-        this.coreService.hideProcessing();
-
-        this._customMessageService.showInfo({summary:'Cita Agendada',detail:'Su cita fue agendada correctamente'})
 
         return docRef.id;
     }

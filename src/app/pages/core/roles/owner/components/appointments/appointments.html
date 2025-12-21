@@ -6,26 +6,161 @@
     header="Detalle de la cita"
     [(visible)]="showDialog"
     [modal]="true"
-    [style]="{ width: '400px' }">
-    @if (selectedEvent) {
-        <div>
-            <p><b>Servicio:</b> {{ selectedEvent.title }}</p>
-            <p><b>Estado:</b> {{ selectedEvent.state }}</p>
-            <p><b>Duración:</b> {{ selectedEvent.extendedProps.durationMin }} min</p>
-            <p><b>Precio:</b> ${{ selectedEvent.extendedProps.price }}</p>
+    [style]="{ width: '600px' }">
+    <p-fluid class="custom-card-form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="custom-grid-form">
+            <!-- identification -->
+            <div class="sm:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="name"
+                    [required]="identificationField"
+                    label="Identificación">
+                </label>
 
-            <hr />
+                <input pInputText id="identification" formControlName="identification"
+                       placeholder="Ingrese su número de cédula o RUC">
 
-            <p><b>Cliente:</b> {{ selectedEvent.extendedProps.customer?.name }}</p>
-            <p><b>Teléfono:</b> {{ selectedEvent.extendedProps.customer?.phone }}</p>
-            <p><b>Email:</b> {{ selectedEvent.extendedProps.customer?.email }}</p>
+                <p-message
+                    appErrorMessage
+                    [errors]="identificationField.errors"
+                    [touched]="identificationField.touched"
+                    [dirty]="identificationField.dirty" />
+            </div>
 
-            @if (selectedEvent.extendedProps.notes) {
-                <p>
-                    <b>Notas:</b> {{ selectedEvent.extendedProps.notes }}
-                </p>
-            }
-        </div>
-    }
+            <!-- name -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="name"
+                    [required]="nameField"
+                    label="Nombre del cliente">
+                </label>
+
+                <input pInputText id="name" formControlName="name">
+
+                <p-message
+                    appErrorMessage
+                    [errors]="nameField.errors"
+                    [touched]="nameField.touched"
+                    [dirty]="nameField.dirty" />
+            </div>
+
+            <!-- email -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="email"
+                    [required]="emailField"
+                    label="Correo">
+                </label>
+
+                <input pInputText id="email" formControlName="email">
+
+                <p-message
+                    appErrorMessage
+                    [errors]="emailField.errors"
+                    [touched]="emailField.touched"
+                    [dirty]="emailField.dirty" />
+            </div>
+
+            <!-- phone -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="phone"
+                    [required]="phoneField"
+                    label="Teléfono">
+                </label>
+
+                <input pInputText id="phone" formControlName="phone">
+
+                <p-message
+                    appErrorMessage
+                    [errors]="phoneField.errors"
+                    [touched]="phoneField.touched"
+                    [dirty]="phoneField.dirty" />
+            </div>
+
+            <!-- service -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="service"
+                    [required]="serviceField"
+                    label="Servicio">
+                </label>
+
+                <p-select
+                    id="service"
+                    formControlName="service"
+                    [options]="services"
+                    [filter]="true"
+                    appendTo="body"
+                    placeholder="Seleccione" />
+
+                <p-message
+                    appErrorMessage
+                    [errors]="serviceField.errors"
+                    [touched]="serviceField.touched"
+                    [dirty]="serviceField.dirty" />
+            </div>
+
+            <!-- date -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="date"
+                    [required]="dateField"
+                    label="Fecha de la cita">
+                </label>
+
+                <p-datepicker
+                    id="date"
+                    formControlName="date"
+                    [showIcon]="true"
+                    inputId="buttondisplay"
+                    [showOnFocus]="false"
+                    [showTime]="true"
+                    [minDate]="currentDate"
+                    appendTo="body">
+                </p-datepicker>
+
+                <p-message
+                    appErrorMessage
+                    [errors]="dateField.errors"
+                    [touched]="dateField.touched"
+                    [dirty]="dateField.dirty" />
+            </div>
+
+            <!-- notes -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="notes"
+                    [required]="notesField"
+                    label="Nota">
+                </label>
+
+                <textarea pTextarea id="notes" formControlName="notes" rows="5" cols="30"></textarea>
+
+                <p-message
+                    appErrorMessage
+                    [errors]="notesField.errors"
+                    [touched]="notesField.touched"
+                    [dirty]="notesField.dirty" />
+            </div>
+
+            <!-- submit -->
+            <div class="md:col-span-12 custom-field-form">
+                <p-button
+                    type="submit"
+                    label="Guardar"
+                    [icon]="PrimeIcons.SAVE"
+                />
+            </div>
+        </form>
+    </p-fluid>
+
 </p-dialog>
 

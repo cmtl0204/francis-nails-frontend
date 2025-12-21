@@ -25,6 +25,7 @@ import { AppointmentHttpService } from '@/pages/public/appointment/services';
 import { debounceTime, distinctUntilChanged, filter, from, Subject, switchMap, takeUntil } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 import { CoreService } from '@utils/services';
+import { Textarea } from 'primeng/textarea';
 
 @Component({
     selector: 'app-appointment-form',
@@ -36,7 +37,8 @@ import { CoreService } from '@utils/services';
         ErrorMessageDirective,
         InputText,
         DatePicker,
-        Select
+        Select,
+        Textarea
     ],
     templateUrl: './appointment-form.html',
     styleUrl: './appointment-form.scss',
@@ -52,11 +54,11 @@ export class AppointmentForm implements OnInit, OnDestroy {
     protected readonly catalogueService = inject(CatalogueService);
     protected readonly customMessageService = inject(CustomMessageService);
     protected readonly coreService = inject(CoreService);
+    private readonly formBuilder = inject(FormBuilder);
     protected form!: FormGroup;
     protected services: string[] = ['Manicura','Depilado de cejas'];
     protected currentDate = new Date();
     private readonly appointmentHttpService = inject(AppointmentHttpService);
-    private readonly formBuilder = inject(FormBuilder);
     private destroy$ = new Subject<void>();
 
     constructor() {
@@ -92,6 +94,10 @@ export class AppointmentForm implements OnInit, OnDestroy {
         return this.form.controls['date'];
     }
 
+    get notesField(): AbstractControl {
+        return this.form.controls['notes'];
+    }
+
     async ngOnInit() {
         await this.loadCatalogues();
         this.loadData();
@@ -114,12 +120,13 @@ export class AppointmentForm implements OnInit, OnDestroy {
 
     buildForm() {
         this.form = this.formBuilder.group({
-            identification: [null, [Validators.required, Validators.minLength(6)]],
+            identification: [null, [Validators.required, Validators.minLength(9)]],
             name: [null, [Validators.required]],
             email: [null, [Validators.email]],
             phone: [null, [Validators.required]],
             service: [null, [Validators.required]],
             date: [null, [Validators.required]],
+            notes: [null],
         });
 
         this.watchFormChanges();
@@ -134,7 +141,7 @@ export class AppointmentForm implements OnInit, OnDestroy {
             debounceTime(300),
             map(v => v?.trim() ?? ''),
             distinctUntilChanged(),
-            filter(v => v.length >=6),
+            filter(v => v.length >=9),
 
             tap(() => {
                 this.coreService.showProcessing();
