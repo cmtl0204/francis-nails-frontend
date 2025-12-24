@@ -54,3 +54,26 @@ export function pendingPaymentRucValidator(authHttpService: AuthHttpService): As
         );
     };
 }
+
+export function dateGreaterThan(startDateKey: string, endDateKey: string): ValidatorFn {
+    return (form: AbstractControl): ValidationErrors | null => {
+        const start = form.get(startDateKey)?.value;
+        const end = form.get(endDateKey)?.value;
+
+        if (!start || !end) return null;
+
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+        if (endDate < startDate) {
+            form.get(startDateKey)?.setErrors({ dateGreaterThan: true, endDate, startDate });
+            form.get(endDateKey)?.setErrors({ dateGreaterThan: true, endDate, startDate });
+            return { dateGreaterThan: true, endDate, startDate };
+        }
+
+        form.get(startDateKey)?.setErrors(null);
+        form.get(endDateKey)?.setErrors(null);
+
+        return null;
+    };
+}

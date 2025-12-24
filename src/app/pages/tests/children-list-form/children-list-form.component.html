@@ -1,0 +1,214 @@
+<p-fluid class="custom-card-form">
+    <form [formGroup]="form" class="custom-grid-form">
+        <!-- title -->
+        <div class="md:col-span-12 custom-field-form">
+            <div class="custom-section-title-form">Tipos de vehículos:</div>
+        </div>
+
+        <!-- hasAdventureTourismModality -->
+        <div class="md:col-span-12 custom-field-form">
+            <label
+                appLabel
+                for="hasMaritimeTransport"
+                [required]="hasMaritimeTransportField">
+                <b>Declaro</b> que el establecimiento, al momento del envío de la solicitud, cuenta con vehículos.
+            </label>
+
+            <p-toggleswitch id="hasMaritimeTransport" formControlName="hasMaritimeTransport">
+                <ng-template #handle let-checked="checked">
+                    <span class="!text-xs font-semibold">{{ checked ? 'SÍ' : 'NO' }}</span>
+                </ng-template>
+            </p-toggleswitch>
+
+            <p-message
+                appErrorMessage
+                [errors]="hasMaritimeTransportField.errors"
+                [touched]="hasMaritimeTransportField.touched"
+                [dirty]="hasMaritimeTransportField.dirty" />
+        </div>
+
+        <!-- other -->
+        <div class="md:col-span-12 custom-field-form">
+            <label
+                appLabel
+                for="other"
+                [required]="otherField"
+                label="lo que sea">
+            </label>
+
+            <input type="text" id="other" pInputText formControlName="other">
+
+            <p-message
+                appErrorMessage
+                [errors]="otherField.errors"
+                [touched]="otherField.touched"
+                [dirty]="otherField.dirty"
+            />
+        </div>
+    </form>
+</p-fluid>
+
+<p-fluid>
+    @if (hasMaritimeTransportField.value) {
+        <app-list-basic
+            title="Listado de Transportes marítimos"
+            [items]="items"
+            [cols]="cols"
+            [buttonActions]="buttonActions"
+            (onCreate)="createItem()"
+            (onSelect)="buildButtonActions($event)"
+        />
+    }
+</p-fluid>
+
+<p-dialog [(visible)]="isVisibleModal"
+          [modal]="true"
+          [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+          [style]="{ width: '30vw' }"
+          [draggable]="false"
+          (onHide)="closeModal()"
+          [resizable]="false">
+    <ng-template #header>
+        <div class="inline-flex items-center justify-center gap-2">
+            <span class="font-bold whitespace-nowrap">
+                Agregar Transporte Marítimo
+            </span>
+        </div>
+    </ng-template>
+
+    <p-fluid>
+        <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="custom-grid-form">
+            <!-- dpaType -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="dpaType"
+                    [required]="dpaTypeField"
+                    label="cataologo 1">
+                </label>
+
+                <p-select
+                    id="dpaType"
+                    [options]="dpaTypes"
+                    formControlName="dpaType"
+                    optionLabel="name"
+                    placeholder="Seleccione..."
+                    appendTo="body"
+                />
+
+                <p-message
+                    appErrorMessage
+                    [errors]="dpaTypeField.errors"
+                    [touched]="dpaTypeField.touched"
+                    [dirty]="dpaTypeField.dirty" />
+            </div>
+
+            <!-- certifiedCode -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="certifiedCode"
+                    [required]="certifiedCodeField"
+                    label="Número o Código de la Matrícula de Armador">
+                </label>
+
+                <input pInputText id="certifiedCode" formControlName="certifiedCode">
+
+                <p-message
+                    appErrorMessage
+                    [errors]="certifiedCodeField.errors"
+                    [touched]="certifiedCodeField.touched"
+                    [dirty]="certifiedCodeField.dirty" />
+            </div>
+
+            <!-- totalUnits -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="totalUnits"
+                    [required]="totalUnitsField"
+                    label="Número de unidades de transporte">
+                </label>
+
+                <p-inputNumber id="totalUnits" formControlName="totalUnits" type="number" [min]="0" />
+
+                <p-message
+                    appErrorMessage
+                    [errors]="totalUnitsField.errors"
+                    [touched]="totalUnitsField.touched"
+                    [dirty]="totalUnitsField.dirty" />
+            </div>
+
+            <!-- totalSeats -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="totalSeats"
+                    [required]="totalSeatsField"
+                    label="Total, número de puesto (asientos)">
+                </label>
+
+                <p-inputNumber id="totalSeats" formControlName="totalSeats" type="number" [min]="0" />
+
+                <p-message
+                    appErrorMessage
+                    [errors]="totalSeatsField.errors"
+                    [touched]="totalSeatsField.touched"
+                    [dirty]="totalSeatsField.dirty" />
+            </div>
+
+            <!-- certifiedIssueAt -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="certifiedIssueAt"
+                    [required]="certifiedIssueAtField"
+                    label="Fecha de emisión de la Matrícula de Armador">
+                </label>
+
+                <p-datepicker
+                    id="certifiedIssueAt"
+                    formControlName="certifiedIssueAt"
+                    [showIcon]="true"
+                    dateFormat="yy-mm-dd"
+                    appendTo="body">
+                </p-datepicker>
+
+                <p-message
+                    appErrorMessage
+                    [errors]="certifiedIssueAtField.errors"
+                    [touched]="certifiedIssueAtField.touched"
+                    [dirty]="certifiedIssueAtField.dirty" />
+            </div>
+
+            <!-- certifiedExpirationAt -->
+            <div class="md:col-span-12 custom-field-form">
+                <label
+                    appLabel
+                    for="certifiedExpirationAt"
+                    [required]="certifiedExpirationAtField"
+                    label="Fecha de Caducidad de la Matrícula de Armador">
+                </label>
+
+                <p-datepicker
+                    id="certifiedExpirationAt"
+                    formControlName="certifiedExpirationAt"
+                    [showIcon]="true"
+                    dateFormat="yy-mm-dd"
+                    appendTo="body">
+                </p-datepicker>
+
+                <p-message
+                    appErrorMessage
+                    [errors]="certifiedExpirationAtField.errors"
+                    [touched]="certifiedExpirationAtField.touched"
+                    [dirty]="certifiedExpirationAtField.dirty" />
+            </div>
+
+            <!-- actions -->
+            <div class="md:col-span-12 custom-field-form">
+                <p-button type="submit" label="Agregar" [icon]="PrimeIcons.SAVE" />
+            </div>
+        </form>
+    </p-fluid>
+</p-dialog>
