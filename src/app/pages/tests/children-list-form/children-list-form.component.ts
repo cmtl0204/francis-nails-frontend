@@ -49,12 +49,13 @@ export class ChildrenListFormComponent implements OnInit {
 
     protected dpaTypes: CatalogueInterface[] = [];
 
-    constructor() {}
+    constructor() {
+        this.buildForm();
+    }
 
     async ngOnInit() {
         await this.loadCatalogues();
         this.loadData();
-        this.buildForm();
         this.buildColumns();
     }
 
@@ -65,7 +66,7 @@ export class ChildrenListFormComponent implements OnInit {
     }
 
     async loadCatalogues() {
-        this.dpaTypes = await this.catalogueService.findByType(CatalogueTypeEnum.activities_geographic_area);
+        this.dpaTypes = await this.catalogueService.findByType(CatalogueTypeEnum.MARITAL_STATUS);// es solo un ejemplo, tipo deberia ir en minusculas
     }
 
     buildForm() {
@@ -104,6 +105,8 @@ export class ChildrenListFormComponent implements OnInit {
         const errors: string[] = [];
 
         if (this.hasMaritimeTransportField.value && this.items.length === 0) errors.push('Transporte Marítimo');
+
+        if(this.otherField.invalid) errors.push('Other');
 
         if (errors.length > 0) {
             this.form.markAllAsTouched();
