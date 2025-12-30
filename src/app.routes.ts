@@ -41,6 +41,12 @@ export const appRoutes: Routes = [
         children: [{ path: '', loadChildren: () => import('./app/pages/public/public.routes') }]
     },
 
+    {
+        path: 'tests',
+        component: AppLayoutBlank,
+        children: [{ path: '', loadChildren: () => import('./app/pages/tests/tests.routes') }]
+    },
+
     { path: '', redirectTo: '/main/dashboards', pathMatch: 'full' },
 
     { path: '**', redirectTo: MY_ROUTES.errorPages.notFound.absolute }

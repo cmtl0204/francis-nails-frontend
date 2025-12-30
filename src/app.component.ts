@@ -49,25 +49,25 @@ export class AppComponent implements OnInit {
     constructor() {}
 
     async ngOnInit() {
-        // this.catalogueHttpService
-        //     .findCache()
-        //     .pipe(
-        //         tap(async (response) => {
-        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response);
-        //         }),
-        //         switchMap(() => this.dpaHttpService.findCache()),
-        //         tap(async (response) => {
-        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.dpa, response);
-        //         }),
-        //         switchMap(() => this.activityHttpService.findCache()),
-        //         tap(async (response) => {
-        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.activities, response.data.activities);
-        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.classifications, response.data.classifications);
-        //             await this.coreSessionStorageService.setEncryptedValue(CoreEnum.categories, response.data.categories);
-        //
-        //             this.loading = true;
-        //         })
-        //     )
-        //     .subscribe();
+        this.catalogueHttpService
+            .findCache()
+            .pipe(
+                tap(async (response) => {
+                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response);
+                }),
+                switchMap(() => this.dpaHttpService.findCache()),
+                tap(async (response) => {
+                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.dpa, response);
+                }),
+                switchMap(() => this.activityHttpService.findCache()),
+                tap(async (response) => {
+                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.activities, response.data.activities);
+                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.classifications, response.data.classifications);
+                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.categories, response.data.categories);
+
+                    this.loading = true;
+                })
+            )
+            .subscribe();
     }
 }

@@ -57,17 +57,7 @@ export class AuthHttpService {
         this.coreService.hideProcessing();
     }
 
-    async signIn(payload: SignInInterface) {
-        return await signInWithEmailAndPassword(this.auth, payload.username, payload.password).then((userCredential) => {
-            const email = userCredential.user.email!;
-            const id = userCredential.user.uid;
-            const username = userCredential.user.providerData[0].uid;
-            this.authService.auth = { id, email, username };
-            this.authService.accessToken = userCredential.user.refreshToken;
-        });
-    }
-
-    signInBackup(payload: SignInInterface) {
+    signIn(payload: SignInInterface) {
         const url = `${this.apiUrl}/sign-in`;
 
         return this.catalogueHttpService.findCache().pipe(

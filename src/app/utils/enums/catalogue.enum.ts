@@ -1,4 +1,5 @@
 export enum CatalogueTypeEnum {
+    MARITAL_STATUS='MARITAL_STATUS',
     inspections_state = 'inspections_state',
     processes_state = 'processes_state',
     cadastres_state = 'cadastres_state',
