@@ -130,7 +130,6 @@ export class AuthHttpService {
         const url = `${this.apiUrl}/transactional-codes/${username}/request`;
         return this.httpClient.get<HttpResponseInterface>(url).pipe(
             map((response) => {
-                this.customMessageService.showHttpSuccess(response);
                 return response.data;
             })
         );

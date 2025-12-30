@@ -42,7 +42,6 @@ export class UserHttpService {
     updatePersonalInformation(id: string, payload: any) {
         return this._httpClient.put<HttpResponseInterface>(`${this._apiUrl}/${id}/personal-information`, payload).pipe(
             tap((response) => {
-                this._customMessageService.showHttpSuccess(response);
             })
         );
     }
@@ -50,7 +49,6 @@ export class UserHttpService {
     updateEmail(id: string, email: string) {
         return this._httpClient.patch<HttpResponseInterface>(`${this._apiUrl}/${id}/email`, { email }).pipe(
             tap((response) => {
-                this._customMessageService.showHttpSuccess(response);
             })
         );
     }
@@ -58,7 +56,6 @@ export class UserHttpService {
     updateBankDetail(id: string, payload: any) {
         return this._httpClient.put<HttpResponseInterface>(`${this._apiUrl}/${id}/bank-detail`, payload).pipe(
             tap((response) => {
-                this._customMessageService.showHttpSuccess(response);
             })
         );
     }
