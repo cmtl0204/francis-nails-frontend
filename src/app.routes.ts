@@ -13,6 +13,7 @@ export const appRoutes: Routes = [
         canActivate: [tokenGuard],
         children: [
             { path: MY_ROUTES.dashboards.base, loadChildren: () => import('./app/pages/dashboards/dashboard.routes') },
+            { path: MY_ROUTES.adminPages.base, loadChildren: () => import('./app/pages/admin/admin.routes') },
             { path: MY_ROUTES.corePages.base, loadChildren: () => import('./app/pages/core/core.routes') }
         ]
     },

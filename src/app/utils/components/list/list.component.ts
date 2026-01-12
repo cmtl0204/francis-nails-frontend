@@ -1,5 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { LabelButtonActionEnum } from '@utils/enums';
+import { Component, EventEmitter, inject, input, OnInit, output, signal } from '@angular/core';
 import { MenuItem, PrimeIcons } from 'primeng/api';
 import { format } from 'date-fns';
 import { Button } from 'primeng/button';
@@ -17,38 +16,36 @@ import { CoreService } from '@utils/services';
 import { ColInterface } from '@utils/interfaces/col.interface';
 import { DatePipe } from '@angular/common';
 import { debounceTime } from 'rxjs';
+import { Tag } from 'primeng/tag';
 
 @Component({
     selector: 'app-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    imports: [Button, ButtonActionComponent, Fluid, IconField, InputIcon, ReactiveFormsModule, TableModule, Tooltip, InputText, Paginator, DatePipe],
+    imports: [Button, ButtonActionComponent, Fluid, IconField, InputIcon, ReactiveFormsModule, TableModule, Tooltip, InputText, Paginator, DatePipe, Tag],
     standalone: true
 })
 export class ListComponent implements OnInit {
-    @Input() items: any[] = [];
-    @Input() cols: ColInterface[] = [];
-    @Input() buttonActions: MenuItem[] = [];
-    @Input() enabled: boolean = false;
-    @Input() title!: string;
-    @Input() isButtonActionsEnabled = false;
-    @Input() pagination!: PaginationInterface;
-    @Output() onCreate: EventEmitter<any> = new EventEmitter<any>();
-    @Output() onEdit: EventEmitter<any> = new EventEmitter<any>();
-    @Output() onDelete: EventEmitter<any> = new EventEmitter<any>();
-    @Output() onSearch: EventEmitter<string> = new EventEmitter<string>();
-    @Output() onPagination: EventEmitter<number> = new EventEmitter<number>();
-    @Output() onSelect: EventEmitter<any> = new EventEmitter<any>();
+    items = input.required<any[]>();
+    cols = input.required<ColInterface[]>();
+    buttonActions = input.required<MenuItem[]>();
+    title = input.required<string>();
+    isButtonActionsEnabled = signal(false);
+    pagination = input.required<PaginationInterface>();
+
+    onCreate = output<any>();
+    onEdit = output<any>();
+    onDelete = output<any>();
+    onSelect = output<any>();
+    onSearch = output<any>();
+    onPagination = output<any>();
+
     protected readonly PrimeIcons = PrimeIcons;
     protected readonly coreService = inject(CoreService);
-    protected selectedItem = new EventEmitter<any>();
     protected searchControl: FormControl = new FormControl(null);
     protected currentYear: string;
 
     constructor() {
-        this.pagination = this.coreService.pagination;
-        console.log('constructor', this.pagination);
-
         this.currentYear = format(new Date(), 'yyyy');
 
         this.checkValueChanges();
@@ -64,14 +61,13 @@ export class ListComponent implements OnInit {
         });
     }
 
-    selectItem(item: any) {
-        this.isButtonActionsEnabled = true;
-        this.selectedItem = item;
-        this.onSelect.emit(item);
+    selectItem(item: any, index: number) {
+        this.isButtonActionsEnabled.set(true);
+        this.onSelect.emit({ item, index });
     }
 
     create() {
-        this.onCreate.emit();
+        this.onCreate.emit(null);
     }
 
     onPageChange(event: PaginatorState) {

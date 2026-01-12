@@ -5,6 +5,7 @@ export const environment = {
     APP_NAME: '(Pruebas) Sistema de Agendamiento Inteligente',
     APP_SHORT_NAME: '(Pruebas) Francis Nails',
     PATH_ASSETS: 'development',
+    PATH_BACKEND_ASSETS: 'http://localhost:3000/assets',
     firebase: {
         apiKey: 'AIzaSyB5ONJ6HaDAHkIg9HHCrEdzebfBYm8VpLs',
         authDomain: 'francis-nails-bf9d2.firebaseapp.com',

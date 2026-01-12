@@ -17,9 +17,10 @@ import { CatalogueInterface, ColInterface } from '@utils/interfaces';
 import { deleteButtonAction, editButtonAction } from '@utils/components/button-action/consts';
 import { ListBasicComponent } from '@utils/components/list-basic/list-basic.component';
 import { dateGreaterThan } from '@utils/form-validators/custom-validator';
-import { CatalogueTypeEnum } from '@utils/enums';
+import { CatalogueTypeEnum, DateFormatEnum } from '@utils/enums';
 import { CatalogueService } from '@utils/services/catalogue.service';
 import { Select } from 'primeng/select';
+import { datePickerFormat } from '@utils/helpers/formats.helper';
 
 @Component({
     selector: 'app-children-list-form',
@@ -66,7 +67,7 @@ export class ChildrenListFormComponent implements OnInit {
     }
 
     async loadCatalogues() {
-        this.dpaTypes = await this.catalogueService.findByType(CatalogueTypeEnum.MARITAL_STATUS);// es solo un ejemplo, tipo deberia ir en minusculas
+        this.dpaTypes = await this.catalogueService.findByType(CatalogueTypeEnum.users_marital_status);// es solo un ejemplo, tipo deberia ir en minusculas
     }
 
     buildForm() {
@@ -275,4 +276,7 @@ export class ChildrenListFormComponent implements OnInit {
     get otherField(): AbstractControl {
         return this.form.controls['other'];
     }
+
+    protected readonly datePickerFormat = datePickerFormat;
+    protected readonly DateFormatEnum = DateFormatEnum;
 }

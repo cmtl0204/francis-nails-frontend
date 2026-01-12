@@ -15,5 +15,9 @@ export enum CoreEnum {
 
 export enum ChildParkFormEnum {
     peopleCapacity = 'peopleCapacity',
-    physicalSpace = 'physicalSpace',
+    physicalSpace = 'physicalSpace'
+}
+
+export enum DateFormatEnum {
+    datePicker = 'yy-mm-dd',
 }

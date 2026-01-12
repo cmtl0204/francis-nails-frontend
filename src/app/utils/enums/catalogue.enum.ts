@@ -1,6 +1,11 @@
 export enum CatalogueTypeEnum {
-    MARITAL_STATUS='MARITAL_STATUS',
-    inspections_state = 'inspections_state',
+    users_identification_type = 'users_identification_type',
+    users_blood_type = 'users_blood_type',
+    users_ethnic_origin = 'users_ethnic_origin',
+    users_gender = 'users_gender',
+    users_marital_status = 'users_marital_status',
+    users_nationality = 'users_nationality',
+    users_sex = 'users_sex',
     processes_state = 'processes_state',
     cadastres_state = 'cadastres_state',
     dpa_zone = 'dpa_zone',
@@ -30,7 +35,7 @@ export enum CatalogueTypeEnum {
     process_food_drinks_establishment_type = 'process_food_drinks_establishment_type',
     service_types_continent = 'service_types_continent',
     transport_vehicle_types = 'transporte_tipo_vehiculos',
-    process_transport_airline_type = 'process_transport_airline_type',
+    process_transport_airline_type = 'process_transport_airline_type'
 }
 
 export enum CatalogueStateEnum {

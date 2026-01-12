@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpResponseInterface, SignInInterface } from './interfaces';
 import { environment } from '@env/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@modules/auth/auth.service';
 import { SignInResponseInterface } from '@modules/auth/interfaces';
@@ -10,19 +10,20 @@ import { Observable } from 'rxjs';
 import { CatalogueHttpService, CoreService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
 import { CoreEnum } from '@utils/enums';
 import { ActivityHttpService } from '@/pages/core/shared/services';
-import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { doc, getDoc } from 'firebase/firestore';
+
 @Injectable({
     providedIn: 'root'
 })
 export class AuthHttpService {
+    protected readonly catalogueHttpService = inject(CatalogueHttpService);
     private readonly authService = inject(AuthService);
     private readonly httpClient = inject(HttpClient);
     private readonly apiUrl = `${environment.API_URL}/auth`;
     private readonly customMessageService = inject(CustomMessageService);
     private readonly dpaHttpService = inject(DpaHttpService);
-    protected readonly catalogueHttpService = inject(CatalogueHttpService);
     private readonly activityHttpService = inject(ActivityHttpService);
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
     private readonly coreService = inject(CoreService);
@@ -64,13 +65,6 @@ export class AuthHttpService {
             tap(async (response) => await this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response)),
             switchMap(() => this.dpaHttpService.findCache()),
             tap(async (response) => await this.coreSessionStorageService.setEncryptedValue(CoreEnum.dpa, response)),
-
-            switchMap(() => this.activityHttpService.findCache()),
-            tap(async (response) => {
-                await this.coreSessionStorageService.setEncryptedValue(CoreEnum.activities, response.data.activities);
-                await this.coreSessionStorageService.setEncryptedValue(CoreEnum.classifications, response.data.classifications);
-                await this.coreSessionStorageService.setEncryptedValue(CoreEnum.categories, response.data.categories);
-            }),
             switchMap(() => this.httpClient.post<SignInResponseInterface>(url, payload)),
             map((response) => {
                 this.authService.accessToken = response.data.accessToken;
@@ -145,10 +139,24 @@ export class AuthHttpService {
         );
     }
 
-    verifyIdentification(identification: string) {
+    verifyIdentification(identification: string, editing = false) {
         const url = `${this.apiUrl}/verify-identification/${identification}`;
 
-        return this.httpClient.get<HttpResponseInterface>(url).pipe(
+        const params = new HttpParams().append('editing', editing);
+
+        return this.httpClient.get<HttpResponseInterface>(url, { params }).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
+    verifyUserExist(identification: string, userId = '') {
+        const url = `${this.apiUrl}/verify-user-exist/${identification}`;
+
+        const params = new HttpParams().append('userId', userId);
+
+        return this.httpClient.get<HttpResponseInterface>(url, { params }).pipe(
             map((response) => {
                 return response.data;
             })

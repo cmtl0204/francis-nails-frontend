@@ -1,5 +1,6 @@
 import { Directive, ElementRef, inject, Input, OnChanges, Renderer2, SimpleChanges } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
+import { passwordPolicesValidator } from '@utils/form-validators/custom-validator';
 
 @Directive({
     selector: '[appErrorMessage]',
@@ -25,14 +26,18 @@ export class ErrorMessageDirective implements OnChanges {
         invalidEmail: this.fieldInvalidEmail,
         invalidEmailMINTUR: this.fieldInvalidEmailMINTUR,
         registeredIdentification: this.fieldRegisteredIdentification,
+        userExist: this.fieldUserExist,
         unregisteredUser: this.fieldUnregisteredUser,
         pendingPaymentRuc: this.fieldRucPendingPayment,
-        unavailableUser: this.fieldUnavailableUser,
         phoneNotAvailable: this.fieldPhoneNotAvailable,
         dateInvalid: this.fieldDateValid,
         dateMax: this.fieldDateMax,
         dateMin: this.fieldDateMin,
         agreementExists: this.fieldAgreementExists,
+        invalidPasswordPolicesUpper: this.fieldPasswordPolicesUpper,
+        invalidPasswordPolicesLower: this.fieldPasswordPolicesLower,
+        invalidPasswordPolicesNumber: this.fieldPasswordPolicesNumber,
+        invalidPasswordPolicesSpecialCharacter: this.fieldPasswordPolicesSpecialCharacter
     };
 
     constructor() {
@@ -41,33 +46,36 @@ export class ErrorMessageDirective implements OnChanges {
 
     ngOnChanges(): void {
         this.setErrorMessage();
-
     }
 
-    @Input() set touched(value: boolean|null|undefined) {
+    @Input() set touched(value: boolean | null | undefined) {
         this._touched = value;
     }
 
-    @Input() set dirty(value: boolean|null|undefined) {
+    @Input() set dirty(value: boolean | null | undefined) {
         this._dirty = value;
     }
 
-    @Input() set errors(value: ValidationErrors | null|undefined) {
+    @Input() set errors(value: ValidationErrors | null | undefined) {
         this._errors = value;
     }
 
     setErrorMessage() {
         let text = '';
 
+        let texts: string[] = [];
+
         if ((this._touched || this._dirty) && this._errors) {
             for (const key in this._errors) {
-                if (this._errorMessages[key]) {
-                    const handler = this._errorMessages[key];
-                    text = typeof handler === 'function' ? handler(this._errors) : handler;
-                    break; // Solo mostramos el primer error encontrado
-                }
+                const handler = this._errorMessages[key];
+                if (!handler) continue;
+
+                const msg = typeof handler === 'function' ? handler(this._errors) : handler;
+
+                if (msg) texts.push(msg);
             }
 
+            text = texts.join('\n');
             this._renderer.addClass(this._nativeElement, 'text-red-500');
         }
 
@@ -158,7 +166,27 @@ export class ErrorMessageDirective implements OnChanges {
         return 'El usuario no se encuentra disponible.';
     }
 
+    private get fieldUserExist(): string {
+        return 'El usuario ya se encuentra registrado, por favor intente con otro.';
+    }
+
     private get fieldUnregisteredUser(): string {
         return 'El usuario no se encuentra registrado, por favor registre una cuenta.';
+    }
+
+    private fieldPasswordPolicesUpper(errors: ValidationErrors): string {
+        return `La contraseña debe tener al menos ${errors['invalidPasswordPolicesUpper']['length']} Mayúscula`;
+    }
+
+    private fieldPasswordPolicesLower(errors: ValidationErrors): string {
+        return `La contraseña debe tener al menos ${errors['invalidPasswordPolicesLower']['length']} minúsculas`;
+    }
+
+    private fieldPasswordPolicesNumber(errors: ValidationErrors): string {
+        return `La contraseña debe tener al menos ${errors['invalidPasswordPolicesNumber']['length']} números`;
+    }
+
+    private fieldPasswordPolicesSpecialCharacter(errors: ValidationErrors): string {
+        return `La contraseña debe tener al menos  ${errors['invalidPasswordPolicesSpecialCharacter']['length']} caracter especial ${errors['invalidPasswordPolicesSpecialCharacter']['allowed']}`;
     }
 }

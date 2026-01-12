@@ -31,10 +31,46 @@ import { RoleEnum } from '@utils/enums';
     `
 })
 export class AppMenu implements OnInit {
-    private readonly _router = inject(Router);
     protected readonly authService = inject(AuthService);
     protected readonly PrimeIcons = PrimeIcons;
     protected model: MenuItem[] = [];
+    private readonly _router = inject(Router);
+
+    get loadMenu(): MenuItem[] {
+        switch (this.authService.role.code) {
+            case RoleEnum.ADMIN:
+                return this.adminMenu;
+            case RoleEnum.OWNER:
+                return this.ownerMenu;
+            default:
+                return [];
+        }
+    }
+
+    get adminMenu(): MenuItem[] {
+        return [
+            {
+                label: 'Usuarios',
+                icon: PrimeIcons.USERS,
+                routerLink: [MY_ROUTES.adminPages.user.absolute]
+            },
+            {
+                label: 'Mi Perfil',
+                icon: PrimeIcons.ID_CARD,
+                routerLink: [MY_ROUTES.adminPages.user.profile.absolute]
+            }
+        ];
+    }
+
+    get ownerMenu(): MenuItem[] {
+        return [
+            {
+                label: 'Citas',
+                icon: PrimeIcons.CALENDAR,
+                routerLink: [MY_ROUTES.corePages.owner.appointments.absolute]
+            }
+        ];
+    }
 
     ngOnInit() {
         this.model = [
@@ -46,7 +82,7 @@ export class AppMenu implements OnInit {
                     {
                         label: this.authService.auth.username,
                         icon: PrimeIcons.USER,
-                        routerLink: [MY_ROUTES.corePages.dac.program.list.absolute]
+                        routerLink: [MY_ROUTES.adminPages.user.profile.absolute]
                     }
                 ]
             }
@@ -55,24 +91,5 @@ export class AppMenu implements OnInit {
 
     signOut() {
         this.authService.removeLogin();
-    }
-
-    get loadMenu(): MenuItem[] {
-        switch (this.authService.role.code) {
-            case RoleEnum.OWNER:
-                return this.ownerMenu;
-            default:
-                return [];
-        }
-    }
-
-    get ownerMenu(): MenuItem[] {
-        return [
-            {
-                label: 'Citas',
-                icon: PrimeIcons.CALENDAR,
-                routerLink: [MY_ROUTES.corePages.owner.appointments.absolute]
-            },
-        ];
     }
 }

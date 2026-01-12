@@ -44,6 +44,7 @@
 <p-fluid>
     @if (hasRoomField.value) {
         <app-list-basic
+            title="Habitaciones"
             [items]="items"
             [cols]="cols"
             [buttonActions]="buttonActions"
@@ -92,38 +93,38 @@
                     [touched]="roomTypeField.touched"
                     [dirty]="roomTypeField.dirty" />
                 </div>
-                
+
                 <div class="md:col-span-12 flex flex-col gap-2">
                     <label for="totalRooms" class="font-medium"> Habitaciones/Tienda de campaña <span class="text-red-500">*</span></label>
-        <p-inputNumber 
-          formControlName="totalRooms" 
-          [min]="0" 
-          [max]="1000" 
-          showButtons 
+        <p-inputNumber
+          formControlName="totalRooms"
+          [min]="0"
+          [max]="1000"
+          showButtons
           inputId="totalRooms"
           class="w-full">
         </p-inputNumber>
                 </div>
     <div class="md:col-span-12 flex flex-col gap-2">
              <label for="totalBeds" class="font-medium">Camas <span class="text-red-500">*</span></label>
-        <p-inputNumber 
-          formControlName="totalBeds" 
-          [min]="0" 
-          [max]="2000" 
-          showButtons 
+        <p-inputNumber
+          formControlName="totalBeds"
+          [min]="0"
+          [max]="2000"
+          showButtons
           inputId="totalBeds"
           class="w-full">
         </p-inputNumber>
                 </div>
 
-                
+
                 <div class="md:col-span-12 flex flex-col gap-2">
                 <label for="totalPlaces" class="font-medium">Plazas <span class="text-red-500">*</span></label>
-        <p-inputNumber 
-          formControlName="totalPlaces" 
-          [min]="0" 
-          [max]="3000" 
-          showButtons 
+        <p-inputNumber
+          formControlName="totalPlaces"
+          [min]="0"
+          [max]="3000"
+          showButtons
           inputId="totalPlaces"
           class="w-full">
         </p-inputNumber>

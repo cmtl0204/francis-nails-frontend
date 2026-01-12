@@ -11,7 +11,6 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { CatalogueHttpService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
 import { switchMap, tap } from 'rxjs/operators';
 import { CoreEnum } from '@utils/enums';
-import { ActivityHttpService } from '@modules/core/shared/services';
 
 @Component({
     selector: 'app-root',
@@ -39,12 +38,11 @@ import { ActivityHttpService } from '@modules/core/shared/services';
 })
 export class AppComponent implements OnInit {
     protected readonly coreService = inject(CoreService);
-    private readonly dpaHttpService = inject(DpaHttpService);
-    private readonly activityHttpService = inject(ActivityHttpService);
     protected readonly catalogueHttpService = inject(CatalogueHttpService);
     protected readonly customMessageService = inject(CustomMessageService);
-    private readonly coreSessionStorageService = inject(CoreSessionStorageService);
     protected loading: boolean = true;
+    private readonly dpaHttpService = inject(DpaHttpService);
+    private readonly coreSessionStorageService = inject(CoreSessionStorageService);
 
     constructor() {}
 
@@ -58,14 +56,6 @@ export class AppComponent implements OnInit {
                 switchMap(() => this.dpaHttpService.findCache()),
                 tap(async (response) => {
                     await this.coreSessionStorageService.setEncryptedValue(CoreEnum.dpa, response);
-                }),
-                switchMap(() => this.activityHttpService.findCache()),
-                tap(async (response) => {
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.activities, response.data.activities);
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.classifications, response.data.classifications);
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.categories, response.data.categories);
-
-                    this.loading = true;
                 })
             )
             .subscribe();

@@ -1,14 +1,4 @@
-import {
-    Directive,
-    ElementRef,
-    HostBinding,
-    inject,
-    Input,
-    OnChanges,
-    AfterViewInit,
-    Renderer2,
-    SimpleChanges
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostBinding, inject, Input, OnChanges, Renderer2, SimpleChanges } from '@angular/core';
 import { AbstractControl, Validators } from '@angular/forms';
 
 @Directive({
@@ -18,25 +8,19 @@ export class LabelDirective implements AfterViewInit, OnChanges {
     @HostBinding('style.display') display = 'block';
     @HostBinding('style.width') width = '100%';
     @HostBinding('style.whiteSpace') whiteSpace = 'normal';
-
-    private el = inject(ElementRef<HTMLElement>);
-    private renderer = inject(Renderer2);
-
-    private _required = false;
-    private _viewInit = false;
-
     /** Si se establece, este HTML reemplaza el contenido del <label>. */
     @Input() label: string | null = null;
-
     /** Si true, añade ":" al final cuando se usa `label`. */
     @Input() appendColon = false;
+    private el = inject(ElementRef<HTMLElement>);
+    private renderer = inject(Renderer2);
+    private _viewInit = false;
+
+    private _required = false;
 
     @Input()
     set required(control: AbstractControl | null) {
-        this._required =
-            !!control &&
-            (control.hasValidator(Validators.required) ||
-                control.hasValidator(Validators.requiredTrue));
+        this._required = !!control && (control.hasValidator(Validators.required) || control.hasValidator(Validators.requiredTrue));
         if (this._viewInit) this.updateRequiredIcon();
     }
 
@@ -67,7 +51,7 @@ export class LabelDirective implements AfterViewInit, OnChanges {
 
     private setInnerHTML(html: string) {
         // Reemplaza el HTML del label (controlado por el dev).
-        this.renderer.setProperty(this.el.nativeElement, 'innerHTML', html);
+        this.renderer.setProperty(this.el.nativeElement, 'innerHTML', html + ':');
     }
 
     private updateRequiredIcon(): void {

@@ -49,7 +49,7 @@ export default class SignInComponent {
 
     private buildForm() {
         this.form = this._formBuilder.group({
-            username: [null, [Validators.required, invalidEmailValidator()]],
+            username: [null, [Validators.required]],
             password: [null, [Validators.required]]
         });
     }

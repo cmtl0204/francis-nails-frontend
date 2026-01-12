@@ -221,6 +221,10 @@ export const MY_ROUTES = {
     },
     authPages: {
         base: 'auth',
+        dashboard: {
+            base: 'dashboard',
+            absolute: '/auth/dashboard'
+        },
         signIn: {
             base: 'sign-in',
             absolute: '/auth/sign-in'
@@ -232,6 +236,21 @@ export const MY_ROUTES = {
         passwordReset: {
             base: 'password-reset',
             absolute: '/auth/password-reset'
+        }
+    },
+    adminPages: {
+        base: 'admin',
+        user: {
+            base: 'users',
+            absolute: '/main/admin/users',
+            form: {
+                base: 'users/form',
+                absolute: '/main/admin/users/form'
+            },
+            profile: {
+                base: 'users/profile',
+                absolute: '/main/admin/users/profile'
+            }
         }
     },
     guessPages: {

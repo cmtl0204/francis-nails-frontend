@@ -1,4 +1,4 @@
-export type ColumnType = 'object' | 'date' | 'number' | 'string' | 'boolean';
+export type ColumnType = 'object' | 'date' | 'number' | 'string' | 'boolean' | 'array' | 'arrayObject';
 
 export interface ColInterface {
     field: string;

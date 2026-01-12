@@ -36,7 +36,7 @@
                 label="lo que sea">
             </label>
 
-            <input type="text" id="other" pInputText formControlName="other">
+            <input pInputText type="text" id="other" formControlName="other">
 
             <p-message
                 appErrorMessage
@@ -170,7 +170,7 @@
                     id="certifiedIssueAt"
                     formControlName="certifiedIssueAt"
                     [showIcon]="true"
-                    dateFormat="yy-mm-dd"
+                    [dateFormat]="DateFormatEnum.datePicker"
                     appendTo="body">
                 </p-datepicker>
 

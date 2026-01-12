@@ -19,12 +19,10 @@ import { Textarea } from 'primeng/textarea';
 import { Button } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
 import { CatalogueInterface } from '@utils/interfaces';
-import { AppointmentStatusPipe } from '@utils/pipes';
-import { AppointmentStatusColorPipe } from '@utils/pipes/appointments-status-color.pipe';
 
 @Component({
     selector: 'app-appointments',
-    imports: [FullCalendarModule, Dialog, DatePicker, ErrorMessageDirective, Fluid, InputText, LabelDirective, Message, ReactiveFormsModule, Select, Textarea, Button, AppointmentStatusPipe, AppointmentStatusColorPipe],
+    imports: [FullCalendarModule, Dialog, DatePicker, ErrorMessageDirective, Fluid, InputText, LabelDirective, Message, ReactiveFormsModule, Select, Textarea, Button],
     templateUrl: './appointments.html',
     styleUrl: './appointments.scss'
 })
@@ -227,7 +225,5 @@ export class Appointments implements OnInit {
 
     confirm() {}
 
-    cancel(){
-
-    }
+    cancel() {}
 }

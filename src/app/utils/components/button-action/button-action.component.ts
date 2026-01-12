@@ -7,6 +7,7 @@ import { Ripple } from 'primeng/ripple';
 import { NgClass } from '@angular/common';
 import { Button } from 'primeng/button';
 import { PanelMenu } from 'primeng/panelmenu';
+import { environment } from '@env/environment';
 
 @Component({
     selector: 'app-button-action',
@@ -30,4 +31,6 @@ export class ButtonActionComponent {
     close(): void {
         this.isHide.emit(false);
     }
+
+    protected readonly environment = environment;
 }

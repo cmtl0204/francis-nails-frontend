@@ -8,6 +8,7 @@ import { environment } from '@env/environment';
 import { AuthService } from '@modules/auth/auth.service';
 import { Button } from 'primeng/button';
 import { Tooltip } from 'primeng/tooltip';
+import { MY_ROUTES } from '@routes';
 
 @Component({
     selector: 'app-topbar',
@@ -48,9 +49,9 @@ import { Tooltip } from 'primeng/tooltip';
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
                     @if (authService.auth && authService.role) {
-                        <p-button type="button" [text]="true" [raised]="true" [rounded]="true" [label]="authService.auth.username" pTooltip="Mi Perfil" [icon]="PrimeIcons.USER" />
+                        <p-button type="button" (onClick)="redirectProfile()" [text]="true" [raised]="true" [rounded]="true" [label]="authService.auth.username" pTooltip="Mi Perfil" [icon]="PrimeIcons.USER" />
 
-                        <p-button type="button" [text]="true" [raised]="true" [rounded]="true" severity="warn" [label]="authService.role.name" pTooltip="Mi Rol" />
+                        <p-button type="button" [icon]="PrimeIcons.VERIFIED" [text]="true" [raised]="true" [rounded]="true" severity="warn" [label]="authService.role.name" pTooltip="Mi Rol" />
                     }
                     <p-button (onClick)="signOut()" type="button" [raised]="true" [rounded]="true" severity="danger" pTooltip="Cerrar Sesión" [icon]="PrimeIcons.POWER_OFF" />
                 </div>
@@ -74,5 +75,9 @@ export class AppTopbar {
 
     signOut() {
         this.authService.removeLogin();
+    }
+
+    redirectProfile() {
+        this._router.navigate([MY_ROUTES.adminPages.user.profile.absolute]);
     }
 }

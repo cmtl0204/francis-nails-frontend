@@ -3,17 +3,17 @@ import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
-import { AppConfigurator } from './app.configurator';
-import { LayoutService } from '../service/layout.service';
-import { environment } from '@env/environment';
 import { Breadcrumb } from 'primeng/breadcrumb';
-import { BreadcrumbService } from '../service/breadcrumb.service';
+import { BreadcrumbService } from '@layout/service';
 
 @Component({
     selector: 'app-breadcrumb',
     standalone: true,
     imports: [RouterModule, CommonModule, StyleClassModule, Breadcrumb],
-    template: ` <p-breadcrumb class="max-w-full" [model]="breadcrumbService.items()" [home]="home" /> `
+    template: `
+        <p-breadcrumb class="max-w-full" [model]="breadcrumbService.items()" [home]="home" />
+        <br>
+    `
 })
 export class AppBreadcrumb implements OnInit {
     protected readonly breadcrumbService = inject(BreadcrumbService);

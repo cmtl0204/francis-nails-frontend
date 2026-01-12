@@ -24,7 +24,7 @@ export interface UserInterface {
   password: string;
   passwordChanged: boolean;
   phone: string;
-  suspendedAt: Date;
+  suspendedAt: Date | null;
   username: string;
   termsConditions: string;
 }

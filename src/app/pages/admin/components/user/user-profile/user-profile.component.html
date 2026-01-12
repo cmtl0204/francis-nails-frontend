@@ -1,0 +1,468 @@
+<p-toolbar>
+    <ng-template #start>
+        <!-- title -->
+        <div class="custom-section-title-form">Mi Perfil:</div>
+    </ng-template>
+    <ng-template #center>
+        <div class="ml-2">
+            Mis Roles:
+        </div>
+
+        <!-- roles -->
+        @for (role of roles; track role.id) {
+            <div class="ml-2">
+                <p-tag [value]="role.name" severity="secondary" [icon]="PrimeIcons.VERIFIED" />
+            </div>
+        }
+    </ng-template>
+    <ng-template #end>
+        <!-- actions -->
+        <p-button label="Guardar" [icon]="PrimeIcons.SAVE" (onClick)="onSubmit()" />
+    </ng-template>
+</p-toolbar>
+
+<p-divider />
+
+<div class="custom-grid-form">
+    <div class="md:col-span-6 custom-field-form">
+        <p-fluid class="custom-card-form">
+            <div class="custom-grid-form">
+                <div class="md:col-span-12 custom-field-form">
+                    <form [formGroup]="form" class="custom-grid-form">
+                        <!-- avatarField -->
+                        <div class="md:col-span-12 custom-field-form">
+                            <label
+                                appLabel
+                                for="avatar"
+                                [required]="avatarField"
+                                label="Foto de perfil">
+                            </label>
+
+                            <p-avatar
+                                [image]="avatarUrl ? avatarUrl:undefined"
+                                [icon]="avatarUrl ? undefined:PrimeIcons.USER"
+                                size="xlarge"
+                                shape="circle"
+                                (click)="fileInput.click()"
+                                pTooltip="Haga click para cambiar" />
+
+                            <input
+                                #fileInput
+                                type="file"
+                                accept="image/*"
+                                hidden
+                                (change)="uploadAvatar($event)" />
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="avatarField.errors"
+                                [touched]="avatarField.touched"
+                                [dirty]="avatarField.dirty" />
+                        </div>
+
+                        <!-- identificationTypeField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="identificationType"
+                                [required]="identificationTypeField"
+                                label="Tipo de identificación">
+                            </label>
+
+                            <p-select
+                                id="identificationType"
+                                dataKey="id"
+                                [options]="identificationTypes"
+                                formControlName="identificationType"
+                                optionLabel="name"
+                                appendTo="body" />
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="identificationTypeField.errors"
+                                [touched]="identificationTypeField.touched"
+                                [dirty]="identificationTypeField.dirty" />
+                        </div>
+
+                        <!-- identificationField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="identification"
+                                [required]="identificationField"
+                                label="Identificación">
+                            </label>
+
+                            <input type="text" pInputText formControlName="identification">
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="identificationField.errors"
+                                [touched]="identificationField.touched"
+                                [dirty]="identificationField.dirty" />
+                        </div>
+
+                        <!-- lastnameField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="lastname"
+                                [required]="lastnameField"
+                                label="Apellidos">
+                            </label>
+
+                            <input type="text" pInputText formControlName="lastname">
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="lastnameField.errors"
+                                [touched]="lastnameField.touched"
+                                [dirty]="lastnameField.dirty" />
+                        </div>
+
+                        <!-- nameField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="name"
+                                [required]="nameField"
+                                label="Nombres">
+                            </label>
+
+                            <input type="text" pInputText formControlName="name">
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="nameField.errors"
+                                [touched]="nameField.touched"
+                                [dirty]="nameField.dirty" />
+                        </div>
+
+                        <!-- emailField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="email"
+                                [required]="emailField">
+                                Correo Principal:
+                                @if (emailVerifiedAtField.value) {
+                                    <p-tag value="Verificado" severity="success" />
+                                } @else {
+                                    <p-tag value="No Verificado" severity="danger" />
+                                }
+                            </label>
+
+                            <input type="email" pInputText formControlName="email">
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="emailField.errors"
+                                [touched]="emailField.touched"
+                                [dirty]="emailField.dirty" />
+                        </div>
+
+                        <!-- personalEmailField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="personalEmail"
+                                [required]="personalEmailField"
+                                label="Correo Secundario">
+                            </label>
+
+                            <input type="email" pInputText formControlName="personalEmail">
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="personalEmailField.errors"
+                                [touched]="personalEmailField.touched"
+                                [dirty]="personalEmailField.dirty" />
+                        </div>
+
+                        <!-- cellPhoneField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="cellPhone"
+                                [required]="cellPhoneField"
+                                label="Teléfono celular">
+                            </label>
+
+                            <input type="text" pInputText formControlName="cellPhone">
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="cellPhoneField.errors"
+                                [touched]="cellPhoneField.touched"
+                                [dirty]="cellPhoneField.dirty" />
+                        </div>
+
+                        <!-- phoneField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="phone"
+                                [required]="phoneField"
+                                label="Teléfono convencional">
+                            </label>
+
+                            <input type="text" pInputText formControlName="phone">
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="phoneField.errors"
+                                [touched]="phoneField.touched"
+                                [dirty]="phoneField.dirty" />
+                        </div>
+
+                        <!-- birthdateField -->
+                        <div class="md:col-span-12 custom-field-form">
+                            <label
+                                appLabel
+                                for="birthdate"
+                                [required]="birthdateField"
+                                label="Fecha de nacimiento">
+                            </label>
+
+                            <p-datePicker
+                                id="birthdate"
+                                formControlName="birthdate"
+                                appendTo="body"
+                                [showIcon]="true"
+                                dateFormat="yy-mm-dd" />
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="birthdateField.errors"
+                                [touched]="birthdateField.touched"
+                                [dirty]="birthdateField.dirty" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </p-fluid>
+    </div>
+
+    <div class="md:col-span-6 custom-field-form">
+        <p-fluid class="custom-card-form">
+            <div class="custom-grid-form">
+                <div class="md:col-span-12 custom-field-form">
+                    <form [formGroup]="form" class="custom-grid-form">
+                        <!-- passwordField -->
+                        <div class="md:col-span-12 custom-field-form">
+                            <div class="custom-grid-form">
+                                <!-- passwordActivated -->
+                                <div class="md:col-span-12 custom-field-form">
+                                    <label
+                                        appLabel
+                                        for="passwordActivated"
+                                        label="Active para cambiar su contraseña">
+                                    </label>
+
+                                    <p-toggleswitch [formControl]="passwordActivated" />
+                                </div>
+
+                                <!-- passwordField -->
+                                <div class="md:col-span-8 custom-field-form">
+                                    <label
+                                        appLabel
+                                        for="password"
+                                        [required]="passwordField"
+                                        label="Contraseña">
+                                    </label>
+
+                                    <p-password
+                                        [toggleMask]="true"
+                                        [feedback]="false"
+                                        formControlName="password">
+                                    </p-password>
+
+                                    <p-message
+                                        appErrorMessage
+                                        [errors]="passwordField.errors"
+                                        [touched]="passwordField.touched"
+                                        [dirty]="passwordField.dirty" />
+                                </div>
+
+                                <!-- password autogenerated -->
+                                <div class="md:col-span-4 custom-field-form mt-8">
+                                    <p-button
+                                        label="Auto Generar"
+                                        [icon]="PrimeIcons.KEY"
+                                        severity="info"
+                                        [disabled]="passwordField.disabled"
+                                        (onClick)="autoGeneratePassword()" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- bloodTypeField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="bloodType"
+                                [required]="bloodTypeField"
+                                label="Tipo de sangre">
+                            </label>
+
+                            <p-select
+                                id="bloodType"
+                                dataKey="id"
+                                [options]="bloodTypes"
+                                formControlName="bloodType"
+                                optionLabel="name"
+                                appendTo="body" />
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="bloodTypeField.errors"
+                                [touched]="bloodTypeField.touched"
+                                [dirty]="bloodTypeField.dirty" />
+                        </div>
+
+                        <!-- ethnicOriginField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="ethnicOrigin"
+                                [required]="ethnicOriginField"
+                                label="Etnia">
+                            </label>
+
+                            <p-select
+                                id="ethnicOrigin"
+                                dataKey="id"
+                                [options]="ethnicOrigins"
+                                formControlName="ethnicOrigin"
+                                optionLabel="name"
+                                appendTo="body" />
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="ethnicOriginField.errors"
+                                [touched]="ethnicOriginField.touched"
+                                [dirty]="ethnicOriginField.dirty" />
+                        </div>
+
+                        <!-- genderField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="gender"
+                                [required]="genderField"
+                                label="Género">
+                            </label>
+
+                            <p-select
+                                id="gender"
+                                dataKey="id"
+                                [options]="genders"
+                                formControlName="gender"
+                                optionLabel="name"
+                                appendTo="body" />
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="genderField.errors"
+                                [touched]="genderField.touched"
+                                [dirty]="genderField.dirty" />
+                        </div>
+
+                        <!-- sexField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="sex"
+                                [required]="sexField"
+                                label="Sexo">
+                            </label>
+
+                            <p-select
+                                id="sex"
+                                dataKey="id"
+                                [options]="sexes"
+                                formControlName="sex"
+                                optionLabel="name"
+                                appendTo="body" />
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="sexField.errors"
+                                [touched]="sexField.touched"
+                                [dirty]="sexField.dirty" />
+                        </div>
+
+                        <!-- maritalStatusField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="maritalStatus"
+                                [required]="maritalStatusField"
+                                label="Estado civil">
+                            </label>
+
+                            <p-select
+                                id="maritalStatus"
+                                dataKey="id"
+                                [options]="maritalStatuses"
+                                formControlName="maritalStatus"
+                                optionLabel="name"
+                                appendTo="body" />
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="maritalStatusField.errors"
+                                [touched]="maritalStatusField.touched"
+                                [dirty]="maritalStatusField.dirty" />
+                        </div>
+
+                        <!-- nationalityField -->
+                        <div class="md:col-span-6 custom-field-form">
+                            <label
+                                appLabel
+                                for="nationality"
+                                [required]="nationalityField"
+                                label="Nacionalidad">
+                            </label>
+
+                            <p-select
+                                id="nationality"
+                                dataKey="id"
+                                [options]="nationalities"
+                                formControlName="nationality"
+                                [filter]="true"
+                                filterBy="name"
+                                optionLabel="name"
+                                appendTo="body" />
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="nationalityField.errors"
+                                [touched]="nationalityField.touched"
+                                [dirty]="nationalityField.dirty" />
+                        </div>
+
+                        <!-- allergiesField -->
+                        <div class="md:col-span-12 custom-field-form">
+                            <label
+                                appLabel
+                                for="allergies"
+                                [required]="nationalityField"
+                                label="Alergias">
+                            </label>
+
+                            <textarea rows="4" cols="30" pTextarea formControlName="allergies" placeholder="Colocar ninguna, si no las tiene."></textarea>
+
+                            <p-message
+                                appErrorMessage
+                                [errors]="nationalityField.errors"
+                                [touched]="nationalityField.touched"
+                                [dirty]="nationalityField.dirty" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </p-fluid>
+    </div>
+</div>
+

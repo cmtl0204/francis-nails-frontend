@@ -31,6 +31,7 @@
 <p-fluid>
     @if (hasComplementaryServicesField.value) {
         <app-list-basic
+            title="Servicios Complementarios"
             [items]="items"
             [cols]="cols"
             [buttonActions]="buttonActions"
@@ -83,11 +84,11 @@
 
                 <div class="md:col-span-12 flex flex-col gap-2">
                     <label for="capacity" class="font-medium">Capacidad de Personas <span class="text-red-500">*</span></label>
-        <p-inputNumber 
-        formControlName="capacity" 
-        [min]="0" 
-        [max]="1000" 
-        showButtons 
+        <p-inputNumber
+        formControlName="capacity"
+        [min]="0"
+        [max]="1000"
+        showButtons
         inputId="Capacity"
         class="w-full">
         </p-inputNumber>

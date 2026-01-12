@@ -31,6 +31,18 @@ export function registeredIdentificationValidator(authHttpService: AuthHttpServi
     };
 }
 
+export function userExistValidator(authHttpService: AuthHttpService, userId = ''): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+        if (!control.value) return of(null);
+
+        return of(control.value).pipe(
+            debounceTime(300),
+            take(1),
+            switchMap((value) => authHttpService.verifyUserExist(value, userId).pipe(map((response) => (response ? { userExist: true } : null))))
+        );
+    };
+}
+
 export function unregisteredUserValidator(authHttpService: AuthHttpService): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
         if (!control.value) return of(null);
@@ -75,5 +87,45 @@ export function dateGreaterThan(startDateKey: string, endDateKey: string): Valid
         form.get(endDateKey)?.setErrors(null);
 
         return null;
+    };
+}
+
+export function passwordPolicesValidator(): ValidatorFn {
+    const upperRegex = /[A-Z]/;
+    const lowerRegex = /(?:.*[a-z]){4,}/;
+    const numberRegex = /(?:.*\d){2,}/;
+    const specialCharacterRegex = /[._+\-*@$!]/;
+
+    return (control: AbstractControl): ValidationErrors | null => {
+        const value = control.value;
+
+        const errors: any = {};
+
+        if (!upperRegex.test(value)) {
+            errors.invalidPasswordPolicesUpper = {
+                length: 1
+            };
+        }
+
+        if (!lowerRegex.test(value)) {
+            errors.invalidPasswordPolicesLower = {
+                length: 4
+            };
+        }
+
+        if (!numberRegex.test(value)) {
+            errors.invalidPasswordPolicesNumber = {
+                length: 2
+            };
+        }
+
+        if (!specialCharacterRegex.test(value)) {
+            errors.invalidPasswordPolicesSpecialCharacter = {
+                length: 1,
+                allowed: '. _ + - * @ $ !'
+            };
+        }
+
+        return Object.keys(errors).length ? errors : null;
     };
 }

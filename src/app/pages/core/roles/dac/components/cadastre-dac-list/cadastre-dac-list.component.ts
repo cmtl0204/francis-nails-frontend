@@ -3,12 +3,11 @@ import { MenuItem } from 'primeng/api';
 import { PaginationInterface } from '@utils/interfaces';
 import { ColInterface } from '@utils/interfaces/col.interface';
 import { CoreService } from '@utils/services';
-import { ListComponent } from '@/utils/components/list/list.component';
 import { CadastreDacHttpService } from '@/pages/core/roles/dac/services';
 
 @Component({
     selector: 'app-cadastre-dac-list',
-    imports: [ListComponent],
+    imports: [],
     templateUrl: './cadastre-dac-list.component.html',
     styleUrl: './cadastre-dac-list.component.scss'
 })

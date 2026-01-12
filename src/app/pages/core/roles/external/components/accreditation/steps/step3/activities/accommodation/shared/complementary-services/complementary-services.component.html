@@ -31,12 +31,12 @@
 <p-fluid>
     @if (hasComplementaryServicesField.value) {
         <app-list-basic
+            title="Servicios Complementarios"
             [items]="items"
             [cols]="cols"
             [buttonActions]="buttonActions"
             (onCreate)="create()"
-            (onSelect)="buildButtonActions($event)"
-        />
+            (onSelect)="buildButtonActions($event)" />
     }
 </p-fluid>
 

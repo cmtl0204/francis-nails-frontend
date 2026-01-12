@@ -1,0 +1,14 @@
+<p-fluid class="custom-card-form">
+    @if (pagination) {
+        <app-list
+            title="Listado de Usuarios"
+            [pagination]="pagination"
+            [items]="items"
+            [cols]="cols"
+            [buttonActions]="buttonActions"
+            (onCreate)="onCreate()"
+            (onSearch)="onSearch($event)"
+            (onSelect)="buildButtonActions($event)"
+            (onPagination)="onPagination($event)" />
+    }
+</p-fluid>

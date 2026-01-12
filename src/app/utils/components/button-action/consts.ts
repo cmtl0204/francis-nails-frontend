@@ -18,6 +18,18 @@ export const deleteButtonAction = {
     icon: PrimeIcons.TRASH
 };
 
+export const suspendButtonAction = {
+    id: 'suspend',
+    label: 'Suspender',
+    icon: PrimeIcons.BAN
+};
+
+export const activateButtonAction = {
+    id: 'activate',
+    label: 'Activar',
+    icon: PrimeIcons.HISTORY
+};
+
 export const attachButtonAction = {
     id: 'attach',
     label: 'adjuntar',

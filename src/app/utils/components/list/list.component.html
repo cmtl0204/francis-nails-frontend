@@ -1,6 +1,6 @@
 <p-table
-    [value]="items"
-    [columns]="cols"
+    [value]="items()"
+    [columns]="cols()"
     [tableStyle]="{ 'min-width': '50rem' }"
     [lazy]="true"
     [loading]="coreService.loading()">
@@ -8,7 +8,7 @@
         <p-fluid>
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                 <div class="md:col-span-8 flex flex-col gap-2">
-                    <span class="text-xl font-bold">{{ title }}</span>
+                    <span class="text-xl font-bold">{{ title() }}</span>
                 </div>
 
                 <div class="md:col-span-4 flex flex-col gap-2">
@@ -38,7 +38,7 @@
         </tr>
     </ng-template>
 
-    <ng-template #body let-item let-columns="columns">
+    <ng-template #body let-item let-columns="columns" let-rowIndex="rowIndex">
         <tr>
             @for (col of columns; track col) {
                 @switch (col?.type) {
@@ -48,6 +48,17 @@
                     @case ('date') {
                         <td>{{ item[col.field] | date }}</td>
                     }
+                    @case ('arrayObject') {
+                        <td>
+                            <ul>
+                                @for (arr of item[col?.field]; track arr) {
+                                    <li>
+                                        <p-tag [value]="arr[col?.objectName]" class="mb-2" severity="secondary" />
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                    }
                     @default {
                         <td>{{ item[col.field] }}</td>
                     }
@@ -56,10 +67,10 @@
 
             <td>
                 <app-button-action
-                    [buttonActions]="buttonActions"
-                    [enabled]="isButtonActionsEnabled"
-                    (isHide)="isButtonActionsEnabled=$event"
-                    (click)="selectItem(item)">
+                    [buttonActions]="buttonActions()"
+                    [enabled]="isButtonActionsEnabled()"
+                    (isHide)="isButtonActionsEnabled.set($event)"
+                    (click)="selectItem(item,rowIndex)">
                 </app-button-action>
             </td>
         </tr>
@@ -76,5 +87,5 @@
 
 <p-paginator
     (onPageChange)="onPageChange($event)"
-    [rows]="pagination.limit"
-    [totalRecords]="pagination.totalItems" />
+    [rows]="pagination().limit"
+    [totalRecords]="pagination().totalItems" />

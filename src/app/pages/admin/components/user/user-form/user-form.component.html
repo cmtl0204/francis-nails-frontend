@@ -1,0 +1,192 @@
+<p-fluid class="custom-card-form">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="custom-grid-form">
+        <!-- title -->
+        <div class="md:col-span-12 custom-field-form">
+            <div class="custom-section-title-form">Formulario Usuario:</div>
+        </div>
+
+        <!-- identificationField -->
+        <div class="md:col-span-3 custom-field-form">
+            <label
+                appLabel
+                for="identification"
+                [required]="identificationField"
+                label="Identificación (nombre de usuario)">
+            </label>
+
+            <input type="text" pInputText formControlName="identification" [pAutoFocus]="true">
+
+            <p-message
+                appErrorMessage
+                [errors]="identificationField.errors"
+                [touched]="identificationField.touched"
+                [dirty]="identificationField.dirty" />
+        </div>
+
+        <!-- lastnameField -->
+        <div class="md:col-span-3 custom-field-form">
+            <label
+                appLabel
+                for="lastname"
+                [required]="lastnameField"
+                label="Apellidos">
+            </label>
+
+            <input type="text" pInputText formControlName="lastname">
+
+            <p-message
+                appErrorMessage
+                [errors]="lastnameField.errors"
+                [touched]="lastnameField.touched"
+                [dirty]="lastnameField.dirty" />
+        </div>
+
+        <!-- nameField -->
+        <div class="md:col-span-3 custom-field-form">
+            <label
+                appLabel
+                for="name"
+                [required]="nameField"
+                label="Nombres">
+            </label>
+
+            <input type="text" pInputText formControlName="name">
+
+            <p-message
+                appErrorMessage
+                [errors]="nameField.errors"
+                [touched]="nameField.touched"
+                [dirty]="nameField.dirty" />
+        </div>
+
+        <!-- emailField -->
+        <div class="md:col-span-3 custom-field-form">
+            <label
+                appLabel
+                for="email"
+                [required]="emailField"
+                label="Correo Electrónico">
+            </label>
+
+            <input type="email" pInputText formControlName="email">
+
+            <p-message
+                appErrorMessage
+                [errors]="emailField.errors"
+                [touched]="emailField.touched"
+                [dirty]="emailField.dirty" />
+        </div>
+
+        <!-- rolesField -->
+        <div class="md:col-span-12 custom-field-form">
+            <label
+                appLabel
+                for="roles"
+                [required]="rolesField"
+                label="Roles">
+            </label>
+
+            <p-multiSelect
+                id="roles"
+                [options]="roles"
+                formControlName="roles"
+                optionLabel="name"
+                [filter]="true"
+                display="chip"
+                [maxSelectedLabels]="2"
+                appendTo="body"
+                placeholder="Seleccione..." />
+
+            <p-message
+                appErrorMessage
+                [errors]="rolesField.errors"
+                [touched]="rolesField.touched"
+                [dirty]="rolesField.dirty" />
+        </div>
+
+        <!-- selected roles -->
+        @if (rolesField.value && rolesField.value.length > 1) {
+            @for (role of rolesField.value; track role.id) {
+                <div class="md:col-span-2 custom-field-form">
+                    <p-tag [value]="role.name"></p-tag>
+                </div>
+            }
+        }
+
+        <div class="md:col-span-12 custom-field-form">
+            <div class="custom-grid-form">
+                <!-- passwordActivated -->
+                <div class="md:col-span-2 custom-field-form">
+                    <label
+                        appLabel
+                        for="passwordActivated"
+                        label="Activar contraseña">
+                    </label>
+
+                    <p-toggleswitch [formControl]="passwordActivated" />
+                </div>
+
+                <!-- passwordChanged -->
+                <div class="md:col-span-10 custom-field-form">
+                    <label
+                        appLabel
+                        for="passwordChanged"
+                        [required]="passwordChangedField"
+                        label="Pedir al usuario que cambie su contraseña cuando inicie sesión">
+                    </label>
+
+                    <p-toggleswitch id="passwordChanged" formControlName="passwordChanged" />
+
+                    <p-message
+                        appErrorMessage
+                        [errors]="passwordChangedField.errors"
+                        [touched]="passwordChangedField.touched"
+                        [dirty]="passwordChangedField.dirty" />
+                </div>
+
+                <!-- passwordField -->
+                <div class="md:col-span-5 custom-field-form">
+                    <label
+                        appLabel
+                        for="password"
+                        [required]="passwordField"
+                        label="Contraseña">
+                    </label>
+
+                    <p-password
+                        [toggleMask]="true"
+                        [feedback]="false"
+                        formControlName="password">
+                    </p-password>
+
+                    <p-message
+                        appErrorMessage
+                        [errors]="passwordField.errors"
+                        [touched]="passwordField.touched"
+                        [dirty]="passwordField.dirty" />
+                </div>
+
+                <!-- password autogenerated -->
+                <div class="md:col-span-2 custom-field-form mt-8">
+                    <p-button
+                        label="Auto Generar"
+                        [icon]="PrimeIcons.KEY"
+                        severity="info"
+                        [disabled]="passwordField.disabled"
+                        (onClick)="autoGeneratePassword()" />
+                </div>
+            </div>
+        </div>
+
+        <!-- actions -->
+        <p-divider class="md:col-span-12 custom-field-form" />
+
+        <div class="md:col-span-6 custom-field-form">
+            <p-button label="Cancelar" [icon]="PrimeIcons.ARROW_LEFT" severity="warn" (onClick)="return()" />
+        </div>
+
+        <div class="md:col-span-6 custom-field-form">
+            <p-button type="submit" label="Guardar" [icon]="PrimeIcons.SAVE" />
+        </div>
+    </form>
+</p-fluid>
