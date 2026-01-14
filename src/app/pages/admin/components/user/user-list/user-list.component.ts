@@ -4,7 +4,7 @@ import { UserHttpService } from '@/pages/admin/user-http.service';
 import { ColInterface, PaginationInterface } from '@utils/interfaces';
 import { ConfirmationService, MenuItem, PrimeIcons } from 'primeng/api';
 import { BreadcrumbService } from '@layout/service';
-import { activateButtonAction, editButtonAction, suspendButtonAction } from '@utils/components/button-action/consts';
+import { activateButtonAction, deleteButtonAction, editButtonAction, suspendButtonAction } from '@utils/components/button-action/consts';
 import { CustomMessageService } from '@utils/services';
 import { Router } from '@angular/router';
 import { MY_ROUTES } from '@routes';
@@ -20,19 +20,19 @@ import { Fluid } from 'primeng/fluid';
 })
 export default class UserListComponent implements OnInit {
     protected readonly PrimeIcons = PrimeIcons;
-    protected readonly customMessageService = inject(CustomMessageService);
-    protected readonly router = inject(Router);
-    protected index = -1;
-    protected isVisibleModal = false;
+
     protected cols: ColInterface[] = [];
     protected items: UserInterface[] = [];
     protected pagination!: PaginationInterface;
     protected buttonActions: MenuItem[] = [];
     protected currentSearch: string = '';
-    private confirmationService = inject(ConfirmationService);
-    private readonly userHttpService = inject(UserHttpService);
+
+    protected readonly router = inject(Router);
+    protected readonly customMessageService = inject(CustomMessageService);
+    private readonly confirmationService = inject(ConfirmationService);
     private readonly breadcrumbService = inject(BreadcrumbService);
     private readonly authService = inject(AuthService);
+    private readonly userHttpService = inject(UserHttpService);
 
     constructor() {
         this.breadcrumbService.setItems([{ label: 'Listado de Usuarios' }]);
@@ -59,21 +59,23 @@ export default class UserListComponent implements OnInit {
             { header: 'Nombres', field: 'name' },
             { header: 'Apellidos', field: 'lastname' },
             { header: 'Email', field: 'email' },
+            { header: 'Email', field: 'createdAt' },
             { header: 'Roles', field: 'roles', type: 'arrayObject', objectName: 'name' }
         ];
     }
 
-    buildButtonActions({ item, index }: { item: any; index: number }) {
-        if (!item) {
-            this.customMessageService.showError({ summary: 'El registro no existe', detail: 'Vuelva a intentar' });
-            return;
-        }
-
+    buildButtonActions(item: any, index: number) {
         this.buttonActions = [
             {
                 ...editButtonAction,
                 command: () => {
                     this.edit(item.id);
+                }
+            },
+            {
+                ...deleteButtonAction,
+                command: () => {
+                    this.delete(item.id, index);
                 }
             }
         ];
@@ -101,7 +103,7 @@ export default class UserListComponent implements OnInit {
         this.router.navigate([MY_ROUTES.adminPages.user.form.absolute, id]);
     }
 
-    suspend(id: string, index: number) {
+    delete(id: string, index: number) {
         this.confirmationService.confirm({
             message: '¿Está seguro de eliminar?',
             header: 'Eliminar',
@@ -114,6 +116,31 @@ export default class UserListComponent implements OnInit {
             },
             acceptButtonProps: {
                 label: 'Sí, Eliminar'
+            },
+            accept: () => {
+                this.userHttpService.delete(id).subscribe({
+                    next: (_) => {
+                        this.items.splice(index, 1);
+                    }
+                });
+            },
+            key: 'confirmdialog'
+        });
+    }
+
+    suspend(id: string, index: number) {
+        this.confirmationService.confirm({
+            message: '¿Está seguro de suspender al usuario?',
+            header: 'Suspender',
+            icon: PrimeIcons.BAN,
+            rejectButtonStyleClass: 'p-button-text',
+            rejectButtonProps: {
+                label: 'Cancelar',
+                severity: 'danger',
+                text: true
+            },
+            acceptButtonProps: {
+                label: 'Sí, Suspender'
             },
             accept: () => {
                 this.userHttpService.suspend(id).subscribe({
@@ -145,5 +172,14 @@ export default class UserListComponent implements OnInit {
 
     onPagination(page: number) {
         this.loadData(page);
+    }
+
+    onSelect({ item, index }: { item: any; index: number }) {
+        if (!item) {
+            this.customMessageService.showError({ summary: 'El registro no existe', detail: 'Vuelva a intentar' });
+            return;
+        }
+
+        this.buildButtonActions(item, index);
     }
 }

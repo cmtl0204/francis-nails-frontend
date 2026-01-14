@@ -33,12 +33,13 @@ import { Tag } from 'primeng/tag';
 export default class UserFormComponent implements OnInit {
     protected readonly PrimeIcons = PrimeIcons;
 
-    protected readonly customMessageService = inject(CustomMessageService);
-    protected readonly router = inject(Router);
     protected form!: FormGroup;
     protected id = input.required<string>();
     protected roles: RoleInterface[] = [];
     protected passwordActivated = new FormControl(false);
+
+    protected readonly router = inject(Router);
+    protected readonly customMessageService = inject(CustomMessageService);
     private readonly authHttpService = inject(AuthHttpService);
     private readonly userHttpService = inject(UserHttpService);
     private readonly roleHttpService = inject(RoleHttpService);
