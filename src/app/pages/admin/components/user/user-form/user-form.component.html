@@ -1,10 +1,24 @@
-<p-fluid class="custom-card-form">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="custom-grid-form">
+<p-toolbar>
+    <ng-template #start>
         <!-- title -->
-        <div class="md:col-span-12 custom-field-form">
-            <div class="custom-section-title-form">Formulario Usuario:</div>
-        </div>
+        <div class="custom-section-title-form">Formulario Usuario:</div>
+    </ng-template>
 
+    <ng-template #center>
+
+    </ng-template>
+
+    <ng-template #end>
+        <!-- actions -->
+        <p-button label="Cancelar" [icon]="PrimeIcons.ARROW_LEFT" severity="warn" (onClick)="return()" />
+        <p-button type="button" label="Guardar" [icon]="PrimeIcons.SAVE" class="ml-2" (onClick)="onSubmit()" />
+    </ng-template>
+</p-toolbar>
+
+<p-divider />
+
+<p-fluid class="custom-card-form">
+    <form [formGroup]="form" class="custom-grid-form">
         <!-- identificationField -->
         <div class="md:col-span-3 custom-field-form">
             <label
@@ -14,7 +28,7 @@
                 label="Identificación">
             </label>
 
-            <input type="text" pInputText formControlName="identification" [pAutoFocus]="true">
+            <input pInputText type="text" id="identification" formControlName="identification" [pAutoFocus]="true">
 
             <p-message
                 appErrorMessage
@@ -32,7 +46,7 @@
                 label="Apellidos">
             </label>
 
-            <input type="text" pInputText formControlName="lastname">
+            <input pInputText type="text" id="lastname" formControlName="lastname">
 
             <p-message
                 appErrorMessage
@@ -50,7 +64,7 @@
                 label="Nombres">
             </label>
 
-            <input type="text" pInputText formControlName="name">
+            <input pInputText type="text" id="name" formControlName="name">
 
             <p-message
                 appErrorMessage
@@ -65,10 +79,10 @@
                 appLabel
                 for="email"
                 [required]="emailField"
-                label="Correo Electrónico">
+                label="Correo electrónico">
             </label>
 
-            <input type="email" pInputText formControlName="email">
+            <input pInputText type="email" id="email" formControlName="email">
 
             <p-message
                 appErrorMessage
@@ -88,8 +102,8 @@
 
             <p-multiSelect
                 id="roles"
-                [options]="roles"
                 formControlName="roles"
+                [options]="roles"
                 optionLabel="name"
                 [filter]="true"
                 display="chip"
@@ -176,17 +190,6 @@
                         (onClick)="autoGeneratePassword()" />
                 </div>
             </div>
-        </div>
-
-        <!-- actions -->
-        <p-divider class="md:col-span-12 custom-field-form" />
-
-        <div class="md:col-span-6 custom-field-form">
-            <p-button label="Cancelar" [icon]="PrimeIcons.ARROW_LEFT" severity="warn" (onClick)="return()" />
-        </div>
-
-        <div class="md:col-span-6 custom-field-form">
-            <p-button type="submit" label="Guardar" [icon]="PrimeIcons.SAVE" />
         </div>
     </form>
 </p-fluid>

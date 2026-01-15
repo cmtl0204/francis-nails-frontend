@@ -99,10 +99,6 @@ export default class UserListComponent implements OnInit {
         }
     }
 
-    edit(id: string) {
-        this.router.navigate([MY_ROUTES.adminPages.user.form.absolute, id]);
-    }
-
     delete(id: string, index: number) {
         this.confirmationService.confirm({
             message: '¿Está seguro de eliminar?',
@@ -159,6 +155,10 @@ export default class UserListComponent implements OnInit {
                 this.items[index].suspendedAt = null;
             }
         });
+    }
+
+    edit(id: string) {
+        this.router.navigate([MY_ROUTES.adminPages.user.form.absolute, id]);
     }
 
     onCreate() {

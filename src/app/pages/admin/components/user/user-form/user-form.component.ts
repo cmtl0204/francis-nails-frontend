@@ -23,34 +23,37 @@ import { ToggleSwitch } from 'primeng/toggleswitch';
 import { Divider } from 'primeng/divider';
 import { AutoFocus } from 'primeng/autofocus';
 import { Tag } from 'primeng/tag';
+import { Toolbar } from 'primeng/toolbar';
 
 @Component({
     selector: 'app-user-form',
-    imports: [Fluid, ReactiveFormsModule, LabelDirective, InputText, ErrorMessageDirective, Message, Button, Password, MultiSelect, ToggleSwitch, FormsModule, Divider, AutoFocus, Tag],
+    imports: [Fluid, ReactiveFormsModule, LabelDirective, InputText, ErrorMessageDirective, Message, Button, Password, MultiSelect, ToggleSwitch, FormsModule, Divider, AutoFocus, Tag, Toolbar],
     templateUrl: './user-form.component.html',
     styleUrl: './user-form.component.scss'
 })
 export default class UserFormComponent implements OnInit {
     protected readonly PrimeIcons = PrimeIcons;
 
-    protected form!: FormGroup;
-    protected id = input.required<string>();
-    protected roles: RoleInterface[] = [];
-    protected passwordActivated = new FormControl(false);
-
     protected readonly router = inject(Router);
     protected readonly customMessageService = inject(CustomMessageService);
+    private readonly breadcrumbService = inject(BreadcrumbService);
+    private readonly formBuilder = inject(FormBuilder);
+
     private readonly authHttpService = inject(AuthHttpService);
     private readonly userHttpService = inject(UserHttpService);
     private readonly roleHttpService = inject(RoleHttpService);
-    private readonly breadcrumbService = inject(BreadcrumbService);
-    private readonly formBuilder = inject(FormBuilder);
+
+    protected id = input.required<string>();
+    protected form!: FormGroup;
+
+    protected roles: RoleInterface[] = [];
+    protected passwordActivated = new FormControl(false);
 
     constructor() {
         this.breadcrumbService.setItems([{ label: 'Listado de Usuarios', routerLink: MY_ROUTES.adminPages.user.absolute }, { label: 'Formulario' }]);
 
-        this.loadRoles();
         this.buildForm();
+        this.loadRoles();
     }
 
     get identificationField(): AbstractControl {
@@ -94,14 +97,10 @@ export default class UserFormComponent implements OnInit {
             this.passwordActivated.setValue(true);
             this.passwordField.enable();
         }
-    }
 
-    loadRoles() {
-        this.roleHttpService.findCatalogues().subscribe({
-            next: (response) => {
-                this.roles = response;
-            }
-        });
+        // if (this.id()) {
+        //     this.find(this.id());
+        // }
     }
 
     buildForm() {
@@ -150,6 +149,14 @@ export default class UserFormComponent implements OnInit {
         });
     }
 
+    loadRoles() {
+        this.roleHttpService.findCatalogues().subscribe({
+            next: (response) => {
+                this.roles = response;
+            }
+        });
+    }
+
     onSubmit() {
         if (this.validateForm()) {
             if (this.id()) {
@@ -160,29 +167,13 @@ export default class UserFormComponent implements OnInit {
         }
     }
 
-    create() {
-        this.userHttpService.create(this.form.value).subscribe({
-            next: (_) => {
-                this.router.navigate([MY_ROUTES.adminPages.user.absolute]);
-            }
-        });
-    }
-
-    update() {
-        this.userHttpService.update(this.id(), this.form.value).subscribe({
-            next: (_) => {
-                this.router.navigate([MY_ROUTES.adminPages.user.absolute]);
-            }
-        });
-    }
-
     validateForm() {
         const errors: string[] = [];
 
         if (this.identificationField.invalid) errors.push('Identificación');
         if (this.nameField.invalid) errors.push('Nombres');
         if (this.lastnameField.invalid) errors.push('Apellidos');
-        if (this.emailField.invalid) errors.push('Email');
+        if (this.emailField.invalid) errors.push('Correo electrónico');
         if ((this.passwordActivated && this.passwordField.invalid) || (!this.id() && this.passwordField.invalid)) errors.push('Contraseña');
         if (this.rolesField.invalid) errors.push('Roles');
 
@@ -193,6 +184,22 @@ export default class UserFormComponent implements OnInit {
         }
 
         return true;
+    }
+
+    create() {
+        this.userHttpService.create(this.form.value).subscribe({
+            next: (_) => {
+                this.return();
+            }
+        });
+    }
+
+    update() {
+        this.userHttpService.update(this.id(), this.form.value).subscribe({
+            next: (_) => {
+                this.return();
+            }
+        });
     }
 
     return() {
