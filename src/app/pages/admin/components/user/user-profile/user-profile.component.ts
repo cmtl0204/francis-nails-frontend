@@ -4,26 +4,14 @@ import { PrimeIcons } from 'primeng/api';
 import { BreadcrumbService } from '@layout/service';
 import { CustomMessageService } from '@utils/services';
 import { Router } from '@angular/router';
-import {
-    AbstractControl,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Fluid } from 'primeng/fluid';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { InputText } from 'primeng/inputtext';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { Message } from 'primeng/message';
 import { Button } from 'primeng/button';
-import {
-    invalidEmailValidator,
-    passwordPolicesValidator,
-    userExistValidator
-} from '@utils/form-validators/custom-validator';
+import { invalidEmailValidator, passwordPolicesValidator, userExistValidator } from '@utils/form-validators/custom-validator';
 import { Password } from 'primeng/password';
 import { generatePassword } from '@utils/helpers/password-generate.helper';
 import { RoleInterface } from '@/pages/auth/interfaces';
@@ -44,10 +32,11 @@ import { environment } from '@env/environment';
 import { uploadFileValidator } from '@utils/helpers/file.helper';
 import { Toolbar } from 'primeng/toolbar';
 import { Textarea } from 'primeng/textarea';
+import { Card } from 'primeng/card';
 
 @Component({
     selector: 'app-user-profile',
-    imports: [Button, Divider, ErrorMessageDirective, Fluid, FormsModule, InputText, LabelDirective, Message, Password, ReactiveFormsModule, Tag, ToggleSwitch, DatePicker, Select, Avatar, Tooltip, Toolbar, Textarea],
+    imports: [Button, Divider, ErrorMessageDirective, Fluid, FormsModule, InputText, LabelDirective, Message, Password, ReactiveFormsModule, Tag, ToggleSwitch, DatePicker, Select, Avatar, Tooltip, Toolbar, Textarea, Card],
     templateUrl: './user-profile.component.html',
     styleUrl: './user-profile.component.scss'
 })
@@ -163,16 +152,6 @@ export default class UserProfileComponent implements OnInit {
             this.find(this.authService.auth.id);
             this.identificationField.setAsyncValidators(userExistValidator(this.authHttpService, this.authService.auth.id));
         }
-
-        this.passwordActivated.valueChanges.subscribe((value) => {
-            if (value) {
-                this.passwordField.enable();
-            } else {
-                this.passwordField.disable();
-            }
-
-            this.passwordField.updateValueAndValidity();
-        });
     }
 
     async loadCatalogues() {
@@ -221,6 +200,16 @@ export default class UserProfileComponent implements OnInit {
     watchFormChanges() {
         this.identificationField.valueChanges.subscribe((value) => {
             this.usernameField.setValue(value);
+        });
+
+        this.passwordActivated.valueChanges.subscribe((value) => {
+            if (value) {
+                this.passwordField.enable();
+            } else {
+                this.passwordField.disable();
+            }
+
+            this.passwordField.updateValueAndValidity();
         });
     }
 
@@ -273,7 +262,7 @@ export default class UserProfileComponent implements OnInit {
         if (this.nameField.invalid) errors.push('Nombres');
         if (this.lastnameField.invalid) errors.push('Apellidos');
         if (this.emailField.invalid) errors.push('Email');
-        if ((this.passwordActivated && this.passwordField.invalid) || (!this.authService.auth.id && this.passwordField.invalid)) errors.push('Contraseña');
+        if (this.passwordField.invalid && (this.passwordActivated || !this.authService.auth.id)) errors.push('Contraseña');
         if (this.cellPhoneField.invalid) errors.push('Teléfono celular');
         if (this.phoneField.invalid) errors.push('Teléfono');
         if (this.birthdateField.invalid) errors.push('Fecha de nacimiento');
@@ -285,7 +274,6 @@ export default class UserProfileComponent implements OnInit {
         if (this.sexField.invalid) errors.push('Sexo');
         if (this.maritalStatusField.invalid) errors.push('Estado civil');
         if (this.nationalityField.invalid) errors.push('Nacionalidad');
-        if (this.avatarField.invalid) errors.push('Foto de perfil');
 
         if (errors.length > 0) {
             this.form.markAllAsTouched();

@@ -1,26 +1,26 @@
 import { Component, inject, input, OnInit } from '@angular/core';
-import { UserHttpService } from '@/pages/admin/user-http.service';
-import { PrimeIcons } from 'primeng/api';
-import { BreadcrumbService } from '@layout/service';
-import { CustomMessageService } from '@utils/services';
-import { Router } from '@angular/router';
-import { MY_ROUTES } from '@routes';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Fluid } from 'primeng/fluid';
-import { LabelDirective } from '@utils/directives/label.directive';
-import { InputText } from 'primeng/inputtext';
+import { Router } from '@angular/router';
+import { PrimeIcons } from 'primeng/api';
+import { invalidEmailValidator, passwordPolicesValidator, userExistValidator } from '@utils/form-validators/custom-validator';
+import { generatePassword } from '@utils/helpers/password-generate.helper';
+import { MY_ROUTES } from '@routes';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
+import { BreadcrumbService } from '@layout/service';
+import { LabelDirective } from '@utils/directives/label.directive';
+import { AuthHttpService } from '@/pages/auth/auth-http.service';
+import { CustomMessageService } from '@utils/services';
+import { UserHttpService } from '@/pages/admin/user-http.service';
+import { RoleHttpService } from '@/pages/admin/role-http.service';
+import { RoleInterface } from '@/pages/auth/interfaces';
+import { Fluid } from 'primeng/fluid';
+import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
 import { Button } from 'primeng/button';
-import { invalidEmailValidator, passwordPolicesValidator, userExistValidator } from '@utils/form-validators/custom-validator';
 import { Password } from 'primeng/password';
-import { generatePassword } from '@utils/helpers/password-generate.helper';
-import { RoleInterface } from '@/pages/auth/interfaces';
 import { MultiSelect } from 'primeng/multiselect';
-import { RoleHttpService } from '@/pages/admin/role-http.service';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { Divider } from 'primeng/divider';
-import { AuthHttpService } from '@/pages/auth/auth-http.service';
 import { AutoFocus } from 'primeng/autofocus';
 import { Tag } from 'primeng/tag';
 
@@ -94,16 +94,6 @@ export default class UserFormComponent implements OnInit {
             this.passwordActivated.setValue(true);
             this.passwordField.enable();
         }
-
-        this.passwordActivated.valueChanges.subscribe((value) => {
-            if (value) {
-                this.passwordField.enable();
-            } else {
-                this.passwordField.disable();
-            }
-
-            this.passwordField.updateValueAndValidity();
-        });
     }
 
     loadRoles() {
@@ -139,6 +129,16 @@ export default class UserFormComponent implements OnInit {
     watchFormChanges() {
         this.identificationField.valueChanges.subscribe((value) => {
             this.usernameField.setValue(value);
+        });
+
+        this.passwordActivated.valueChanges.subscribe((value) => {
+            if (value) {
+                this.passwordField.enable();
+            } else {
+                this.passwordField.disable();
+            }
+
+            this.passwordField.updateValueAndValidity();
         });
     }
 
