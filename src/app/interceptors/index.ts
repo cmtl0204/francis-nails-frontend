@@ -5,9 +5,9 @@ import { versionInterceptor } from './version.interceptor';
 import { coreInterceptor } from './core.interceptor';
 
 export const HttpInterceptorProviders = [
+    tokenInterceptor,
     authenticationInterceptor,
     coreInterceptor,
     errorInterceptor,
-    tokenInterceptor,
     versionInterceptor
 ];

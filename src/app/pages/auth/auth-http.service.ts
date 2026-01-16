@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpResponseInterface, SignInInterface } from './interfaces';
 import { environment } from '@env/environment';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@modules/auth/auth.service';
 import { SignInResponseInterface } from '@modules/auth/interfaces';
@@ -58,6 +58,14 @@ export class AuthHttpService {
         this.coreService.hideProcessing();
     }
 
+    refreshToken() {
+        const url = `${this.apiUrl}/refresh-token`;
+
+        const headers = new HttpHeaders({ Authorization: this.authService.refreshToken! });
+
+        return this.httpClient.post<SignInResponseInterface>(url, null, { headers });
+    }
+
     signIn(payload: SignInInterface) {
         const url = `${this.apiUrl}/sign-in`;
 
@@ -68,6 +76,7 @@ export class AuthHttpService {
             switchMap(() => this.httpClient.post<SignInResponseInterface>(url, payload)),
             map((response) => {
                 this.authService.accessToken = response.data.accessToken;
+                this.authService.refreshToken = response.data.refreshToken;
 
                 this.authService.auth = response.data.auth;
 

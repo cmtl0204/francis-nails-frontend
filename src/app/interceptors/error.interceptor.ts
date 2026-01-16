@@ -1,19 +1,22 @@
 import { inject } from '@angular/core';
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CoreService } from '@utils/services/core.service';
 import { CustomMessageService } from '@utils/services/custom-message.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-    const _coreService = inject(CoreService);
-    const _customMessageService = inject(CustomMessageService);
+    const coreService = inject(CoreService);
+    const customMessageService = inject(CustomMessageService);
 
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
-            _coreService.hideLoading();
-            _coreService.hideProcessing();
-            _customMessageService.showHttpError(error.error);
+            if (error.error.error !== 'TOKEN_EXPIRED') {
+                coreService.hideLoading();
+                coreService.hideProcessing();
+                customMessageService.showHttpError(error.error);
+            }
+
             return throwError(() => error);
         })
     );

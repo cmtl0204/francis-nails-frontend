@@ -1,13 +1,16 @@
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { HttpHeaders, HttpInterceptorFn } from '@angular/common/http';
 import { AuthService } from '@modules/auth/auth.service';
+import { switchMap } from 'rxjs';
+import { AuthHttpService } from '@/pages/auth/auth-http.service';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
-    const _authService = inject(AuthService);
+    const authService = inject(AuthService);
+    const authHttpService = inject(AuthHttpService);
     let headers = req.headers ? req.headers : new HttpHeaders();
 
-    if (_authService.accessToken) {
-        headers = headers.append('Authorization', _authService.accessToken.replace(/"/g, ''));
+    if (authService.accessToken && !headers.get('Authorization')) {
+        headers = headers.append('Authorization', authService.accessToken);
     }
 
     return next(req.clone({ headers }));

@@ -35,6 +35,20 @@ export class AuthService {
         sessionStorage.setItem('accessToken', JSON.stringify(value));
     }
 
+    get refreshToken(): string | null {
+        let refreshToken = sessionStorage.getItem('refreshToken');
+
+        if (refreshToken) {
+            refreshToken = 'Bearer ' + refreshToken.replace(/"/g, '');
+        }
+
+        return refreshToken;
+    }
+
+    set refreshToken(value: string) {
+        sessionStorage.setItem('refreshToken', JSON.stringify(value));
+    }
+
     get tokenDecode(): string | null {
         let tokenDecode = sessionStorage.getItem('tokenDecode');
 

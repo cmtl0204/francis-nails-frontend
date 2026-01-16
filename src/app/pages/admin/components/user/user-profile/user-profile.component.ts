@@ -4,26 +4,14 @@ import { PrimeIcons } from 'primeng/api';
 import { BreadcrumbService } from '@layout/service';
 import { CustomMessageService } from '@utils/services';
 import { Router } from '@angular/router';
-import {
-    AbstractControl,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Fluid } from 'primeng/fluid';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { InputText } from 'primeng/inputtext';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { Message } from 'primeng/message';
 import { Button } from 'primeng/button';
-import {
-    invalidEmailValidator,
-    passwordPolicesValidator,
-    userExistValidator
-} from '@utils/form-validators/custom-validator';
+import { invalidEmailValidator, passwordPolicesValidator, userExistValidator } from '@utils/form-validators/custom-validator';
 import { Password } from 'primeng/password';
 import { generatePassword } from '@utils/helpers/password-generate.helper';
 import { RoleInterface } from '@/pages/auth/interfaces';
@@ -202,6 +190,7 @@ export default class UserProfileComponent implements OnInit {
             maritalStatus: [null],
             nationality: [null],
             avatar: [null],
+            allergies: [null],
             emailVerifiedAt: [{ value: null, disabled: true }]
         });
 

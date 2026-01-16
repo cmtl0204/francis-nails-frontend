@@ -5,10 +5,12 @@ export interface SignInResponseInterface {
     message: string;
     title: string;
     accessToken: string;
+    refreshToken: string;
 }
 
 export interface DataSignInInterface {
     auth: AuthInterface;
     accessToken: string;
+    refreshToken: string;
     roles: RoleInterface[];
 }
