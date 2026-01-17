@@ -1,16 +1,26 @@
 <p-fluid class="custom-card-form">
     <form [formGroup]="form" class="custom-grid-form">
-        <div class="custom-section-title-form md:col-span-12">
-            CREACIÓN DE LA CUENTA
+        <!-- backButton -->
+        <div class="custom-field-form md:col-span-12">
+            <p-button
+                label="Regresar"
+                [icon]="PrimeIcons.ARROW_LEFT"
+                severity="warn"
+                [routerLink]="[MY_ROUTES.authPages.signIn.absolute]" />
         </div>
 
+        <div class="custom-section-title-form md:col-span-12  text-center">
+            Creación de la Cuenta
+        </div>
+
+        <!-- identificationField -->
         <div class="custom-field-form md:col-span-12">
             <label
                 appLabel for="identification"
-                label="R.U.C."
+                label="Cédula"
                 [required]="identificationField"></label>
 
-            <input pInputText id="identification" type="text" formControlName="identification" [maxlength]="13"
+            <input pInputText type="text" id="identification" formControlName="identification" [maxlength]="13"
                    pKeyFilter="pint" />
 
             <p-message
@@ -20,7 +30,8 @@
                 [dirty]="identificationField.dirty" />
         </div>
 
-        @if (identificationField.valid) {
+        @if (emailField.enabled && identificationField.valid) {
+            <!-- emailField -->
             <div class="custom-field-form md:col-span-12">
                 <label
                     appLabel for="email"
@@ -36,6 +47,7 @@
                     [dirty]="emailField.dirty" />
             </div>
 
+            <!-- requestTransactionalCode -->
             <div class="custom-field-form md:col-span-12">
                 <p-button
                     label="Solicitar código"
@@ -47,6 +59,7 @@
         }
 
         @if (transactionalCodeControl.enabled) {
+            <!-- transactionalCodeControl -->
             <div class="custom-field-form md:col-span-12">
                 <label
                     appLabel for="transactionalCode"
@@ -64,11 +77,38 @@
             </div>
         }
 
-        @if (isValidTransactionalCode) {
+        @if (passwordField.enabled) {
+            <!-- nameField -->
             <div class="custom-field-form md:col-span-12">
                 <label
-                    appLabel for="password" label="Contraseña"
-                    [required]="passwordField"></label>
+                    appLabel
+                    for="name"
+                    [required]="nameField"
+                    label="Nombres">
+                </label>
+
+                <input
+                    pInputText
+                    type="text"
+                    id="name"
+                    formControlName="name"
+                />
+
+                <p-message
+                    appErrorMessage
+                    [errors]="nameField.errors"
+                    [touched]="nameField.touched"
+                    [dirty]="nameField.dirty" />
+            </div>
+
+            <!-- passwordField -->
+            <div class="custom-field-form md:col-span-12">
+                <label
+                    appLabel
+                    for="password"
+                    label="Contraseña"
+                    [required]="passwordField">
+                </label>
 
                 <p-password
                     id="password" type="text" formControlName="password"
@@ -82,6 +122,32 @@
                     [dirty]="passwordField.dirty" />
             </div>
 
+            <!-- termsAcceptedAtField -->
+            <div class="custom-field-form md:col-span-12">
+                <div class="flex items-center">
+                    <p-checkbox
+                        inputId="termsAcceptedAt"
+                        formControlName="termsAcceptedAt"
+                        [binary]="true"
+                        (click)="openTerms()" />
+
+                    <label
+                        appLabel
+                        for="termsAcceptedAt"
+                        [required]="termsAcceptedAtField"
+                        class="ml-2"
+                        label="He leído y acepto los Términos y Condiciones">
+                    </label>
+                </div>
+
+                <p-message
+                    appErrorMessage
+                    [errors]="termsAcceptedAtField.errors"
+                    [touched]="termsAcceptedAtField.touched"
+                    [dirty]="termsAcceptedAtField.dirty" />
+            </div>
+
+            <!-- saveButton -->
             <div class="custom-field-form md:col-span-12">
                 <p-button
                     label="Crear Cuenta"
@@ -91,12 +157,5 @@
                     (onClick)="onSubmit()" />
             </div>
         }
-
-        <div class="custom-field-form md:col-span-12">
-            <p-button
-                label="Regresar"
-                [icon]="PrimeIcons.ARROW_LEFT"
-                [routerLink]="[MY_ROUTES.authPages.signIn.absolute]" />
-        </div>
     </form>
 </p-fluid>

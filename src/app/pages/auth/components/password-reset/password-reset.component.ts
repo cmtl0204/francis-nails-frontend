@@ -17,7 +17,7 @@ import { LabelDirective } from '@utils/directives/label.directive';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { InputOtp } from 'primeng/inputotp';
 import { MY_ROUTES } from '@routes';
-import { invalidEmailMINTURValidator, invalidEmailValidator, passwordPolicesValidator } from '@utils/form-validators/custom-validator';
+import { invalidEmailMINTURValidator, invalidEmailValidator, passwordPolicesValidator, unregisteredUserValidator } from '@utils/form-validators/custom-validator';
 import { Fluid } from 'primeng/fluid';
 
 @Component({
@@ -34,7 +34,6 @@ export default class PasswordResetComponent {
     protected form!: FormGroup;
     protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
     protected isValidTransactionalCode = false;
-    protected isValidUser = false;
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
     private readonly authHttpService = inject(AuthHttpService);
@@ -60,17 +59,31 @@ export default class PasswordResetComponent {
         return this.form.controls['name'];
     }
 
+    protected verifyRegisteredUser() {
+        this.authHttpService.verifyRegisteredUser(this.identificationField.value).subscribe({
+            next: (response) => {
+                this.emailField.setValue(response.email);
+            }
+        });
+    }
+
     protected watchFormChanges() {
         this.identificationField.valueChanges.subscribe((value) => {
             this.transactionalCodeControl.reset();
             this.transactionalCodeControl.disable();
-            this.emailField.reset();
             this.passwordField.reset();
-            this.isValidTransactionalCode = false;
+            this.passwordField.disable();
 
-            if (value && (value.length === 10 || value.length === 13)) {
-                this.verifyUserExist();
+            if (!this.identificationField.errors) {
+                this.verifyRegisteredUser();
             }
+        });
+
+        this.emailField.valueChanges.subscribe((value) => {
+            this.transactionalCodeControl.reset();
+            this.transactionalCodeControl.disable();
+            this.passwordField.reset();
+            this.passwordField.disable();
         });
 
         this.transactionalCodeControl.valueChanges.subscribe((value) => {
@@ -87,11 +100,14 @@ export default class PasswordResetComponent {
     }
 
     protected requestTransactionalCode() {
-        this.transactionalCodeControl.reset();
-        this.isValidTransactionalCode = false;
+        this.nameField.disable();
+        this.passwordField.disable();
 
-        this.authHttpService.requestTransactionalSignupCode(this.identificationField.value).subscribe({
-            next: () => {
+        this.transactionalCodeControl.reset();
+        this.transactionalCodeControl.disable();
+
+        this.authHttpService.requestTransactionalPasswordResetCode(this.identificationField.value).subscribe({
+            next: (_) => {
                 this.transactionalCodeControl.enable();
             }
         });
@@ -101,29 +117,10 @@ export default class PasswordResetComponent {
         this.isValidTransactionalCode = false;
 
         this.authHttpService.verifyTransactionalCode(this.transactionalCodeControl.value!, this.identificationField.value).subscribe({
-            next: (response) => {
+            next: (_) => {
                 this.transactionalCodeControl.reset();
                 this.transactionalCodeControl.disable();
-                this.isValidTransactionalCode = true;
-            }
-        });
-    }
-
-    protected verifyUserExist() {
-        this.isValidUser = false;
-
-        this.authHttpService.verifyUserRegister(this.identificationField.value).subscribe({
-            next: (response) => {
-                if (!response) {
-                    this.customMessageService.showModalError({
-                        summary: 'Usuario no existe',
-                        detail: 'Intente con otro número'
-                    });
-                }
-
-                this.emailField.setValue(response.email);
-                this.nameField.setValue(`${response.name} ${response.lastName}`);
-                this.isValidUser = true;
+                this.passwordField.enable();
             }
         });
     }
@@ -139,8 +136,18 @@ export default class PasswordResetComponent {
             ],
             password: [null, [Validators.required, passwordPolicesValidator()]],
             name: [null, [Validators.required]],
-            identification: [null, [Validators.required, Validators.minLength(13), Validators.maxLength(13)]]
+            identification: [
+                null,
+                {
+                    validators: [Validators.required, Validators.minLength(10), Validators.maxLength(13)],
+                    asyncValidators: [unregisteredUserValidator(this.authHttpService)]
+                }
+            ]
         });
+
+        this.emailField.disable();
+        this.nameField.disable();
+        this.passwordField.disable();
 
         this.watchFormChanges();
     }

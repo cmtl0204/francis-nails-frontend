@@ -96,7 +96,7 @@ export class Appointments implements OnInit {
     }
 
     async loadAppointments() {
-        const appointments = await this.appointmentHttpService.findAppointments();
+        const appointments: any = [];
 
         if (!appointments) {
             this.customMessageService.showError({ summary: 'No existen citas', detail: 'Vuelva a intentar más tarde' });
@@ -173,7 +173,7 @@ export class Appointments implements OnInit {
 
     async onSubmit() {
         if (this.validateForm()) {
-            await this.appointmentHttpService.updateAppointment(this.idField.value, this.form.value);
+            //TODO updateAppointment
             const index = this.events.findIndex((item) => item.id === this.idField.value);
             this.events[index] = {
                 id: this.idField.value,

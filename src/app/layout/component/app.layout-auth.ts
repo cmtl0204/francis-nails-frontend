@@ -6,7 +6,6 @@ import { AppTopbar } from './app.topbar';
 import { AppSidebar } from './app.sidebar';
 import { LayoutService } from '@layout/service';
 import { Divider } from 'primeng/divider';
-import { Fluid } from 'primeng/fluid';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Message } from 'primeng/message';
 import { environment } from '@env/environment';
@@ -16,10 +15,30 @@ import { MY_ROUTES } from '@routes';
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, RouterModule, Divider, Fluid, FormsModule, Message, ReactiveFormsModule],
+    imports: [CommonModule, RouterModule, Divider, FormsModule, Message, ReactiveFormsModule],
+    styles: [
+        `
+            .login-page {
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                overflow: hidden;
+                background-image: url('/development/auth/images/background.png');
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+
+            .box {
+                opacity: 0.85; /* 50% de opacidad */
+            }
+        `
+    ],
     template: `
-        <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-            <div class="w-full max-w-6xl bg-white rounded-xl shadow-md overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+        <div class="login-page min-h-screen flex items-center justify-center bg-gray-50 px-4">
+            <div class="box w-full max-w-6xl bg-white rounded-xl shadow-md overflow-hidden grid grid-cols-1 lg:grid-cols-2">
                 <!-- COLUMNA IZQUIERDA -->
                 <div class="p-6 lg:p-10 flex flex-col justify-center">
                     <!-- Logo / Header -->
@@ -126,17 +145,13 @@ import { MY_ROUTES } from '@routes';
     `
 })
 export class AppLayoutAuth {
-    protected readonly environment = environment;
-
-    protected readonly PrimeIcons = PrimeIcons;
-
     overlayMenuOpenSubscription: Subscription;
-
     menuOutsideClickListener: any;
-
     @ViewChild(AppSidebar) appSidebar!: AppSidebar;
-
     @ViewChild(AppTopbar) appTopBar!: AppTopbar;
+    protected readonly environment = environment;
+    protected readonly PrimeIcons = PrimeIcons;
+    protected readonly MY_ROUTES = MY_ROUTES;
 
     constructor(
         public layoutService: LayoutService,
@@ -160,6 +175,16 @@ export class AppLayoutAuth {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
             this.hideMenu();
         });
+    }
+
+    get containerClass() {
+        return {
+            'layout-overlay': this.layoutService.layoutConfig().menuMode === 'overlay',
+            'layout-static': this.layoutService.layoutConfig().menuMode === 'static',
+            'layout-static-inactive': this.layoutService.layoutState().staticMenuDesktopInactive && this.layoutService.layoutConfig().menuMode === 'static',
+            'layout-overlay-active': this.layoutService.layoutState().overlayMenuActive,
+            'layout-mobile-active': this.layoutService.layoutState().staticMenuMobileActive
+        };
     }
 
     isOutsideClicked(event: MouseEvent) {
@@ -195,16 +220,6 @@ export class AppLayoutAuth {
         }
     }
 
-    get containerClass() {
-        return {
-            'layout-overlay': this.layoutService.layoutConfig().menuMode === 'overlay',
-            'layout-static': this.layoutService.layoutConfig().menuMode === 'static',
-            'layout-static-inactive': this.layoutService.layoutState().staticMenuDesktopInactive && this.layoutService.layoutConfig().menuMode === 'static',
-            'layout-overlay-active': this.layoutService.layoutState().overlayMenuActive,
-            'layout-mobile-active': this.layoutService.layoutState().staticMenuMobileActive
-        };
-    }
-
     ngOnDestroy() {
         if (this.overlayMenuOpenSubscription) {
             this.overlayMenuOpenSubscription.unsubscribe();
@@ -214,6 +229,4 @@ export class AppLayoutAuth {
             this.menuOutsideClickListener();
         }
     }
-
-    protected readonly MY_ROUTES = MY_ROUTES;
 }

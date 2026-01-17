@@ -137,43 +137,43 @@ export class AppointmentForm implements OnInit, OnDestroy {
             this.dataOut.emit(this.form.value);
         });
 
-        this.identificationField.valueChanges.pipe(
-            debounceTime(300),
-            map(v => v?.trim() ?? ''),
-            distinctUntilChanged(),
-            filter(v => v.length >=9),
-
-            tap(() => {
-                this.coreService.showProcessing();
-            }),
-
-            switchMap(v =>
-                from(this.appointmentHttpService.findByIdentification(v)).pipe(
-                    finalize(() => {
-                        this.coreService.hideProcessing();
-                    })
-                )
-            ),
-
-            tap(customer => {
-                if (!customer) {
-                    this.form.patchValue({
-                        name: null,
-                        email: null,
-                        phone: null
-                    });
-                    return;
-                }
-
-                this.form.patchValue({
-                    name: customer['name'] ?? null,
-                    email: customer['email'] ?? null,
-                    phone: customer['phone'] ?? null
-                });
-            }),
-
-            takeUntil(this.destroy$)
-        ).subscribe();
+        // this.identificationField.valueChanges.pipe(
+        //     debounceTime(300),
+        //     map(v => v?.trim() ?? ''),
+        //     distinctUntilChanged(),
+        //     filter(v => v.length >=9),
+        //
+        //     tap(() => {
+        //         this.coreService.showProcessing();
+        //     }),
+        //
+        //     switchMap(v =>
+        //         from(this.appointmentHttpService.findByIdentification(v)).pipe(
+        //             finalize(() => {
+        //                 this.coreService.hideProcessing();
+        //             })
+        //         )
+        //     ),
+        //
+        //     tap(customer => {
+        //         if (!customer) {
+        //             this.form.patchValue({
+        //                 name: null,
+        //                 email: null,
+        //                 phone: null
+        //             });
+        //             return;
+        //         }
+        //
+        //         this.form.patchValue({
+        //             name: customer['name'] ?? null,
+        //             email: customer['email'] ?? null,
+        //             phone: customer['phone'] ?? null
+        //         });
+        //     }),
+        //
+        //     takeUntil(this.destroy$)
+        // ).subscribe();
 
     }
 

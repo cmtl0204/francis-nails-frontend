@@ -1,25 +1,7 @@
 import { Injectable, signal } from '@angular/core';
-import { environment } from '@env/environment';
 import { CoreEnum } from '@utils/enums';
 import { CatalogueInterface, DpaInterface } from '@utils/interfaces';
-import { ActivityInterface, CategoryInterface, ClassificationInterface } from '@modules/core/shared/interfaces';
 
-export interface ProcessI {
-    processId?: string;
-    establishmentId?: string;
-    activity?: ActivityInterface;
-    classification?: ClassificationInterface;
-    category?: CategoryInterface;
-    province?: DpaInterface;
-    type?: CatalogueInterface;
-}
-
-export interface ProcessStep2I {
-    totalMen?: number;
-    totalMenDisability?: number;
-    totalWomen?: number;
-    totalWomenDisability?: number;
-}
 
 @Injectable({
     providedIn: 'root'
@@ -27,14 +9,8 @@ export interface ProcessStep2I {
 export class CoreSessionStorageService {
     private readonly encryptionKey: string = 'rQg47X9@RkK9Vky#2U2xZ@hSB71zleXt';
 
-    private _processSignal = signal<ProcessI>({});
+    private _processSignal = signal<any>({});
     readonly processSignal = this._processSignal.asReadonly();
-
-    private _cadastreSignal = signal<any | null>(null);
-    readonly cadastreSignal = this._cadastreSignal.asReadonly();
-
-    private _establishmentSignal = signal<any | null>(null);
-    readonly establishmentSignal = this._establishmentSignal.asReadonly();
 
     constructor() {
         this.loadInitialSignal().then();
@@ -44,12 +20,6 @@ export class CoreSessionStorageService {
         let decryptedValue = await this.getEncryptedValue(sessionStorage.getItem(CoreEnum.process));
 
         this._processSignal.set(decryptedValue);
-
-        decryptedValue = await this.getEncryptedValue(sessionStorage.getItem(CoreEnum.cadastre));
-        this._cadastreSignal.set(decryptedValue);
-
-        decryptedValue = await this.getEncryptedValue(sessionStorage.getItem(CoreEnum.establishment));
-        this._establishmentSignal.set(decryptedValue);
     }
 
     private async generateCryptoKey(): Promise<CryptoKey> {

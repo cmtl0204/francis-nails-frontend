@@ -2,7 +2,7 @@ import { Component, inject, input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PrimeIcons } from 'primeng/api';
-import { invalidEmailValidator, passwordPolicesValidator, userExistValidator } from '@utils/form-validators/custom-validator';
+import { invalidEmailValidator, passwordPolicesValidator, userExistValidator, userUpdatedValidator } from '@utils/form-validators/custom-validator';
 import { generatePassword } from '@utils/helpers/password-generate.helper';
 import { MY_ROUTES } from '@routes';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
@@ -92,7 +92,7 @@ export default class UserFormComponent implements OnInit {
         if (this.id()) {
             this.passwordField.disable();
             this.find(this.id());
-            this.identificationField.setAsyncValidators(userExistValidator(this.authHttpService, this.id()));
+            this.identificationField.setAsyncValidators(userUpdatedValidator(this.authHttpService, this.id()));
         } else {
             this.passwordActivated.setValue(true);
             this.passwordField.enable();

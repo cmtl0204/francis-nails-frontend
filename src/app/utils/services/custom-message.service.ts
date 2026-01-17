@@ -10,15 +10,71 @@ export class CustomMessageService {
     private readonly _messageService = inject(MessageService);
     private _isModalVisible = signal(false);
     readonly modalVisible = this._isModalVisible.asReadonly();
+    private errorMessages = new Map<string, string>([
+        ['INVALID_USER', 'Credenciales no válidas'],
+        ['INVALID_PASSWORD', 'Credenciales no válidas'],
+        ['INSUFFICIENT_PERMISSIONS', 'Permisos Insuficientes'],
+        ['ACCOUNT_SUSPENDED', 'Cuenta Suspendida'],
+        ['ACCOUNT_LOCKED', 'Cuenta Bloqueada']
+    ]);
+
     private _modalConfirmVisible: boolean = false;
+
+    get modalConfirmVisible(): boolean {
+        return this._modalConfirmVisible;
+    }
+
+    set modalConfirmVisible(value: boolean) {
+        this._modalConfirmVisible = value;
+    }
+
     private _modalAcceptSeverity: Severity = null;
+
+    get modalAcceptSeverity(): Severity {
+        return this._modalAcceptSeverity;
+    }
+
     private _modalRejectSeverity: Severity = 'danger';
+
+    get modalRejectSeverity(): Severity {
+        return this._modalRejectSeverity;
+    }
+
     private _modalIcon: string = '';
+
+    get modalIcon(): string {
+        return this._modalIcon;
+    }
+
     private _modalTitleIcon: string = '';
+
+    get modalTitleIcon(): string {
+        return this._modalTitleIcon;
+    }
+
     private _modalIconColor: string = '';
+
+    get modalIconColor(): string {
+        return this._modalIconColor;
+    }
+
     private _modalTitle: string = '';
+
+    get modalTitle(): string {
+        return this._modalTitle;
+    }
+
     private _modalMessage: string | string[] = '';
+
+    get modalMessage(): string | string[] {
+        return this._modalMessage;
+    }
+
     private _modalLife: number = 5000;
+
+    get modalLife(): number {
+        return this._modalLife;
+    }
 
     showSuccess({ summary, detail }: { summary: string; detail: string }) {
         this._messageService.add({ severity: 'success', summary, detail });
@@ -50,7 +106,11 @@ export class CustomMessageService {
                 error.message.sort();
             }
 
-            this._messageService.add({ severity: 'error', summary: error.error, detail: error.message });
+            this._messageService.add({
+                severity: 'error',
+                summary: this.errorMessages.get(error.error) ?? error.error,
+                detail: error.message
+            });
         }
     }
 
@@ -92,47 +152,7 @@ export class CustomMessageService {
         this._modalMessage = detail;
     }
 
-    get modalTitle(): string {
-        return this._modalTitle;
-    }
-
-    get modalIcon(): string {
-        return this._modalIcon;
-    }
-
-    get modalTitleIcon(): string {
-        return this._modalTitleIcon;
-    }
-
-    get modalIconColor(): string {
-        return this._modalIconColor;
-    }
-
-    get modalMessage(): string | string[] {
-        return this._modalMessage;
-    }
-
-    get modalAcceptSeverity(): Severity {
-        return this._modalAcceptSeverity;
-    }
-
-    get modalRejectSeverity(): Severity {
-        return this._modalRejectSeverity;
-    }
-
     setModalVisible(value: boolean) {
         this._isModalVisible.set(value);
-    }
-
-    get modalConfirmVisible(): boolean {
-        return this._modalConfirmVisible;
-    }
-
-    set modalConfirmVisible(value: boolean) {
-        this._modalConfirmVisible = value;
-    }
-
-    get modalLife(): number {
-        return this._modalLife;
     }
 }

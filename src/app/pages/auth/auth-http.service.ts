@@ -5,13 +5,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@modules/auth/auth.service';
 import { SignInResponseInterface } from '@modules/auth/interfaces';
-import { CustomMessageService } from '@utils/services/custom-message.service';
 import { Observable, of } from 'rxjs';
-import { CatalogueHttpService, CoreService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
+import { CatalogueHttpService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
 import { CoreEnum } from '@utils/enums';
-import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
-import { doc, getDoc } from 'firebase/firestore';
 import { Router } from '@angular/router';
 import { MY_ROUTES } from '@routes';
 
@@ -23,41 +19,9 @@ export class AuthHttpService {
     private readonly authService = inject(AuthService);
     private readonly httpClient = inject(HttpClient);
     private readonly apiUrl = `${environment.API_URL}/auth`;
-    private readonly customMessageService = inject(CustomMessageService);
     private readonly dpaHttpService = inject(DpaHttpService);
     private readonly router = inject(Router);
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
-    private readonly coreService = inject(CoreService);
-
-    private auth = inject(Auth);
-    private firestore = inject(Firestore);
-    private provider = new GoogleAuthProvider();
-
-    async signInWithGoogle() {
-        this.coreService.showProcessing();
-
-        this.provider.setCustomParameters({ prompt: 'select_account' });
-
-        const userCredentials = await signInWithPopup(this.auth, this.provider);
-
-        const userRef = doc(this.firestore, 'users', userCredentials.user.uid);
-
-        const response = (await getDoc(userRef)).data();
-
-        if (response) {
-            this.authService.accessToken = userCredentials.user.refreshToken;
-
-            this.authService.auth = { id: response['id'], email: response['email'], username: response['username'] };
-
-            this.authService.roles = response['roles'];
-
-            if (response['roles'].length === 1) {
-                this.authService.role = response['roles'][0];
-            }
-        }
-
-        this.coreService.hideProcessing();
-    }
 
     refreshToken() {
         const url = `${this.apiUrl}/refresh-token`;
@@ -162,7 +126,17 @@ export class AuthHttpService {
     }
 
     requestTransactionalSignupCode(identification: string): Observable<HttpResponseInterface> {
-        const url = `${this.apiUrl}/transactional-password-reset-codes/${identification}/request`;
+        const url = `${this.apiUrl}/transactional-codes/${identification}/signup`;
+
+        return this.httpClient.get<HttpResponseInterface>(url).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
+    requestTransactionalPasswordResetCode(identification: string): Observable<HttpResponseInterface> {
+        const url = `${this.apiUrl}/transactional-codes/${identification}/password-reset`;
 
         return this.httpClient.get<HttpResponseInterface>(url).pipe(
             map((response) => {
@@ -180,8 +154,18 @@ export class AuthHttpService {
         );
     }
 
-    verifyUserExist(identification: string, userId = '') {
-        const url = `${this.apiUrl}/verify-user-exist/${identification}`;
+    verifyUserExist(identification: string) {
+        const url = `${this.apiUrl}/${identification}/exist`;
+
+        return this.httpClient.get<HttpResponseInterface>(url).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
+    verifyUserUpdated(identification: string, userId = '') {
+        const url = `${this.apiUrl}/${identification}/updated`;
 
         const params = new HttpParams().append('userId', userId);
 
@@ -192,8 +176,8 @@ export class AuthHttpService {
         );
     }
 
-    verifyUserRegister(identification: string) {
-        const url = `${this.apiUrl}/verify-user-register/${identification}`;
+    verifyRegisteredUser(identification: string) {
+        const url = `${this.apiUrl}/${identification}/registered`;
 
         return this.httpClient.get<HttpResponseInterface>(url).pipe(
             map((response) => {
@@ -204,16 +188,6 @@ export class AuthHttpService {
 
     verifyRucPendingPayment(ruc: string) {
         const url = `${this.apiUrl}/verify-ruc-pending-payment/${ruc}`;
-
-        return this.httpClient.get<HttpResponseInterface>(url).pipe(
-            map((response) => {
-                return response.data;
-            })
-        );
-    }
-
-    verifyRUC(ruc: string) {
-        const url = `${this.apiUrl}/verify-ruc/${ruc}`;
 
         return this.httpClient.get<HttpResponseInterface>(url).pipe(
             map((response) => {

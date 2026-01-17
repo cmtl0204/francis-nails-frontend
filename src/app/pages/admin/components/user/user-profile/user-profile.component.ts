@@ -11,7 +11,7 @@ import { InputText } from 'primeng/inputtext';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { Message } from 'primeng/message';
 import { Button } from 'primeng/button';
-import { invalidEmailValidator, passwordPolicesValidator, userExistValidator } from '@utils/form-validators/custom-validator';
+import { invalidEmailValidator, passwordPolicesValidator, userExistValidator, userUpdatedValidator } from '@utils/form-validators/custom-validator';
 import { Password } from 'primeng/password';
 import { generatePassword } from '@utils/helpers/password-generate.helper';
 import { RoleInterface } from '@/pages/auth/interfaces';
@@ -149,7 +149,7 @@ export default class UserProfileComponent implements OnInit {
         if (this.authService.auth.id) {
             this.passwordField.disable();
             this.find(this.authService.auth.id);
-            this.identificationField.setAsyncValidators(userExistValidator(this.authHttpService, this.authService.auth.id));
+            this.identificationField.setAsyncValidators(userUpdatedValidator(this.authHttpService, this.authService.auth.id));
         }
     }
 
@@ -169,7 +169,7 @@ export default class UserProfileComponent implements OnInit {
                 null,
                 {
                     validators: [Validators.required],
-                    asyncValidators: [userExistValidator(this.authHttpService)],
+                    asyncValidators: [userUpdatedValidator(this.authHttpService)],
                     updateOn: 'blur'
                 }
             ],

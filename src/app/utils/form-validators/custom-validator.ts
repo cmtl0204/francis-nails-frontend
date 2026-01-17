@@ -31,14 +31,14 @@ export function registeredIdentificationValidator(authHttpService: AuthHttpServi
     };
 }
 
-export function userExistValidator(authHttpService: AuthHttpService, userId = ''): AsyncValidatorFn {
+export function userExistValidator(authHttpService: AuthHttpService): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
         if (!control.value) return of(null);
 
         return of(control.value).pipe(
             debounceTime(300),
             take(1),
-            switchMap((value) => authHttpService.verifyUserExist(value, userId).pipe(map((response) => (response ? { userExist: true } : null))))
+            switchMap((value) => authHttpService.verifyUserExist(value).pipe(map((response) => (response ? { userExist: true } : null))))
         );
     };
 }
@@ -51,6 +51,30 @@ export function unregisteredUserValidator(authHttpService: AuthHttpService): Asy
             debounceTime(300),
             take(1),
             switchMap((value) => authHttpService.verifyUserExist(value).pipe(map((response) => (response ? null : { unregisteredUser: true }))))
+        );
+    };
+}
+
+export function unavailableUserValidator(authHttpService: AuthHttpService): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+        if (!control.value) return of(null);
+
+        return of(control.value).pipe(
+            debounceTime(300),
+            take(1),
+            switchMap((value) => authHttpService.verifyUserExist(value).pipe(map((response) => (response ? { unavailableUser: true } : null))))
+        );
+    };
+}
+
+export function userUpdatedValidator(authHttpService: AuthHttpService, userId = ''): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+        if (!control.value) return of(null);
+
+        return of(control.value).pipe(
+            debounceTime(300),
+            take(1),
+            switchMap((value) => authHttpService.verifyUserUpdated(value, userId).pipe(map((response) => (response ? { userExist: true } : null))))
         );
     };
 }

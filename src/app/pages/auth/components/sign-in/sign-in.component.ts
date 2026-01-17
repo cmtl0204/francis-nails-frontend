@@ -24,7 +24,6 @@ import { Fluid } from 'primeng/fluid';
 @Component({
     selector: 'app-sign-in',
     templateUrl: './sign-in.component.html',
-    styleUrls: ['./sign-in.component.scss'],
     standalone: true,
     imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, Dialog, Fluid]
 })
@@ -73,23 +72,6 @@ export default class SignInComponent {
         }
 
         return true;
-    }
-
-    protected async signInWithGoogle() {
-        this.roleControl.reset();
-
-        await this.authHttpService.signInWithGoogle();
-
-        this.roles = this.authService.roles;
-
-        if (this.roles.length === 1) {
-            this.router.navigate([MY_ROUTES.dashboards.absolute]);
-            return;
-        }
-
-        this.roleControl.setValidators([Validators.required]);
-
-        this.isVisibleRoles = true;
     }
 
     private signIn() {

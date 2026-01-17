@@ -4,14 +4,9 @@ import { environment } from '@env/environment';
 
 import { AuthInterface } from '@modules/auth/interfaces/auth.interface';
 import { RoleInterface } from '@modules/auth/interfaces/role.interface';
-import { CoreEnum, RoleEnum } from '@utils/enums';
 import { Router } from '@angular/router';
 import { CustomMessageService } from '@utils/services/custom-message.service';
 import { CoreService } from '@utils/services/core.service';
-import { MY_ROUTES } from '@routes';
-import { CatalogueHttpService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
-import { ActivityHttpService } from '@/pages/core/shared/services';
-import { switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -97,7 +92,7 @@ export class AuthService {
         return environment.APP_SHORT_NAME;
     }
 
-    removeLogin(){
+    removeLogin() {
         sessionStorage.clear();
         localStorage.clear();
     }

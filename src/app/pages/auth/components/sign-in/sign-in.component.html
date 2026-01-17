@@ -1,18 +1,20 @@
 <p-fluid class="custom-card-form">
     <form [formGroup]="form" class="custom-grid-form">
-        <div class="md:col-span-12 custom-field-form">
-            <div class="font-semibold text-xl text-center">
-                Ingreso al Sistema - {{environment.APP_SHORT_NAME}}
-            </div>
+        <div class="custom-section-title-form md:col-span-12 text-center">
+            Ingreso al Sistema
         </div>
 
         <div class="md:col-span-12 custom-field-form">
             <label
                 appLabel for="username"
-                label="Correo electrónico"
+                label="Cédula"
                 [required]="usernameField"></label>
 
-            <input pInputText id="username" type="text" formControlName="username" />
+            <input
+                pInputText
+                type="text"
+                id="username"
+                formControlName="username" />
 
             <p-message
                 appErrorMessage
@@ -21,13 +23,17 @@
                 [dirty]="usernameField.dirty" />
         </div>
 
-        <div class="md:col-span-12 custom-field-form">
+        <div class="custom-field-form md:col-span-12">
             <label
-                appLabel for="password" label="Contraseña"
-                [required]="passwordField"></label>
+                appLabel
+                for="password"
+                [required]="passwordField"
+                label="Contraseña">
+            </label>
 
             <p-password
-                id="password" type="text" formControlName="password"
+                id="password"
+                formControlName="password"
                 [toggleMask]="true"
                 [feedback]="false" />
 
@@ -38,30 +44,26 @@
                 [dirty]="passwordField.dirty" />
         </div>
 
-        <div class="md:col-span-12 custom-field-form">
+        <div class="custom-field-form md:col-span-12">
             <p-button
                 label="Ingresar"
                 [icon]="PrimeIcons.SIGN_IN"
-                severity="success"
                 (onClick)="onSubmit()" />
+        </div>
 
-            <p-button
-                label="Ingreso con Google"
-                [icon]="PrimeIcons.GOOGLE"
-                severity="warn"
-                class="mt-2"
-                (onClick)="signInWithGoogle()"/>
+        <div class="custom-field-form md:col-span-6">
             <p-button
                 label="Crear Cuenta"
                 [icon]="PrimeIcons.USER_PLUS"
-                class="mt-2"
+                severity="success"
                 [routerLink]="MY_ROUTES.authPages.signUp.absolute" />
+        </div>
 
+        <div class="custom-field-form md:col-span-6">
             <p-button
                 label="Recuperar Cuenta"
                 [icon]="PrimeIcons.LOCK_OPEN"
                 severity="help"
-                class="mt-2"
                 [routerLink]="MY_ROUTES.authPages.passwordReset.absolute" />
         </div>
     </form>
@@ -75,24 +77,22 @@
           (onHide)="closeRoleSelect()"
           [resizable]="false">
     <ng-template #header>
-        <div class="inline-flex items-center justify-center gap-2">
-            <span class="font-bold whitespace-nowrap">Seleccione un Rol</span>
+        <div class="custom-section-title-form">
+            Seleccione un Rol
         </div>
     </ng-template>
 
-    <span class="text-surface-500 dark:text-surface-400 block mb-8">
-        Actualmente tiene los siguientes roles asignados
-    </span>
-
-    <div class="card flex flex-col gap-6 w-full">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+    <p-fluid class="custom-card-form">
+        <div class="custom-grid-form">
             @for (role of roles; track role.id) {
-                <div class="md:col-span-12 custom-field-form">
-                    <p-button class="w-full [&>button]:w-full"
-                              variant="text" [raised]="true" [label]="role.name"
-                              (onClick)="selectRole(role)" />
+                <div class="custom-field-form md:col-span-12">
+                    <p-button
+                        variant="text"
+                        [raised]="true"
+                        [label]="role.name"
+                        (onClick)="selectRole(role)" />
                 </div>
             }
         </div>
-    </div>
+    </p-fluid>
 </p-dialog>

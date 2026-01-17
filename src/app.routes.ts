@@ -4,7 +4,6 @@ import { AppLayoutMain } from '@layout/component/app.layout-main';
 import { AppLayoutBlank } from '@layout/component/app.layout-blank';
 import { AppLayoutAuth } from '@layout/component/app.layout-auth';
 import { tokenGuard } from '@/guards/token.guard';
-import { RegulationSimulatorComponent } from '@/pages/core/shared/components/regulation-simulator/regulation-simulator.component';
 
 export const appRoutes: Routes = [
     {
@@ -31,21 +30,9 @@ export const appRoutes: Routes = [
     },
 
     {
-        path: MY_ROUTES.guessPages.base,
-        component: AppLayoutBlank,
-        children: [{ path: MY_ROUTES.guessPages.simulator.base, component: RegulationSimulatorComponent }]
-    },
-
-    {
         path: MY_ROUTES.publicPages.base,
         component: AppLayoutBlank,
         children: [{ path: '', loadChildren: () => import('./app/pages/public/public.routes') }]
-    },
-
-    {
-        path: 'tests',
-        component: AppLayoutBlank,
-        children: [{ path: '', loadChildren: () => import('./app/pages/tests/tests.routes') }]
     },
 
     { path: '', redirectTo: '/main/dashboards', pathMatch: 'full' },

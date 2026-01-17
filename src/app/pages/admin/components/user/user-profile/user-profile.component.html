@@ -2,11 +2,6 @@
     <ng-template #start>
         <!-- title -->
         <div class="custom-section-title-form">Mi Perfil:</div>
-    </ng-template>
-    <ng-template #center>
-        <div class="ml-2">
-            Mis Roles:
-        </div>
 
         <!-- roles -->
         @for (role of roles; track role.id) {
@@ -14,6 +9,9 @@
                 <p-tag [value]="role.name" severity="secondary" [icon]="PrimeIcons.VERIFIED" />
             </div>
         }
+    </ng-template>
+    <ng-template #center>
+
     </ng-template>
     <ng-template #end>
         <!-- actions -->
@@ -27,8 +25,13 @@
     <div class="md:w-1/1">
         <p-fluid class="custom-card-form">
             <form [formGroup]="form" class="custom-grid-form">
+                <!-- title -->
+                <div class="md:col-span-12 custom-section-title-form">
+                    Datos Personales:
+                </div>
+
                 <!-- avatarField -->
-                <div class="md:col-span-12 custom-field-form">
+                <div class="md:col-span-3 custom-field-form">
                     <label
                         appLabel
                         for="avatar"
@@ -56,6 +59,29 @@
                         [errors]="avatarField.errors"
                         [touched]="avatarField.touched"
                         [dirty]="avatarField.dirty" />
+                </div>
+
+                <!-- emailField -->
+                <div class="md:col-span-9 custom-field-form">
+                    <label
+                        appLabel
+                        for="email"
+                        [required]="emailField">
+                        Correo Principal:
+                        @if (emailVerifiedAtField.value) {
+                            <p-tag value="Verificado" severity="success" />
+                        } @else {
+                            <p-tag value="No Verificado" severity="danger" />
+                        }
+                    </label>
+
+                    <input type="email" pInputText formControlName="email">
+
+                    <p-message
+                        appErrorMessage
+                        [errors]="emailField.errors"
+                        [touched]="emailField.touched"
+                        [dirty]="emailField.dirty" />
                 </div>
 
                 <!-- identificationTypeField -->
@@ -136,31 +162,8 @@
                         [dirty]="nameField.dirty" />
                 </div>
 
-                <!-- emailField -->
-                <div class="md:col-span-6 custom-field-form">
-                    <label
-                        appLabel
-                        for="email"
-                        [required]="emailField">
-                        Correo Principal:
-                        @if (emailVerifiedAtField.value) {
-                            <p-tag value="Verificado" severity="success" />
-                        } @else {
-                            <p-tag value="No Verificado" severity="danger" />
-                        }
-                    </label>
-
-                    <input type="email" pInputText formControlName="email">
-
-                    <p-message
-                        appErrorMessage
-                        [errors]="emailField.errors"
-                        [touched]="emailField.touched"
-                        [dirty]="emailField.dirty" />
-                </div>
-
                 <!-- personalEmailField -->
-                <div class="md:col-span-6 custom-field-form">
+                <div class="md:col-span-12 custom-field-form">
                     <label
                         appLabel
                         for="personalEmail"
@@ -235,6 +238,25 @@
                         [touched]="birthdateField.touched"
                         [dirty]="birthdateField.dirty" />
                 </div>
+
+                <!-- allergiesField -->
+                <div class="md:col-span-12 custom-field-form">
+                    <label
+                        appLabel
+                        for="allergies"
+                        [required]="nationalityField"
+                        label="Alergias">
+                    </label>
+
+                    <textarea rows="4" cols="30" pTextarea formControlName="allergies"
+                              placeholder="Colocar ninguna, si no las tiene."></textarea>
+
+                    <p-message
+                        appErrorMessage
+                        [errors]="nationalityField.errors"
+                        [touched]="nationalityField.touched"
+                        [dirty]="nationalityField.dirty" />
+                </div>
             </form>
         </p-fluid>
     </div>
@@ -242,6 +264,11 @@
     <div class="flex flex-col w-1/1">
         <p-fluid class="custom-card-form">
             <form [formGroup]="form" class="custom-grid-form">
+                <!-- title -->
+                <div class="md:col-span-12 custom-section-title-form">
+                    Cambio de Contraseña:
+                </div>
+
                 <!-- passwordField -->
                 <div class="md:col-span-12 custom-field-form">
                     <div class="custom-grid-form">
@@ -294,6 +321,11 @@
 
         <p-fluid class="custom-card-form">
             <form [formGroup]="form" class="custom-grid-form">
+                <!-- title -->
+                <div class="md:col-span-12 custom-section-title-form">
+                    Información Adicional:
+                </div>
+
                 <!-- bloodTypeField -->
                 <div class="md:col-span-6 custom-field-form">
                     <label
@@ -432,25 +464,6 @@
                         filterBy="name"
                         optionLabel="name"
                         appendTo="body" />
-
-                    <p-message
-                        appErrorMessage
-                        [errors]="nationalityField.errors"
-                        [touched]="nationalityField.touched"
-                        [dirty]="nationalityField.dirty" />
-                </div>
-
-                <!-- allergiesField -->
-                <div class="md:col-span-12 custom-field-form">
-                    <label
-                        appLabel
-                        for="allergies"
-                        [required]="nationalityField"
-                        label="Alergias">
-                    </label>
-
-                    <textarea rows="4" cols="30" pTextarea formControlName="allergies"
-                              placeholder="Colocar ninguna, si no las tiene."></textarea>
 
                     <p-message
                         appErrorMessage
