@@ -95,7 +95,7 @@ export function generatePassword(options: PasswordOptions = {}): string {
 }
 
 // Ejemplos:
-// console.log(generatePassword()); // 12, sin confusos, con repetición
-// console.log(generatePassword({ length: 16 }));
-// console.log(generatePassword({ length: 12, allowRepeat: false })); // sin repetir
-// console.log(generatePassword({ length: 12, avoidConfusables: false })); // permite 0/1/O/I...
+// console.info(generatePassword()); // 12, sin confusos, con repetición
+// console.info(generatePassword({ length: 16 }));
+// console.info(generatePassword({ length: 12, allowRepeat: false })); // sin repetir
+// console.info(generatePassword({ length: 12, avoidConfusables: false })); // permite 0/1/O/I...

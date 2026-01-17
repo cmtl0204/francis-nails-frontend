@@ -6,13 +6,14 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from '@modules/auth/auth.service';
 import { SignInResponseInterface } from '@modules/auth/interfaces';
 import { CustomMessageService } from '@utils/services/custom-message.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CatalogueHttpService, CoreService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
 import { CoreEnum } from '@utils/enums';
-import { ActivityHttpService } from '@/pages/core/shared/services';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Firestore } from '@angular/fire/firestore';
 import { doc, getDoc } from 'firebase/firestore';
+import { Router } from '@angular/router';
+import { MY_ROUTES } from '@routes';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +25,7 @@ export class AuthHttpService {
     private readonly apiUrl = `${environment.API_URL}/auth`;
     private readonly customMessageService = inject(CustomMessageService);
     private readonly dpaHttpService = inject(DpaHttpService);
-    private readonly activityHttpService = inject(ActivityHttpService);
+    private readonly router = inject(Router);
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
     private readonly coreService = inject(CoreService);
 
@@ -63,7 +64,11 @@ export class AuthHttpService {
 
         const headers = new HttpHeaders({ Authorization: this.authService.refreshToken! });
 
-        return this.httpClient.post<SignInResponseInterface>(url, null, { headers });
+        return this.httpClient.post<SignInResponseInterface>(url, null, { headers }).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
     }
 
     signIn(payload: SignInInterface) {
@@ -107,13 +112,41 @@ export class AuthHttpService {
         // );
     }
 
+    signOut() {
+        if (!this.authService.accessToken) {
+            localStorage.clear();
+            sessionStorage.clear();
+            this.router.navigate([MY_ROUTES.signIn]);
+            return of();
+        }
+
+        const url = `${this.apiUrl}/sign-out`;
+
+        return this.httpClient.post<SignInResponseInterface>(url, null).pipe(
+            map((response) => {
+                localStorage.clear();
+                sessionStorage.clear();
+                this.router.navigate([MY_ROUTES.signIn]);
+                return response.data;
+            })
+        );
+    }
+
+    resetPassword(username: string, password: string): Observable<HttpResponseInterface> {
+        const url = `${this.apiUrl}/passwords/${username}/reset`;
+
+        return this.httpClient.patch<HttpResponseInterface>(url, { username, password }).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
     signUpExternal(payload: SignInInterface) {
         const url = `${this.apiUrl}/sign-up-external`;
 
         return this.httpClient.post<SignInResponseInterface>(url, payload).pipe(
             map((response) => {
-                this.customMessageService.showSuccess({ summary: response.title, detail: response.message });
-
                 return response;
             })
         );
@@ -128,11 +161,11 @@ export class AuthHttpService {
         );
     }
 
-    requestTransactionalEmailCode(email: string): Observable<HttpResponseInterface> {
-        const url = `${this.apiUrl}/transactional-email-codes/${email}/request`;
+    requestTransactionalSignupCode(identification: string): Observable<HttpResponseInterface> {
+        const url = `${this.apiUrl}/transactional-password-reset-codes/${identification}/request`;
+
         return this.httpClient.get<HttpResponseInterface>(url).pipe(
             map((response) => {
-                this.customMessageService.showHttpSuccess(response);
                 return response.data;
             })
         );
@@ -141,19 +174,6 @@ export class AuthHttpService {
     verifyTransactionalCode(token: string, username: string): Observable<HttpResponseInterface> {
         const url = `${this.apiUrl}/transactional-codes/${token}/verify`;
         return this.httpClient.patch<HttpResponseInterface>(url, { username }).pipe(
-            map((response) => {
-                this.customMessageService.showHttpSuccess(response);
-                return response.data;
-            })
-        );
-    }
-
-    verifyIdentification(identification: string, editing = false) {
-        const url = `${this.apiUrl}/verify-identification/${identification}`;
-
-        const params = new HttpParams().append('editing', editing);
-
-        return this.httpClient.get<HttpResponseInterface>(url, { params }).pipe(
             map((response) => {
                 return response.data;
             })
@@ -166,6 +186,16 @@ export class AuthHttpService {
         const params = new HttpParams().append('userId', userId);
 
         return this.httpClient.get<HttpResponseInterface>(url, { params }).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
+    verifyUserRegister(identification: string) {
+        const url = `${this.apiUrl}/verify-user-register/${identification}`;
+
+        return this.httpClient.get<HttpResponseInterface>(url).pipe(
             map((response) => {
                 return response.data;
             })
@@ -198,7 +228,6 @@ export class AuthHttpService {
         return this.httpClient.patch<HttpResponseInterface>(url, null).pipe(
             map((response) => {
                 this.authService.auth = { ...this.authService.auth, termsConditions: true };
-                this.customMessageService.showHttpSuccess(response);
                 return response.data;
             })
         );
@@ -209,7 +238,6 @@ export class AuthHttpService {
 
         return this.httpClient.patch<HttpResponseInterface>(url, null).pipe(
             map((response) => {
-                this.customMessageService.showHttpSuccess(response);
                 return response.data;
             })
         );

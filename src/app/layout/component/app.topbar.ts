@@ -9,6 +9,7 @@ import { AuthService } from '@modules/auth/auth.service';
 import { Button } from 'primeng/button';
 import { Tooltip } from 'primeng/tooltip';
 import { MY_ROUTES } from '@routes';
+import { AuthHttpService } from '@/pages/auth/auth-http.service';
 
 @Component({
     selector: 'app-topbar',
@@ -61,7 +62,8 @@ import { MY_ROUTES } from '@routes';
 })
 export class AppTopbar {
     protected readonly authService = inject(AuthService);
-    private readonly _router = inject(Router);
+    protected readonly authHttpService = inject(AuthHttpService);
+    private readonly router = inject(Router);
     items!: MenuItem[];
 
     constructor(public layoutService: LayoutService) {}
@@ -74,10 +76,10 @@ export class AppTopbar {
     protected readonly PrimeIcons = PrimeIcons;
 
     signOut() {
-        this.authService.removeLogin();
+        this.authHttpService.signOut().subscribe();
     }
 
     redirectProfile() {
-        this._router.navigate([MY_ROUTES.adminPages.user.profile.absolute]);
+        this.router.navigate([MY_ROUTES.adminPages.user.profile.absolute]);
     }
 }

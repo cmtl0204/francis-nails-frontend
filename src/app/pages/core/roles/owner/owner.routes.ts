@@ -1,14 +1,13 @@
 import { Routes } from '@angular/router';
 import { MY_ROUTES } from '@routes';
-import { TechnicianDashboardComponent } from '@modules/core/roles/technician/technician-dashboard/technician-dashboard.component';
-import { ProcessComponent } from '@modules/core/roles/technician/process/process.component';
 import { Appointments } from '@/pages/core/roles/owner/components/appointments/appointments';
+import { OwnerDashboardComponent } from '@/pages/core/roles/owner/owner-dashboard/owner-dashboard.component';
 
 
 export default [
     {
         path: MY_ROUTES.corePages.owner.dashboard.base,
-        component: TechnicianDashboardComponent
+        component: OwnerDashboardComponent
     },
     {
         path: MY_ROUTES.corePages.owner.appointments.base,

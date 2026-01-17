@@ -30,11 +30,11 @@ import { Fluid } from 'primeng/fluid';
 })
 export default class SignInComponent {
     protected readonly environment = environment;
-    private readonly _formBuilder = inject(FormBuilder);
-    private readonly _customMessageService = inject(CustomMessageService);
-    private readonly _authHttpService = inject(AuthHttpService);
-    private readonly _authService = inject(AuthService);
-    private readonly _router = inject(Router);
+    private readonly formBuilder = inject(FormBuilder);
+    private readonly customMessageService = inject(CustomMessageService);
+    private readonly authHttpService = inject(AuthHttpService);
+    private readonly authService = inject(AuthService);
+    private readonly router = inject(Router);
     protected readonly PrimeIcons = PrimeIcons;
     protected form!: FormGroup;
     protected roles: RoleInterface[] = [];
@@ -48,7 +48,7 @@ export default class SignInComponent {
     }
 
     private buildForm() {
-        this.form = this._formBuilder.group({
+        this.form = this.formBuilder.group({
             username: [null, [Validators.required]],
             password: [null, [Validators.required]]
         });
@@ -68,7 +68,7 @@ export default class SignInComponent {
 
         if (errors.length > 0) {
             this.form.markAllAsTouched();
-            this._customMessageService.showFormErrors(errors);
+            this.customMessageService.showFormErrors(errors);
             return false;
         }
 
@@ -78,12 +78,12 @@ export default class SignInComponent {
     protected async signInWithGoogle() {
         this.roleControl.reset();
 
-        await this._authHttpService.signInWithGoogle();
+        await this.authHttpService.signInWithGoogle();
 
-        this.roles = this._authService.roles;
+        this.roles = this.authService.roles;
 
         if (this.roles.length === 1) {
-            this._router.navigateByUrl(MY_ROUTES.dashboards.absolute);
+            this.router.navigate([MY_ROUTES.dashboards.absolute]);
             return;
         }
 
@@ -95,10 +95,10 @@ export default class SignInComponent {
     private signIn() {
         this.roleControl.reset();
 
-        this._authHttpService.signIn(this.form.value).subscribe({
+        this.authHttpService.signIn(this.form.value).subscribe({
             next: (data) => {
                 if (data.roles.length === 1) {
-                    this._router.navigateByUrl(MY_ROUTES.dashboards.absolute);
+                    this.router.navigate([MY_ROUTES.dashboards.absolute]);
                     return;
                 }
 
@@ -110,12 +110,12 @@ export default class SignInComponent {
     }
 
     protected selectRole(value: RoleInterface) {
-        this._authService.role = value;
-        this._router.navigateByUrl(MY_ROUTES.dashboards.absolute);
+        this.authService.role = value;
+        this.router.navigate([MY_ROUTES.dashboards.absolute]);
     }
 
     protected closeRoleSelect() {
-        this._authService.removeLogin();
+        this.authHttpService.signOut().subscribe();
     }
 
     protected get usernameField(): AbstractControl {

@@ -1,6 +1,6 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,118 +16,32 @@ import { Message } from 'primeng/message';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { InputOtp } from 'primeng/inputotp';
-import { KeyFilter } from 'primeng/keyfilter';
 import { MY_ROUTES } from '@routes';
-import { JsonPipe } from '@angular/common';
-import { invalidEmailMINTURValidator, invalidEmailValidator, pendingPaymentRucValidator, unregisteredUserValidator } from '@utils/form-validators/custom-validator';
+import { invalidEmailMINTURValidator, invalidEmailValidator, passwordPolicesValidator } from '@utils/form-validators/custom-validator';
+import { Fluid } from 'primeng/fluid';
 
 @Component({
     selector: 'app-password-reset',
     templateUrl: './password-reset.component.html',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, InputOtp, KeyFilter]
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, InputOtp, Fluid]
 })
 export default class PasswordResetComponent {
-    @Output() outForm = new EventEmitter(true);
+    protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly environment = environment;
-    private readonly _formBuilder = inject(FormBuilder);
-    private readonly _customMessageService = inject(CustomMessageService);
-    private readonly _authHttpService = inject(AuthHttpService);
-    protected readonly _coreService = inject(CoreService);
+    protected readonly coreService = inject(CoreService);
     protected readonly PrimeIcons = PrimeIcons;
     protected form!: FormGroup;
-    protected formErrors: string[] = [];
     protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
     protected isValidTransactionalCode = false;
+    protected isValidUser = false;
+    private readonly formBuilder = inject(FormBuilder);
+    private readonly customMessageService = inject(CustomMessageService);
+    private readonly authHttpService = inject(AuthHttpService);
+    private readonly router = inject(Router);
 
     constructor() {
         this.buildForm();
-
-        this.identificationField.valueChanges.subscribe((value) => {
-            this.transactionalCodeControl.reset();
-            this.transactionalCodeControl.disable();
-            this.emailField.reset();
-            this.passwordField.reset();
-            this.isValidTransactionalCode = false;
-
-            if (value?.length === 13) {
-                this.verifyRUC();
-            }
-        });
-
-        this.transactionalCodeControl.valueChanges.subscribe((value) => {
-            if (value?.length === 6) {
-                this.verifyTransactionalCode();
-            }
-        });
-    }
-
-    private buildForm() {
-        this.form = this._formBuilder.group({
-            email: [
-                {
-                    value: null,
-                    disabled: true
-                },
-                [Validators.required, invalidEmailValidator(), invalidEmailMINTURValidator()]
-            ],
-            password: [null, [Validators.required, Validators.minLength(8)]],
-            name: [null, [Validators.required]],
-            identification: [
-                null,
-                {
-                    validators: [Validators.required, Validators.minLength(13), Validators.maxLength(13)],
-                    asyncValidators: [unregisteredUserValidator(this._authHttpService), pendingPaymentRucValidator(this._authHttpService)]
-                }
-            ]
-        });
-    }
-
-    protected onSubmit() {
-        if (!this.validateForm()) {
-            this.form.markAllAsTouched();
-            this._customMessageService.showFormErrors(this.formErrors);
-            return;
-        }
-
-        this.signUpExternal();
-    }
-
-    private signUpExternal() {
-        this.emailField.enable();
-
-        this._authHttpService.signUpExternal(this.form.value).subscribe({
-            next: (response) => {
-                this.form.reset();
-                this.outForm.emit(false);
-            }
-        });
-    }
-
-    private verifyRUC() {
-        this._authHttpService.verifyIdentification(this.identificationField.value).subscribe({});
-        this.nameField.patchValue('hola');
-    }
-
-    protected requestTransactionalCode() {
-        this.emailField.disable();
-        this.transactionalCodeControl.enable();
-    }
-
-    protected verifyTransactionalCode() {
-        this._authHttpService.verifyTransactionalCode(this.transactionalCodeControl.value!, this.emailField.value).subscribe({});
-        this.isValidTransactionalCode = true;
-    }
-
-    private validateForm() {
-        this.formErrors = [];
-
-        if (this.nameField.invalid) this.formErrors.push('Nombre');
-        if (this.emailField.invalid) this.formErrors.push('Correo Electrónico');
-        if (this.passwordField.invalid) this.formErrors.push('Contraseña');
-        if (this.identificationField.invalid) this.formErrors.push('RUC');
-
-        return this.formErrors.length === 0 && this.form.valid;
     }
 
     protected get emailField(): AbstractControl {
@@ -146,5 +60,113 @@ export default class PasswordResetComponent {
         return this.form.controls['name'];
     }
 
-    protected readonly MY_ROUTES = MY_ROUTES;
+    protected watchFormChanges() {
+        this.identificationField.valueChanges.subscribe((value) => {
+            this.transactionalCodeControl.reset();
+            this.transactionalCodeControl.disable();
+            this.emailField.reset();
+            this.passwordField.reset();
+            this.isValidTransactionalCode = false;
+
+            if (value && (value.length === 10 || value.length === 13)) {
+                this.verifyUserExist();
+            }
+        });
+
+        this.transactionalCodeControl.valueChanges.subscribe((value) => {
+            if (value?.length === 6) {
+                this.verifyTransactionalCode();
+            }
+        });
+    }
+
+    protected onSubmit() {
+        if (this.validateForm()) {
+            this.resetPassword();
+        }
+    }
+
+    protected requestTransactionalCode() {
+        this.transactionalCodeControl.reset();
+        this.isValidTransactionalCode = false;
+
+        this.authHttpService.requestTransactionalSignupCode(this.identificationField.value).subscribe({
+            next: () => {
+                this.transactionalCodeControl.enable();
+            }
+        });
+    }
+
+    protected verifyTransactionalCode() {
+        this.isValidTransactionalCode = false;
+
+        this.authHttpService.verifyTransactionalCode(this.transactionalCodeControl.value!, this.identificationField.value).subscribe({
+            next: (response) => {
+                this.transactionalCodeControl.reset();
+                this.transactionalCodeControl.disable();
+                this.isValidTransactionalCode = true;
+            }
+        });
+    }
+
+    protected verifyUserExist() {
+        this.isValidUser = false;
+
+        this.authHttpService.verifyUserRegister(this.identificationField.value).subscribe({
+            next: (response) => {
+                if (!response) {
+                    this.customMessageService.showModalError({
+                        summary: 'Usuario no existe',
+                        detail: 'Intente con otro número'
+                    });
+                }
+
+                this.emailField.setValue(response.email);
+                this.nameField.setValue(`${response.name} ${response.lastName}`);
+                this.isValidUser = true;
+            }
+        });
+    }
+
+    private buildForm() {
+        this.form = this.formBuilder.group({
+            email: [
+                {
+                    value: null,
+                    disabled: true
+                },
+                [Validators.required, invalidEmailValidator(), invalidEmailMINTURValidator()]
+            ],
+            password: [null, [Validators.required, passwordPolicesValidator()]],
+            name: [null, [Validators.required]],
+            identification: [null, [Validators.required, Validators.minLength(13), Validators.maxLength(13)]]
+        });
+
+        this.watchFormChanges();
+    }
+
+    private resetPassword() {
+        this.authHttpService.resetPassword(this.identificationField.value, this.passwordField.value).subscribe({
+            next: () => {
+                this.form.reset();
+                this.router.navigate([MY_ROUTES.signIn]);
+            }
+        });
+    }
+
+    private validateForm() {
+        const errors: string[] = [];
+
+        if (this.emailField.invalid) errors.push('Correo Electrónico');
+        if (this.passwordField.invalid) errors.push('Contraseña');
+        if (this.identificationField.invalid) errors.push('RUC');
+
+        if (errors.length > 0) {
+            this.form.markAllAsTouched();
+            this.customMessageService.showFormErrors(errors);
+            return false;
+        }
+
+        return true;
+    }
 }

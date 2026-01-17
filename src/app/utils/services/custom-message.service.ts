@@ -74,6 +74,15 @@ export class CustomMessageService {
         this._modalMessage = detail;
     }
 
+    showModalError({ summary, detail }: { summary: string; detail: string }): void {
+        this._isModalVisible.set(true);
+        this._modalAcceptSeverity = 'danger';
+        this._modalTitleIcon = PrimeIcons.TIMES;
+        this._modalIconColor = 'var(--p-red-500)';
+        this._modalTitle = summary;
+        this._modalMessage = detail;
+    }
+
     showModalWarn({ summary, detail }: { summary: string; detail: string }): void {
         this._isModalVisible.set(true);
         this._modalAcceptSeverity = 'info';

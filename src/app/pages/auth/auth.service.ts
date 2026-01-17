@@ -97,19 +97,8 @@ export class AuthService {
         return environment.APP_SHORT_NAME;
     }
 
-    removeLogin() {
-        this.coreService.showProcessing();
-
-        setTimeout(() => {
-            this.coreService.hideProcessing();
-
-            if (this.accessToken) {
-                this.customMessageService.showInfo({ summary: 'Se cerró la sesión correctamente', detail: '' });
-            }
-
-            localStorage.clear();
-            sessionStorage.clear();
-            this.router.navigateByUrl(MY_ROUTES.signIn);
-        }, 500);
+    removeLogin(){
+        sessionStorage.clear();
+        localStorage.clear();
     }
 }

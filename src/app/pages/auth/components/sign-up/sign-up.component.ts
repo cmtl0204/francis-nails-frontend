@@ -15,17 +15,18 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { Message } from 'primeng/message';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
-import { invalidEmailMINTURValidator, invalidEmailValidator, unregisteredUserValidator } from '@utils/form-validators/custom-validator';
+import { invalidEmailMINTURValidator, invalidEmailValidator, unregisteredUserValidator, userExistValidator } from '@utils/form-validators/custom-validator';
 import { InputOtp } from 'primeng/inputotp';
 import { KeyFilter } from 'primeng/keyfilter';
 import { MY_ROUTES } from '@routes';
 import { JsonPipe } from '@angular/common';
+import { Fluid } from 'primeng/fluid';
 
 @Component({
     selector: 'app-sign-up',
     templateUrl: './sign-up.component.html',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, InputOtp, KeyFilter, JsonPipe]
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, InputOtp, KeyFilter, JsonPipe, Fluid]
 })
 export default class SignUpComponent {
     @Output() outForm = new EventEmitter(true);
@@ -72,7 +73,7 @@ export default class SignUpComponent {
                 null,
                 {
                     validators: [Validators.required, Validators.minLength(10), Validators.maxLength(13)],
-                    asyncValidators: [unregisteredUserValidator(this._authHttpService)]
+                    asyncValidators: [userExistValidator(this._authHttpService)]
                 }
             ]
         });
@@ -102,19 +103,6 @@ export default class SignUpComponent {
     private verifyRUC() {
         this._authHttpService.verifyRUC(this.identificationField.value).subscribe({});
         this.nameField.patchValue('hola');
-    }
-
-    private verifyIdentification() {
-        this._authHttpService.verifyIdentification(this.identificationField.value).subscribe({
-            next: (response) => {
-                if (response) {
-                    this._customMessageService.showError({
-                        summary: 'El usuario ya existe',
-                        detail: 'Por favor intente con otro RUC'
-                    });
-                }
-            }
-        });
     }
 
     protected requestTransactionalCode() {

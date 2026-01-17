@@ -2,7 +2,6 @@ import { Component, effect, inject, QueryList, signal, ViewChildren, WritableSig
 import { PrimeIcons } from 'primeng/api';
 import { ChildParkFormEnum, CoreEnum } from '@utils/enums';
 import { CoreSessionStorageService, CustomMessageService } from '@utils/services';
-import { ParkHttpService } from '@modules/core/roles/external/services/park-http.service';
 import { collectFormErrors } from '@utils/helpers/collect-form-errors.helper';
 import { ChildrenListFormComponent } from '@/pages/tests/children-list-form/children-list-form.component';
 import { Button } from 'primeng/button';
@@ -20,7 +19,6 @@ export class ParentForm {
     protected readonly ChildParkFormEnum = ChildParkFormEnum;
     protected readonly PrimeIcons = PrimeIcons;
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
-    private readonly parksHttpService = inject(ParkHttpService);
     private readonly customMessageService = inject(CustomMessageService);
 
     private mainData: WritableSignal<Record<string, any>> = signal({});

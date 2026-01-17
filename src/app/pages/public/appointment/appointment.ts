@@ -2,7 +2,6 @@ import { Component, effect, inject, OnInit, QueryList, signal, ViewChildren, Wri
 import { PrimeIcons } from 'primeng/api';
 import {  CoreEnum } from '@utils/enums';
 import { CoreSessionStorageService, CustomMessageService } from '@utils/services';
-import { ParkHttpService } from '@modules/core/roles/external/services/park-http.service';
 import { collectFormErrors } from '@utils/helpers/collect-form-errors.helper';
 import { AppointmentForm } from '@/pages/public/appointment/appointment-form/appointment-form';
 import { AppointmentHttpService } from '@/pages/public/appointment/services';
@@ -30,7 +29,6 @@ export class Appointment implements OnInit {
     protected readonly environment = environment;
     @ViewChildren(AppointmentForm) private appointmentForm!: QueryList<AppointmentForm>;
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
-    private readonly parksHttpService = inject(ParkHttpService);
     private readonly appointmentHttpService = inject(AppointmentHttpService);
     private readonly customMessageService = inject(CustomMessageService);
 

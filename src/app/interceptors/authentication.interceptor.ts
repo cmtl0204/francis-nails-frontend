@@ -1,12 +1,13 @@
 import { inject } from '@angular/core';
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { switchMap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
+
 import { CoreService } from '@utils/services/core.service';
 import { AuthService } from '@modules/auth/auth.service';
-import { Router } from '@angular/router';
-import { MY_ROUTES } from '@routes';
 import { AuthHttpService } from '@/pages/auth/auth-http.service';
+import { MY_ROUTES } from '@routes';
 
 export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
     const coreService = inject(CoreService);
@@ -14,22 +15,30 @@ export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
     const authHttpService = inject(AuthHttpService);
     const router = inject(Router);
 
+    const isRefreshRequest = req.url.includes('/refresh-token');
+
+    const logout = () => {
+        authService.removeLogin();
+        authHttpService.signOut().subscribe({ error: () => {} });
+        router.navigate([MY_ROUTES.signIn]);
+    };
+
     return next(req).pipe(
-        catchError((error) => {
-            if (error.status === 401 && !authService.refreshToken) {
-                console.log('Unauthorized');
-                authService.removeLogin();
-            }
+        catchError((error: HttpErrorResponse) => {
+            /* ===========================
+             * 401 - UNAUTHORIZED OR TOKEN EXPIRADO
+             * =========================== */
+            if (error.status === 401) {
+                if (!authService.refreshToken || isRefreshRequest) {
+                    logout();
+                    return throwError(() => error);
+                }
 
-            if (error.status === 401 && authService.refreshToken) {
-                console.log('2');
-                // Cuando el usuario no está autenticado o el token expiró
                 return authHttpService.refreshToken().pipe(
-                    switchMap((response) => {
-                        authService.accessToken = response.data.accessToken;
-                        authService.refreshToken = response.data.refreshToken;
+                    switchMap(({ accessToken,refreshToken }) => {
+                        authService.accessToken = accessToken;
+                        authService.refreshToken = refreshToken;
 
-                        // Reintentar request original con token nuevo
                         return next(
                             req.clone({
                                 setHeaders: {
@@ -39,37 +48,40 @@ export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
                         );
                     }),
                     catchError(() => {
-                        authService.removeLogin();
+                        logout();
                         return throwError(() => error);
                     })
                 );
-                // authService.removeLogin();
             }
 
-            // Cuando el usuario no tiene permisos para acceder al recurso solicitado y se encuentra logueado
-            if (error.status === 403 && authService.accessToken) {
-                switch (error.error.code) {
+            /* ===========================
+             * 403 - PERMISOS / CUENTA
+             * =========================== */
+            if (error.status === 403) {
+                switch (error.error?.error) {
                     case 'INSUFFICIENT_PERMISSIONS':
+                        router.navigate([MY_ROUTES.errorPages.forbidden.absolute]);
                         break;
+
                     case 'ACCOUNT_SUSPENDED':
-                        authService.removeLogin();
-                        break;
                     case 'ACCOUNT_LOCKED':
-                        authService.removeLogin();
+                        logout();
                         break;
+
+                    default:
+                        logout();
                 }
+
+                return throwError(() => error);
             }
 
-            // Cuando el usuario no tiene permisos para acceder al recurso solicitado y no está logueado
-            if (error.status === 403 && !authService.accessToken) {
-                authService.removeLogin();
-            }
-
-            // Cuando la aplicación o una ruta está en mantenimiento
+            /* ===========================
+             * 503 - MANTENIMIENTO
+             * =========================== */
             if (error.status === 503) {
-                authService.removeLogin();
-                coreService.serviceUnavailable = error.error.data;
-                router.navigateByUrl(MY_ROUTES.signIn);
+                coreService.serviceUnavailable = error.error?.data;
+                logout();
+                return throwError(() => error);
             }
 
             return throwError(() => error);

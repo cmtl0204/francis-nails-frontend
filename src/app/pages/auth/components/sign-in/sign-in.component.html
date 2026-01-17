@@ -1,12 +1,12 @@
-<p-fluid>
-    <form [formGroup]="form" class="card flex flex-col gap-6">
-        <div class="md:col-span-12 flex flex-col gap-2">
+<p-fluid class="custom-card-form">
+    <form [formGroup]="form" class="custom-grid-form">
+        <div class="md:col-span-12 custom-field-form">
             <div class="font-semibold text-xl text-center">
                 Ingreso al Sistema - {{environment.APP_SHORT_NAME}}
             </div>
         </div>
 
-        <div class="md:col-span-12 flex flex-col gap-2">
+        <div class="md:col-span-12 custom-field-form">
             <label
                 appLabel for="username"
                 label="Correo electrónico"
@@ -21,7 +21,7 @@
                 [dirty]="usernameField.dirty" />
         </div>
 
-        <div class="md:col-span-12 flex flex-col gap-2">
+        <div class="md:col-span-12 custom-field-form">
             <label
                 appLabel for="password" label="Contraseña"
                 [required]="passwordField"></label>
@@ -38,7 +38,7 @@
                 [dirty]="passwordField.dirty" />
         </div>
 
-        <div class="md:col-span-12 flex flex-col gap-2">
+        <div class="md:col-span-12 custom-field-form">
             <p-button
                 label="Ingresar"
                 [icon]="PrimeIcons.SIGN_IN"
@@ -66,6 +66,7 @@
         </div>
     </form>
 </p-fluid>
+
 <p-dialog [(visible)]="isVisibleRoles"
           [modal]="true"
           [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
@@ -86,7 +87,7 @@
     <div class="card flex flex-col gap-6 w-full">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
             @for (role of roles; track role.id) {
-                <div class="md:col-span-12 flex flex-col gap-2">
+                <div class="md:col-span-12 custom-field-form">
                     <p-button class="w-full [&>button]:w-full"
                               variant="text" [raised]="true" [label]="role.name"
                               (onClick)="selectRole(role)" />

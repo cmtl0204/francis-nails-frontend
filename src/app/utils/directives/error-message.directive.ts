@@ -28,6 +28,7 @@ export class ErrorMessageDirective implements OnChanges {
         registeredIdentification: this.fieldRegisteredIdentification,
         userExist: this.fieldUserExist,
         unregisteredUser: this.fieldUnregisteredUser,
+        unavailableUser: this.fieldUnavailableUser,
         pendingPaymentRuc: this.fieldRucPendingPayment,
         phoneNotAvailable: this.fieldPhoneNotAvailable,
         dateInvalid: this.fieldDateValid,

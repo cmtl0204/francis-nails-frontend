@@ -18,100 +18,111 @@ import { MY_ROUTES } from '@routes';
     standalone: true,
     imports: [CommonModule, RouterModule, Divider, Fluid, FormsModule, Message, ReactiveFormsModule],
     template: `
-        <p-fluid>
-            <div class="card flex flex-col md:flex-row gap-8">
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
-                    <div class="card h-full flex flex-col lg:col-start-2 lg:col-span-4 md:col-start-1 md:col-span-6">
+        <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+            <div class="w-full max-w-6xl bg-white rounded-xl shadow-md overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+                <!-- COLUMNA IZQUIERDA -->
+                <div class="p-6 lg:p-10 flex flex-col justify-center">
+                    <!-- Logo / Header -->
+                    <div class="mb-2 flex justify-center">
                         <img [src]="environment.PATH_ASSETS + '/auth/images/logo.png'" alt="" class="mx-auto" />
-
-<!--                        <p-message>-->
-<!--                            <ng-template #icon>-->
-<!--                                <p class="text-lg font-semibold text-center">Si usted tiene inconvenientes para ingresar al sistema, comuníquese con el Ministerio de Turismo</p>-->
-<!--                            </ng-template>-->
-<!--                        </p-message>-->
-
-                        <router-outlet />
-
-<!--                        <img [src]="environment.PATH_ASSETS + '/auth/images/footer.png'" alt="" class="mx-auto" />-->
                     </div>
 
-                    <div class="card h-full flex flex-col lg:col-start-6 lg:col-span-6 md:col-start-7 md:col-span-6 gap-6">
-                        <div class="font-semibold text-xl text-center">{{environment.APP_NAME}}</div>
+                    <!-- Contenido dinámico -->
+                    <!-- Aquí renderizas varios componentes -->
+                    <ng-content select="[left-content]">
+                        <router-outlet />
+                    </ng-content>
+                </div>
 
-                        <p-message>
-                            <div class="text-sm font-semibold">
-                                <p>
-                                    <b>Importante:</b>
-                                    Estimado Usuario, si su ......
-                                </p>
-                                <p><b>Dirección:</b> Nela Martínez y Antonio Castelo.</p>
-                                <p><b>Teléfono:</b> 097 8627 513</p>
-                                <p>
-                                    <b>Correo electrónico:</b>
-                                    <a href="mailto:info@francis-nails.com"> info&#64;francis-nails.com</a>
-                                </p>
+                <!-- COLUMNA DERECHA -->
+                <div class="bg-surface-50 p-6 lg:p-10 flex flex-col justify-center">
+                    <!-- Bloque informativo superior -->
+                    <div class="mb-6">
+                        <ng-content select="[right-header]">
+                            <div class="font-semibold text-xl text-center">{{ environment.APP_NAME }}</div>
+
+                            <p-divider />
+
+                            <p-message>
+                                <div class="text-sm font-semibold">
+                                    <p>
+                                        <b>Importante:</b>
+                                        Estimado Usuario, si su ......
+                                    </p>
+                                    <p><b>Dirección:</b> Nela Martínez y Antonio Castelo.</p>
+                                    <p><b>Teléfono:</b> 097 8627 513</p>
+                                    <p>
+                                        <b>Correo electrónico:</b>
+                                        <a href="mailto:info@francis-nails.com"> info&#64;francis-nails.com</a>
+                                    </p>
+                                </div>
+                            </p-message>
+                        </ng-content>
+                    </div>
+
+                    <!-- Listado / pasos / información -->
+                    <div class="space-y-6">
+                        <ng-content select="[right-content]">
+                            <div class="flex flex-col gap-2">
+                                <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/steps.pdf'">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                                        <div class="md:col-span-2 flex flex-col gap-2">
+                                            <i [class]="PrimeIcons.LIST_CHECK" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                        </div>
+                                        <div class="md:col-span-10 flex flex-col gap-2">
+                                            <h6 class="mb-5" style="color: #01579B">1 PASO</h6>
+                                            <p>Pasos para poder agendar.....</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <p-divider />
+
+                                <a target="_blank" [routerLink]="[MY_ROUTES.guessPages.simulator.absolute]">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                                        <div class="md:col-span-2 flex flex-col gap-2">
+                                            <i [class]="PrimeIcons.DESKTOP" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                        </div>
+                                        <div class="md:col-span-10 flex flex-col gap-2">
+                                            <h6 class="mb-5" style="color: #01579B">Reñas</h6>
+                                            <p>Ver reseñas.</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <p-divider />
+
+                                <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/external_manual.pdf'">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                                        <div class="md:col-span-2 flex flex-col gap-2">
+                                            <!--                                    <img [src]="environment.PATH_ASSETS+'/images/auth/manual_usuario.svg'"-->
+                                            <!--                                         alt="cabecera">-->
+
+                                            <i [class]="PrimeIcons.BOOK" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                        </div>
+                                        <div class="md:col-span-10 flex flex-col gap-2">
+                                            <h6 class="mb-5" style="color: #01579B">Servicios</h6>
+                                            <p>Catalogo de Servicios</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <p-divider />
+
+                                <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/terms_conditions.pdf'">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                                        <div class="md:col-span-2 flex flex-col gap-2">
+                                            <i [class]="PrimeIcons.VERIFIED" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                        </div>
+                                        <div class="md:col-span-10 flex flex-col gap-2">
+                                            <h6 class="mb-5" style="color: #01579B">TÉRMINOS Y CONDICIONES</h6>
+                                            <p>Términos y Condiciones del Sistema</p>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
-                        </p-message>
-
-                        <div class="flex flex-col gap-2">
-                            <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/steps.pdf'">
-                                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                                    <div class="md:col-span-2 flex flex-col gap-2">
-                                        <i [class]="PrimeIcons.LIST_CHECK" style="font-size: 3rem;color:var(--primary-color)"></i>
-                                    </div>
-                                    <div class="md:col-span-10 flex flex-col gap-2">
-                                        <h6 class="mb-5" style="color: #01579B">1 PASO</h6>
-                                        <p>Pasos para poder agendar.....</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <p-divider/>
-
-                            <a target="_blank" [routerLink]="[MY_ROUTES.guessPages.simulator.absolute]">
-                                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                                    <div class="md:col-span-2 flex flex-col gap-2">
-                                        <i [class]="PrimeIcons.DESKTOP" style="font-size: 3rem;color:var(--primary-color)"></i>
-                                    </div>
-                                    <div class="md:col-span-10 flex flex-col gap-2">
-                                        <h6 class="mb-5" style="color: #01579B">Reñas</h6>
-                                        <p>Ver reseñas.</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <p-divider/>
-
-                            <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/external_manual.pdf'">
-                                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                                    <div class="md:col-span-2 flex flex-col gap-2">
-                                        <!--                                    <img [src]="environment.PATH_ASSETS+'/images/auth/manual_usuario.svg'"-->
-                                        <!--                                         alt="cabecera">-->
-
-                                        <i [class]="PrimeIcons.BOOK" style="font-size: 3rem;color:var(--primary-color)"></i>
-                                    </div>
-                                    <div class="md:col-span-10 flex flex-col gap-2">
-                                        <h6 class="mb-5" style="color: #01579B">Servicios</h6>
-                                        <p>Catalogo de Servicios</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <p-divider/>
-
-                            <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/terms_conditions.pdf'">
-                                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                                    <div class="md:col-span-2 flex flex-col gap-2">
-                                        <i [class]="PrimeIcons.VERIFIED" style="font-size: 3rem;color:var(--primary-color)"></i>
-                                    </div>
-                                    <div class="md:col-span-10 flex flex-col gap-2">
-                                        <h6 class="mb-5" style="color: #01579B">TÉRMINOS Y CONDICIONES</h6>
-                                        <p>Términos y Condiciones del Sistema</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                        </ng-content>
                     </div>
                 </div>
             </div>
-        </p-fluid>
+        </div>
     `
 })
 export class AppLayoutAuth {

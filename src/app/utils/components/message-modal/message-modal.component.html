@@ -5,32 +5,30 @@
     [closable]="false">
 
     <ng-template #header>
-        {{ customMessageService.modalTitle }}
+        <div class="text-center">
+            <h5>{{ customMessageService.modalTitle }}</h5>
+        </div>
     </ng-template>
 
     <ng-template #content>
-        <div class="text-center">
-        </div>
-
         @if (Array.isArray(customMessageService.modalMessage)) {
             @for (message of customMessageService.modalMessage; track message) {
                 <ul>
                     <li>
                         <h6>
                             <i [class]="customMessageService.modalIcon"
-                               [style]="{'color':customMessageService.modalIconColor}"></i>
+                               [style]="{'color':customMessageService.modalIconColor}">
+                            </i>
                             {{ message }}
                         </h6>
                     </li>
                 </ul>
             }
         } @else {
-            <div class="text-center">
-                <i [class]="customMessageService.modalTitleIcon"
-                   [style]="{'color':customMessageService.modalIconColor,'font-size':'2.5rem'}"></i>
-            </div>
+            <div>
 
-            <p>{{ customMessageService.modalMessage }}</p>
+                {{ customMessageService.modalMessage }}
+            </div>
         }
     </ng-template>
 
@@ -39,7 +37,7 @@
             <p-button
                 label="Cerrar"
                 [severity]="customMessageService.modalAcceptSeverity"
-                (click)="customMessageService.setModalVisible(false)"/>
+                (click)="customMessageService.setModalVisible(false)" />
         </div>
     </ng-template>
 </p-dialog>

@@ -7,6 +7,7 @@ import { MY_ROUTES } from '@routes';
 import { Ripple } from 'primeng/ripple';
 import { AuthService } from '@modules/auth/auth.service';
 import { RoleEnum } from '@utils/enums';
+import { AuthHttpService } from '@/pages/auth/auth-http.service';
 
 @Component({
     selector: 'app-menu',
@@ -32,9 +33,10 @@ import { RoleEnum } from '@utils/enums';
 })
 export class AppMenu implements OnInit {
     protected readonly authService = inject(AuthService);
+    protected readonly authHttpService = inject(AuthHttpService);
     protected readonly PrimeIcons = PrimeIcons;
     protected model: MenuItem[] = [];
-    private readonly _router = inject(Router);
+    private readonly router = inject(Router);
 
     get loadMenu(): MenuItem[] {
         switch (this.authService.role.code) {
@@ -90,6 +92,6 @@ export class AppMenu implements OnInit {
     }
 
     signOut() {
-        this.authService.removeLogin();
+        this.authHttpService.signOut().subscribe();
     }
 }

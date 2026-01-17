@@ -26,7 +26,7 @@ export function registeredIdentificationValidator(authHttpService: AuthHttpServi
         return of(control.value).pipe(
             debounceTime(300),
             take(1),
-            switchMap((value) => authHttpService.verifyIdentification(value).pipe(map((response) => (response ? { registeredIdentification: true } : null))))
+            switchMap((value) => authHttpService.verifyUserExist(value).pipe(map((response) => (response ? { registeredIdentification: true } : null))))
         );
     };
 }
@@ -50,7 +50,7 @@ export function unregisteredUserValidator(authHttpService: AuthHttpService): Asy
         return of(control.value).pipe(
             debounceTime(300),
             take(1),
-            switchMap((value) => authHttpService.verifyIdentification(value).pipe(map((response) => (response ? null : { unregisteredUser: true }))))
+            switchMap((value) => authHttpService.verifyUserExist(value).pipe(map((response) => (response ? null : { unregisteredUser: true }))))
         );
     };
 }
