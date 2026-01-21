@@ -31,8 +31,7 @@
                 [dirty]="identificationField.dirty" />
         </div>
 
-        <!--        @if (emailField.enabled && identificationField.valid) {-->
-        @if (emailField.enabled) {
+        @if (emailField.enabled && identificationField.valid) {
             <!-- emailField -->
             <div class="custom-field-form md:col-span-12">
                 <label
@@ -79,7 +78,7 @@
             </div>
         }
 
-        @if (true) {
+        @if (passwordField.enabled) {
             <!-- nameField -->
             <div class="custom-field-form md:col-span-12">
                 <label
@@ -140,8 +139,8 @@
                         <label
                             appLabel
                             [for]="$index"
-                            [required]="securityQuestion.get('answer')"
-                            [label]="securityQuestion.get('question')?.value">
+                            [required]="securityQuestion.get('answer')">
+                            {{ securityQuestion.get('question')?.value }}
                         </label>
 
                         <input
@@ -188,7 +187,7 @@
             <div class="custom-field-form md:col-span-12">
                 <p-button
                     label="Crear Cuenta"
-                    [icon]="PrimeIcons.SAVE"
+                    [icon]="PrimeIcons.USER_PLUS"
                     severity="success"
                     [disabled]="passwordField.invalid"
                     (onClick)="onSubmit()" />

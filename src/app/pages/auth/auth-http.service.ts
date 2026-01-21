@@ -10,6 +10,7 @@ import { CatalogueHttpService, CoreSessionStorageService, DpaHttpService } from 
 import { CoreEnum } from '@utils/enums';
 import { Router } from '@angular/router';
 import { MY_ROUTES } from '@routes';
+import { CatalogueInterface } from '@utils/interfaces';
 
 @Injectable({
     providedIn: 'root'
@@ -188,6 +189,16 @@ export class AuthHttpService {
 
     verifyRucPendingPayment(ruc: string) {
         const url = `${this.apiUrl}/verify-ruc-pending-payment/${ruc}`;
+
+        return this.httpClient.get<HttpResponseInterface>(url).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
+    findSecurityQuestions(): Observable<CatalogueInterface> {
+        const url = `${this.apiUrl}/security-questions`;
 
         return this.httpClient.get<HttpResponseInterface>(url).pipe(
             map((response) => {

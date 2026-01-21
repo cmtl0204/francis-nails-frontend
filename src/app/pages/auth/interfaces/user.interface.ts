@@ -1,4 +1,5 @@
-import { CatalogueInterface, RoleInterface } from '@modules/auth/interfaces';
+import {  RoleInterface } from '@modules/auth/interfaces';
+import { CatalogueInterface } from '@utils/interfaces';
 
 export interface UserInterface {
   id: string;

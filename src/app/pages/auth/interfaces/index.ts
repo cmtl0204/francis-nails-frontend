@@ -1,5 +1,4 @@
 export  * from './auth.interface';
-export  * from './catalogue.interface';
 export  * from './role.interface';
 export  * from './sign-in.interface';
 export  * from './sign-in-response.interface';

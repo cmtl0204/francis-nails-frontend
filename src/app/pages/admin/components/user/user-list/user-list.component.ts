@@ -165,8 +165,8 @@ export default class UserListComponent implements OnInit {
         this.router.navigate([MY_ROUTES.adminPages.user.form.absolute]);
     }
 
-    onSearch(searchTerm: string) {
-        this.currentSearch = searchTerm || '';
+    onSearch(search: string) {
+        this.currentSearch = search || '';
         this.loadData();
     }
 

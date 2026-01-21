@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -19,6 +19,9 @@ import { InputOtp } from 'primeng/inputotp';
 import { KeyFilter } from 'primeng/keyfilter';
 import { MY_ROUTES } from '@routes';
 import { Fluid } from 'primeng/fluid';
+import { CatalogueInterface } from '@utils/interfaces';
+import { CatalogueService } from '@utils/services/catalogue.service';
+import { CatalogueTypeEnum } from '@utils/enums';
 
 @Component({
     selector: 'app-sign-up',
@@ -26,7 +29,7 @@ import { Fluid } from 'primeng/fluid';
     standalone: true,
     imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, InputOtp, KeyFilter, Fluid]
 })
-export default class SignUpComponent {
+export default class SignUpComponent implements OnInit {
     protected readonly environment = environment;
     protected readonly PrimeIcons = PrimeIcons;
     protected form!: FormGroup;
@@ -34,6 +37,7 @@ export default class SignUpComponent {
     protected readonly MY_ROUTES = MY_ROUTES;
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
+    private readonly catalogueService = inject(CatalogueService);
     private readonly authHttpService = inject(AuthHttpService);
     private readonly router = inject(Router);
 
@@ -69,13 +73,27 @@ export default class SignUpComponent {
         return this.form.controls['securityQuestions'] as FormArray;
     }
 
-    openTerms() {
+    async ngOnInit() {
+        await this.loadSecurityQuestions();
+    }
+
+    protected async loadSecurityQuestions() {
+        let securityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
+
+        securityQuestions = securityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
+
+        for (const securityQuestion of securityQuestions) {
+            this.addQuestion(securityQuestion);
+        }
+    }
+
+    protected openTerms() {
         if (!this.termsAcceptedAtField.value) {
             window.open(`${environment.PATH_ASSETS}/auth/files/terms.pdf`, '_blank');
         }
     }
 
-    addQuestion(question: any): void {
+    protected addQuestion(question: any): void {
         const group = this.formBuilder.group({
             code: [question.code, Validators.required],
             question: [question.name, Validators.required],
@@ -92,14 +110,14 @@ export default class SignUpComponent {
             this.emailField.reset();
             this.emailField.enable();
             this.passwordField.reset();
-            // this.passwordField.disable();
+            this.passwordField.disable();
         });
 
         this.emailField.valueChanges.subscribe((value) => {
             this.transactionalCodeControl.reset();
             this.transactionalCodeControl.disable();
             this.passwordField.reset();
-            // this.passwordField.disable();
+            this.passwordField.disable();
         });
 
         this.transactionalCodeControl.valueChanges.subscribe((value) => {
@@ -111,7 +129,7 @@ export default class SignUpComponent {
 
     protected requestTransactionalCode() {
         this.nameField.disable();
-        // this.passwordField.disable();
+        this.passwordField.disable();
 
         this.transactionalCodeControl.reset();
         this.transactionalCodeControl.disable();
@@ -159,13 +177,9 @@ export default class SignUpComponent {
             securityQuestions: this.formBuilder.array([])
         });
 
-        // this.emailField.disable();
-        // this.nameField.disable();
-        // this.passwordField.disable();
-
-        this.addQuestion({ code: '1', name: 'Primera pregunta' });
-        this.addQuestion({ code: '2', name: 'Segunda pregunta' });
-        this.addQuestion({ code: '3', name: 'Tercera pregunta' });
+        this.emailField.disable();
+        this.nameField.disable();
+        this.passwordField.disable();
 
         this.watchFormChanges();
     }
