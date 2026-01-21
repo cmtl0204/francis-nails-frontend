@@ -36,18 +36,15 @@ export default class UserFormComponent implements OnInit {
 
     protected readonly router = inject(Router);
     protected readonly customMessageService = inject(CustomMessageService);
+    protected id = input.required<string>();
+    protected form!: FormGroup;
+    protected roles: RoleInterface[] = [];
+    protected passwordActivated = new FormControl(false);
     private readonly breadcrumbService = inject(BreadcrumbService);
     private readonly formBuilder = inject(FormBuilder);
-
     private readonly authHttpService = inject(AuthHttpService);
     private readonly userHttpService = inject(UserHttpService);
     private readonly roleHttpService = inject(RoleHttpService);
-
-    protected id = input.required<string>();
-    protected form!: FormGroup;
-
-    protected roles: RoleInterface[] = [];
-    protected passwordActivated = new FormControl(false);
 
     constructor() {
         this.breadcrumbService.setItems([{ label: 'Listado de Usuarios', routerLink: MY_ROUTES.adminPages.user.absolute }, { label: 'Formulario' }]);
@@ -96,6 +93,8 @@ export default class UserFormComponent implements OnInit {
         } else {
             this.passwordActivated.setValue(true);
             this.passwordField.enable();
+            this.passwordActivated.disable();
+            this.passwordChangedField.setValue(true);
         }
 
         // if (this.id()) {
@@ -133,8 +132,12 @@ export default class UserFormComponent implements OnInit {
         this.passwordActivated.valueChanges.subscribe((value) => {
             if (value) {
                 this.passwordField.enable();
+                this.passwordChangedField.enable();
             } else {
                 this.passwordField.disable();
+                this.passwordField.reset();
+                this.passwordChangedField.reset();
+                this.passwordChangedField.disable();
             }
 
             this.passwordField.updateValueAndValidity();
@@ -145,6 +148,10 @@ export default class UserFormComponent implements OnInit {
         this.userHttpService.findOne(id).subscribe({
             next: (response: any) => {
                 this.form.patchValue(response);
+                if (this.id()) {
+                    this.passwordChangedField.setValue(false);
+                    this.passwordChangedField.disable();
+                }
             }
         });
     }

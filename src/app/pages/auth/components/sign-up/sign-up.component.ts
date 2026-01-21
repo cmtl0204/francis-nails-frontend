@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -30,7 +30,6 @@ export default class SignUpComponent {
     protected readonly environment = environment;
     protected readonly PrimeIcons = PrimeIcons;
     protected form!: FormGroup;
-    protected formErrors: string[] = [];
     protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
     protected readonly MY_ROUTES = MY_ROUTES;
     private readonly formBuilder = inject(FormBuilder);
@@ -66,10 +65,24 @@ export default class SignUpComponent {
         return this.form.controls['termsAcceptedAt'];
     }
 
+    protected get securityQuestionsField(): FormArray {
+        return this.form.controls['securityQuestions'] as FormArray;
+    }
+
     openTerms() {
         if (!this.termsAcceptedAtField.value) {
             window.open(`${environment.PATH_ASSETS}/auth/files/terms.pdf`, '_blank');
         }
+    }
+
+    addQuestion(question: any): void {
+        const group = this.formBuilder.group({
+            code: [question.code, Validators.required],
+            question: [question.name, Validators.required],
+            answer: [null, Validators.required]
+        });
+
+        this.securityQuestionsField.push(group);
     }
 
     protected watchFormChanges() {
@@ -79,14 +92,14 @@ export default class SignUpComponent {
             this.emailField.reset();
             this.emailField.enable();
             this.passwordField.reset();
-            this.passwordField.disable();
+            // this.passwordField.disable();
         });
 
         this.emailField.valueChanges.subscribe((value) => {
             this.transactionalCodeControl.reset();
             this.transactionalCodeControl.disable();
             this.passwordField.reset();
-            this.passwordField.disable();
+            // this.passwordField.disable();
         });
 
         this.transactionalCodeControl.valueChanges.subscribe((value) => {
@@ -98,7 +111,7 @@ export default class SignUpComponent {
 
     protected requestTransactionalCode() {
         this.nameField.disable();
-        this.passwordField.disable();
+        // this.passwordField.disable();
 
         this.transactionalCodeControl.reset();
         this.transactionalCodeControl.disable();
@@ -142,12 +155,17 @@ export default class SignUpComponent {
                     validators: [Validators.required, Validators.minLength(10), Validators.maxLength(13)],
                     asyncValidators: [unavailableUserValidator(this.authHttpService)]
                 }
-            ]
+            ],
+            securityQuestions: this.formBuilder.array([])
         });
 
-        this.emailField.disable();
-        this.nameField.disable();
-        this.passwordField.disable();
+        // this.emailField.disable();
+        // this.nameField.disable();
+        // this.passwordField.disable();
+
+        this.addQuestion({ code: '1', name: 'Primera pregunta' });
+        this.addQuestion({ code: '2', name: 'Segunda pregunta' });
+        this.addQuestion({ code: '3', name: 'Tercera pregunta' });
 
         this.watchFormChanges();
     }
@@ -169,6 +187,9 @@ export default class SignUpComponent {
         if (this.passwordField.invalid) errors.push('Contraseña');
         if (this.identificationField.invalid) errors.push('Identificación');
         if (this.termsAcceptedAtField.invalid) errors.push('Términos y Condiciones');
+
+        const invalidSecurityQuestions = this.securityQuestionsField.controls.some((ctrl) => ctrl.get('answer')?.invalid);
+        if (invalidSecurityQuestions) errors.push('Preguntas de seguridad');
 
         if (errors.length > 0) {
             this.form.markAllAsTouched();

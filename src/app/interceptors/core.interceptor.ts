@@ -36,8 +36,13 @@ export const coreInterceptor: HttpInterceptorFn = (req, next) => {
                     // const resHeaders = event.headers; // <-- headers de respuesta
 
                     if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
-
                         if (!event.url?.includes('refresh-token')) {
+                            customMessageService.showHttpSuccess(event.body);
+                        }
+                    }
+
+                    if (['GET'].includes(req.method)) {
+                        if (event.url?.includes('transactional-codes')) {
                             customMessageService.showHttpSuccess(event.body);
                         }
                     }

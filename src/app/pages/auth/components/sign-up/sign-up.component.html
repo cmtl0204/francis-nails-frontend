@@ -9,6 +9,7 @@
                 [routerLink]="[MY_ROUTES.authPages.signIn.absolute]" />
         </div>
 
+        <!-- title -->
         <div class="custom-section-title-form md:col-span-12  text-center">
             Creación de la Cuenta
         </div>
@@ -30,7 +31,8 @@
                 [dirty]="identificationField.dirty" />
         </div>
 
-        @if (emailField.enabled && identificationField.valid) {
+        <!--        @if (emailField.enabled && identificationField.valid) {-->
+        @if (emailField.enabled) {
             <!-- emailField -->
             <div class="custom-field-form md:col-span-12">
                 <label
@@ -77,7 +79,7 @@
             </div>
         }
 
-        @if (passwordField.enabled) {
+        @if (true) {
             <!-- nameField -->
             <div class="custom-field-form md:col-span-12">
                 <label
@@ -122,6 +124,41 @@
                     [dirty]="passwordField.dirty" />
             </div>
 
+            <!-- securityQuestions title -->
+            <div class="md:col-span-12">
+                <h4>Preguntas de seguridad:</h4>
+                <small style="color: var(--primary-color)">
+                    Tus respuestas nos ayudarán a recuperar tu cuenta si alguna vez lo necesitas.
+                </small>
+            </div>
+
+            <!-- securityQuestionsField -->
+            <div formArrayName="securityQuestions" class="custom-field-form md:col-span-12">
+                @for (securityQuestion of securityQuestionsField.controls; track securityQuestion) {
+                    <div [formGroupName]="$index" class="custom-field-form md:col-span-12">
+
+                        <label
+                            appLabel
+                            [for]="$index"
+                            [required]="securityQuestion.get('answer')"
+                            [label]="securityQuestion.get('question')?.value">
+                        </label>
+
+                        <input
+                            pInputText
+                            type="text"
+                            [id]="$index"
+                            formControlName="answer" />
+
+                        <p-message
+                            appErrorMessage
+                            [errors]="securityQuestion.get('answer')?.errors"
+                            [touched]="securityQuestion.get('answer')?.touched"
+                            [dirty]="securityQuestion.get('answer')?.dirty" />
+                    </div>
+                }
+            </div>
+
             <!-- termsAcceptedAtField -->
             <div class="custom-field-form md:col-span-12">
                 <div class="flex items-center">
@@ -135,8 +172,8 @@
                         appLabel
                         for="termsAcceptedAt"
                         [required]="termsAcceptedAtField"
-                        class="ml-2"
-                        label="He leído y acepto los Términos y Condiciones">
+                        class="ml-2">
+                        He leído y acepto los Términos y Condiciones
                     </label>
                 </div>
 

@@ -1,0 +1,36 @@
+<form [formGroup]="form" class="custom-grid-form">
+    <div class="custom-field-form md:col-span-12">
+        <h5>Preguntas de seguridad:</h5>
+    </div>
+
+    <!-- securityQuestionsField -->
+    <div formArrayName="securityQuestions" class="custom-field-form md:col-span-12">
+        @for (securityQuestion of securityQuestionsField.controls; track securityQuestion) {
+            <div [formGroupName]="$index" class="custom-field-form md:col-span-12">
+
+                <label
+                    appLabel
+                    [for]="$index"
+                    [required]="securityQuestion.get('answer')">
+                    {{ securityQuestion.get('question')?.value?.name }}
+                </label>
+
+                <input
+                    pInputText
+                    type="text"
+                    [id]="$index"
+                    formControlName="answer"
+                    placeholder="Enter your answer" />
+
+                <p-message
+                    appErrorMessage
+                    [errors]="securityQuestion.get('answer')?.errors"
+                    [touched]="securityQuestion.get('answer')?.touched"
+                    [dirty]="securityQuestion.get('answer')?.dirty" />
+            </div>
+        }
+    </div>
+</form>
+
+{{ securityQuestionsField.errors |json }}
+<!--{{ securityQuestionsField.value |json }}-->
