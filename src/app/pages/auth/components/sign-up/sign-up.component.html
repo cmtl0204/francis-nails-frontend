@@ -4,7 +4,7 @@
         <div class="custom-field-form md:col-span-12">
             <p-button
                 pTooltip="Regresar"
-                [icon]="FontAwesome.ARROW_LEFT_SOLID"
+                [icon]="FontAwesome.CHEVRON_LEFT_SOLID"
                 severity="warn"
                 [text]="true"
                 [routerLink]="[MY_ROUTES.authPages.signIn.absolute]" />
@@ -32,8 +32,8 @@
                 [dirty]="identificationField.dirty" />
         </div>
 
+        <!-- emailField -->
         @if (emailField.enabled && identificationField.valid) {
-            <!-- emailField -->
             <div class="custom-field-form md:col-span-12">
                 <label
                     appLabel for="email"
@@ -127,7 +127,8 @@
             <!-- securityQuestions title -->
             <div class="md:col-span-12">
                 <h4>Preguntas de seguridad:</h4>
-                <small style="color: var(--primary-color)">
+
+                <small class="bg-surface-100">
                     Tus respuestas nos ayudarán a recuperar tu cuenta si alguna vez lo necesitas.
                 </small>
             </div>

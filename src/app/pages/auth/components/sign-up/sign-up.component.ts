@@ -83,9 +83,7 @@ export default class SignUpComponent implements OnInit {
 
         const selectedSecurityQuestions = allSecurityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
 
-        for (const securityQuestion of selectedSecurityQuestions) {
-            this.addQuestion(securityQuestion);
-        }
+        selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
     }
 
     protected openTerms() {

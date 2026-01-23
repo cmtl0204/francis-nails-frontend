@@ -42,7 +42,7 @@
 
                     <p-avatar
                         [image]="avatarUrl ? avatarUrl:undefined"
-                        [icon]="avatarUrl ? undefined:FontAwesome.USER_SOLID"
+                        [icon]="avatarUrl ? undefined:FontAwesome.CAMERA_RETRO_SOLID"
                         size="xlarge"
                         shape="circle"
                         (click)="fileInput.click()"
@@ -311,7 +311,7 @@
                         <div class="md:col-span-4 custom-field-form mt-8">
                             <p-button
                                 label="Auto Generar"
-                                [icon]="FontAwesome.KEY_SOLID"
+                                [icon]="FontAwesome.WAND_MAGIC_SPARKLES_SOLID"
                                 severity="info"
                                 [disabled]="passwordField.disabled"
                                 (onClick)="autoGeneratePassword()" />
@@ -342,12 +342,12 @@
                         </p>
 
                         <p>
-                            <small style="color: var(--primary-color)">
+                            <small class="bg-surface-100">
                                 Estas preguntas se utilizan para verificar tu identidad.
                             </small>
                         </p>
 
-                        <small style="color: var(--primary-color)">
+                        <small class="bg-surface-100">
                             Para cambiarlas, deberás validar un código de seguridad.
                         </small>
                     </label>
@@ -357,7 +357,7 @@
                     <p-button
                         label="Cambiar Preguntas"
                         severity="info"
-                        [icon]="FontAwesome.PENCIL_SOLID"
+                        [icon]="FontAwesome.PEN_TO_SQUARE_REGULAR"
                         (onClick)="goToSecurityQuestions()"
                     />
                 </div>

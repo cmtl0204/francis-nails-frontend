@@ -140,12 +140,8 @@ export default class SecurityQuestionComponent implements OnInit {
         this.selectedSecurityQuestions = this.allSecurityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
 
         this.securityQuestionsField.clear();
-        this.securityQuestionsField.reset();
-        this.securityQuestionsField.updateValueAndValidity();
 
         this.selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
-
-        console.log(this.securityQuestionsField.value);
     }
 
     protected addQuestion(question: any): void {

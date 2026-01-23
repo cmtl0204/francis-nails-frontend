@@ -28,7 +28,10 @@
     <ng-template #header let-columns>
         <tr>
             <th>
-                <p-button pTooltip="Crear" [icon]="FontAwesome.PLUS_SOLID" severity="success" (onClick)="create()" />
+                <p-button
+                    label="Nuevo"
+                    severity="success"
+                    (onClick)="create()" />
             </th>
 
             @for (col of columns; track col) {
@@ -41,7 +44,7 @@
 
     <ng-template #body let-item let-columns="columns" let-rowIndex="rowIndex">
         <tr>
-            <td>
+            <td class="justify-center">
                 <app-button-action
                     [buttonActions]="buttonActions()"
                     [enabled]="isButtonActionsEnabled()"
