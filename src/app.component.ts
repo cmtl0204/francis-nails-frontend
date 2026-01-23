@@ -17,20 +17,26 @@ import { CoreEnum } from '@utils/enums';
     standalone: true,
     imports: [RouterModule, ToastModule, MessageModalComponent, MessageProcessingComponent, AppConfigurator, FormsModule, ConfirmDialog],
     template: `
+        <!-- show a modal for http response -->
         @if (coreService.processing()) {
             <app-message-processing />
         }
 
+        <!-- show a modal for custom messages -->
         @if (customMessageService.modalVisible()) {
             <app-message-modal />
         }
 
-        <p-toast position="top-right" [life]="customMessageService.modalLife" />
+        <!-- show a toast for custom messages (http response) -->
+        <p-toast position="top-center" [life]="customMessageService.modalLife" />
 
+        <!-- show a confirm modal for custom messages (ex. delete) -->
         <p-confirmdialog key="confirmdialog"></p-confirmdialog>
 
+        <!-- init custom styles -->
         <app-configurator />
 
+        <!-- render components -->
         @if (loading) {
             <router-outlet />
         }

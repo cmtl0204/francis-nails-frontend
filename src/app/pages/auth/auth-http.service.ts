@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpResponseInterface, SignInInterface } from './interfaces';
+import { HttpResponseInterface, SignInInterface, UserInterface } from './interfaces';
 import { environment } from '@env/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -187,6 +187,16 @@ export class AuthHttpService {
         );
     }
 
+    verifySecurityQuestionsAndResetEmail(userId: string, payload: any): Observable<HttpResponseInterface> {
+        const url = `${this.apiUrl}/${userId}/security-questions/verify`;
+
+        return this.httpClient.patch<HttpResponseInterface>(url, payload).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
     verifyRucPendingPayment(ruc: string) {
         const url = `${this.apiUrl}/verify-ruc-pending-payment/${ruc}`;
 
@@ -201,6 +211,16 @@ export class AuthHttpService {
         const url = `${this.apiUrl}/security-questions`;
 
         return this.httpClient.get<HttpResponseInterface>(url).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
+    createSecurityQuestions(payload: CatalogueInterface): Observable<UserInterface> {
+        const url = `${this.apiUrl}/security-questions`;
+
+        return this.httpClient.post<HttpResponseInterface>(url, payload).pipe(
             map((response) => {
                 return response.data;
             })

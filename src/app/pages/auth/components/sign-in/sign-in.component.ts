@@ -17,9 +17,9 @@ import { AuthService } from '@modules/auth/auth.service';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { MY_ROUTES } from '@routes';
-import { invalidEmailValidator } from '@utils/form-validators/custom-validator';
 import { RoleInterface } from '@modules/auth/interfaces';
 import { Fluid } from 'primeng/fluid';
+import { CoreService } from '@utils/services';
 
 @Component({
     selector: 'app-sign-in',
@@ -29,11 +29,7 @@ import { Fluid } from 'primeng/fluid';
 })
 export default class SignInComponent {
     protected readonly environment = environment;
-    private readonly formBuilder = inject(FormBuilder);
-    private readonly customMessageService = inject(CustomMessageService);
-    private readonly authHttpService = inject(AuthHttpService);
-    private readonly authService = inject(AuthService);
-    private readonly router = inject(Router);
+    protected readonly coreService = inject(CoreService);
     protected readonly PrimeIcons = PrimeIcons;
     protected form!: FormGroup;
     protected roles: RoleInterface[] = [];
@@ -41,15 +37,29 @@ export default class SignInComponent {
     protected isVisibleRoles = false;
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly Validators = Validators;
+    private readonly formBuilder = inject(FormBuilder);
+    private readonly customMessageService = inject(CustomMessageService);
+    private readonly authHttpService = inject(AuthHttpService);
+    private readonly authService = inject(AuthService);
+    private readonly router = inject(Router);
 
     constructor() {
         this.buildForm();
     }
 
-    private buildForm() {
-        this.form = this.formBuilder.group({
-            username: [null, [Validators.required]],
-            password: [null, [Validators.required]]
+    protected get usernameField(): AbstractControl {
+        return this.form.controls['username'];
+    }
+
+    protected get passwordField(): AbstractControl {
+        return this.form.controls['password'];
+    }
+
+    signOut() {
+        this.authHttpService.signOut().subscribe({
+            next: () => {
+                this.isVisibleRoles = false;
+            }
         });
     }
 
@@ -57,6 +67,22 @@ export default class SignInComponent {
         if (this.validateForm()) {
             this.signIn();
         }
+    }
+
+    protected selectRole(value: RoleInterface) {
+        this.authService.role = value;
+        this.router.navigate([MY_ROUTES.dashboards.absolute]);
+    }
+
+    protected closeRoleSelect() {
+        this.authHttpService.signOut().subscribe();
+    }
+
+    private buildForm() {
+        this.form = this.formBuilder.group({
+            username: [null, [Validators.required]],
+            password: [null, [Validators.required]]
+        });
     }
 
     private validateForm() {
@@ -89,22 +115,5 @@ export default class SignInComponent {
                 this.isVisibleRoles = true;
             }
         });
-    }
-
-    protected selectRole(value: RoleInterface) {
-        this.authService.role = value;
-        this.router.navigate([MY_ROUTES.dashboards.absolute]);
-    }
-
-    protected closeRoleSelect() {
-        this.authHttpService.signOut().subscribe();
-    }
-
-    protected get usernameField(): AbstractControl {
-        return this.form.controls['username'];
-    }
-
-    protected get passwordField(): AbstractControl {
-        return this.form.controls['password'];
     }
 }

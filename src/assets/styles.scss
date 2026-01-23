@@ -4,6 +4,8 @@
 @use 'primeicons/primeicons.css';
 @use './demo/demo.scss';
 
+@import './primeng-zindex';
+
 .custom-grid-form {
     @apply grid grid-cols-1 md:grid-cols-12 gap-6;
 }
@@ -18,7 +20,7 @@
 }
 
 .custom-section-title-form {
-    @apply text-3xl font-semibold;
+    @apply text-xl font-semibold;
 }
 
 .p-toolbar {

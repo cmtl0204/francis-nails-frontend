@@ -3,6 +3,7 @@ import { CustomMessageService } from '@utils/services/custom-message.service';
 import { Dialog } from 'primeng/dialog';
 import { Button } from 'primeng/button';
 import { NgClass } from '@angular/common';
+import { PrimeIcons } from 'primeng/api';
 
 @Component({
     selector: 'app-message-modal',
@@ -13,4 +14,5 @@ import { NgClass } from '@angular/common';
 export class MessageModalComponent {
     protected readonly customMessageService = inject(CustomMessageService);
     protected readonly Array = Array;
+    protected readonly PrimeIcons = PrimeIcons;
 }

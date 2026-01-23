@@ -1,36 +1,120 @@
-<form [formGroup]="form" class="custom-grid-form">
-    <div class="custom-field-form md:col-span-12">
-        <h5>Preguntas de seguridad:</h5>
+@if (form.enabled) {
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div class="w-full max-w-3xl rounded-xl shadow-md overflow-hidden grid grid-cols-1 lg:grid-cols-1">
+            @if (this.authService.auth.securityQuestionAcceptedAt) {
+                <p-button
+                    label="Regresar"
+                    [icon]="PrimeIcons.ARROW_LEFT"
+                    severity="warn"
+                    [text]="true"
+                    (onClick)="back()" />
+            }
+
+            <div class="p-6 lg:p-10 flex flex-col justify-center">
+                <ng-content select="[left-content]">
+                    <p-fluid class="custom-card-form">
+                        <h3 class="mb-4 text-center">Crear preguntas de seguridad</h3>
+                        <form [formGroup]="form" class="custom-grid-form" (ngSubmit)="onSubmit()">
+                            <div class="custom-field-form md:col-span-12">
+                                <small style="color: var(--primary-color)">
+                                    Por favor, crea tus preguntas de seguridad.
+                                </small>
+                                <small style="color: var(--primary-color)">
+                                    Tus respuestas serán cifradas y usadas solo para verificar tu identidad.
+                                </small>
+                            </div>
+
+                            <!-- securityQuestionsField -->
+                            <div formArrayName="securityQuestions" class="custom-field-form md:col-span-12">
+                                @for (securityQuestion of securityQuestionsField.controls; track securityQuestion.value.code) {
+                                    <div [formGroupName]="$index" class="custom-field-form md:col-span-12">
+                                        <label
+                                            appLabel
+                                            [for]="$index"
+                                            [required]="securityQuestion.get('answer')">
+                                            {{ securityQuestion.get('question')?.value }}
+                                        </label>
+
+                                        <p-password
+                                            [id]="$index"
+                                            [formControl]="$any(securityQuestion.get('answer'))"
+                                            [toggleMask]="true"
+                                            [feedback]="false" />
+
+                                        <p-message
+                                            appErrorMessage
+                                            [errors]="securityQuestion.get('answer')?.errors"
+                                            [touched]="securityQuestion.get('answer')?.touched"
+                                            [dirty]="securityQuestion.get('answer')?.dirty" />
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- actions -->
+                            <div class="custom-field-form md:col-span-6">
+                                <p-button
+                                    label="Elejir otras preguntas"
+                                    severity="info"
+                                    [text]="true"
+                                    [icon]="PrimeIcons.SYNC"
+                                    (onClick)="loadSecurityQuestions()" />
+                            </div>
+
+                            <div class="custom-field-form md:col-span-6">
+                                <p-button type="submit" label="Guardar y Continuar" [icon]="PrimeIcons.ARROW_RIGHT" />
+                            </div>
+
+                        </form>
+                    </p-fluid>
+                </ng-content>
+            </div>
+        </div>
     </div>
+}
 
-    <!-- securityQuestionsField -->
-    <div formArrayName="securityQuestions" class="custom-field-form md:col-span-12">
-        @for (securityQuestion of securityQuestionsField.controls; track securityQuestion) {
-            <div [formGroupName]="$index" class="custom-field-form md:col-span-12">
+<p-dialog
+    header="Por seguridad, ingrese el código enviado a su correo electrónico"
+    [(visible)]="showOtpModal"
+    [modal]="true"
+    [closable]="false"
+    [dismissableMask]="false"
+    [style]="{ width: '400px' }"
+>
+    <p-fluid class="custom-card-form">
+        <div class="custom-grid-form">
+            <div class="custom-section-title-form md:col-span-12">
 
+            </div>
+
+            <!-- transactionalCode -->
+            <div class="custom-field-form md:col-span-12">
                 <label
                     appLabel
-                    [for]="$index"
-                    [required]="securityQuestion.get('answer')">
-                    {{ securityQuestion.get('question')?.value?.name }}
-                </label>
+                    for="transactionalCode"
+                    [required]="transactionalCodeControl"
+                    label="Código transaccional"></label>
 
-                <input
-                    pInputText
-                    type="text"
-                    [id]="$index"
-                    formControlName="answer"
-                    placeholder="Enter your answer" />
+                <p-inputOtp
+                    id="transactionalCode"
+                    [formControl]="transactionalCodeControl"
+                    [length]="6"
+                    [integerOnly]="true" />
 
                 <p-message
                     appErrorMessage
-                    [errors]="securityQuestion.get('answer')?.errors"
-                    [touched]="securityQuestion.get('answer')?.touched"
-                    [dirty]="securityQuestion.get('answer')?.dirty" />
+                    [errors]="transactionalCodeControl.errors"
+                    [touched]="transactionalCodeControl.touched"
+                    [dirty]="transactionalCodeControl.dirty" />
             </div>
-        }
-    </div>
-</form>
 
-{{ securityQuestionsField.errors |json }}
-<!--{{ securityQuestionsField.value |json }}-->
+            <div class="custom-field-form md:col-span-12">
+                <p-button
+                    label="Regresar"
+                    [icon]="PrimeIcons.ARROW_LEFT"
+                    severity="warn"
+                    [text]="true"
+                    (onClick)="back()" />
+            </div>
+        </div>
+    </p-fluid>
+</p-dialog>

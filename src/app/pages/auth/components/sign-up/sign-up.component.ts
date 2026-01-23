@@ -19,15 +19,15 @@ import { InputOtp } from 'primeng/inputotp';
 import { KeyFilter } from 'primeng/keyfilter';
 import { MY_ROUTES } from '@routes';
 import { Fluid } from 'primeng/fluid';
-import { CatalogueInterface } from '@utils/interfaces';
 import { CatalogueService } from '@utils/services/catalogue.service';
 import { CatalogueTypeEnum } from '@utils/enums';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-sign-up',
     templateUrl: './sign-up.component.html',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, InputOtp, KeyFilter, Fluid]
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, InputOtp, KeyFilter, Fluid, Tooltip]
 })
 export default class SignUpComponent implements OnInit {
     protected readonly environment = environment;
@@ -78,11 +78,11 @@ export default class SignUpComponent implements OnInit {
     }
 
     protected async loadSecurityQuestions() {
-        let securityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
+        let allSecurityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
 
-        securityQuestions = securityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
+        const selectedSecurityQuestions = allSecurityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
 
-        for (const securityQuestion of securityQuestions) {
+        for (const securityQuestion of selectedSecurityQuestions) {
             this.addQuestion(securityQuestion);
         }
     }

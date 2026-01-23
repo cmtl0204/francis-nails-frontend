@@ -19,12 +19,34 @@ import { InputOtp } from 'primeng/inputotp';
 import { MY_ROUTES } from '@routes';
 import { invalidEmailMINTURValidator, invalidEmailValidator, passwordPolicesValidator, unregisteredUserValidator } from '@utils/form-validators/custom-validator';
 import { Fluid } from 'primeng/fluid';
+import { Tooltip } from 'primeng/tooltip';
+import { Dialog } from 'primeng/dialog';
+import EmailResetComponent from '@/pages/auth/components/email-reset/email-reset.component';
+import { CatalogueInterface } from '@utils/interfaces';
 
 @Component({
     selector: 'app-password-reset',
     templateUrl: './password-reset.component.html',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, InputOtp, Fluid]
+    imports: [
+        ButtonModule,
+        CheckboxModule,
+        InputTextModule,
+        PasswordModule,
+        FormsModule,
+        RouterModule,
+        RippleModule,
+        ReactiveFormsModule,
+        DatePickerModule,
+        Message,
+        LabelDirective,
+        ErrorMessageDirective,
+        InputOtp,
+        Fluid,
+        Tooltip,
+        Dialog,
+        EmailResetComponent
+    ]
 })
 export default class PasswordResetComponent {
     protected readonly MY_ROUTES = MY_ROUTES;
@@ -33,7 +55,8 @@ export default class PasswordResetComponent {
     protected readonly PrimeIcons = PrimeIcons;
     protected form!: FormGroup;
     protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
-    protected isValidTransactionalCode = false;
+    protected securityQuestionsModal = false;
+    protected allSecurityQuestions: CatalogueInterface[] = [];
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
     private readonly authHttpService = inject(AuthHttpService);
@@ -41,6 +64,10 @@ export default class PasswordResetComponent {
 
     constructor() {
         this.buildForm();
+    }
+
+    protected get idField(): AbstractControl {
+        return this.form.controls['id'];
     }
 
     protected get emailField(): AbstractControl {
@@ -59,10 +86,17 @@ export default class PasswordResetComponent {
         return this.form.controls['name'];
     }
 
+    onSubmitEmailReset(email: string) {
+        this.emailField.setValue(email);
+        this.securityQuestionsModal = false;
+    }
+
     protected verifyRegisteredUser() {
         this.authHttpService.verifyRegisteredUser(this.identificationField.value).subscribe({
             next: (response) => {
+                this.idField.setValue(response.id);
                 this.emailField.setValue(response.email);
+                this.allSecurityQuestions = response.securityQuestions;
             }
         });
     }
@@ -114,8 +148,6 @@ export default class PasswordResetComponent {
     }
 
     protected verifyTransactionalCode() {
-        this.isValidTransactionalCode = false;
-
         this.authHttpService.verifyTransactionalCode(this.transactionalCodeControl.value!, this.identificationField.value).subscribe({
             next: (_) => {
                 this.transactionalCodeControl.reset();
@@ -125,8 +157,21 @@ export default class PasswordResetComponent {
         });
     }
 
+    protected showSecurityQuestionsModal() {
+        if (this.allSecurityQuestions.length === 0) {
+            this.customMessageService.showModalError({
+                summary: 'No tiene preguntas de seguridad registradas',
+                detail: 'Contactar con el administrador'
+            });
+            return;
+        }
+
+        this.securityQuestionsModal = true;
+    }
+
     private buildForm() {
         this.form = this.formBuilder.group({
+            id: [null, [Validators.required]],
             email: [
                 {
                     value: null,
@@ -145,6 +190,7 @@ export default class PasswordResetComponent {
             ]
         });
 
+        this.idField.disable();
         this.emailField.disable();
         this.nameField.disable();
         this.passwordField.disable();

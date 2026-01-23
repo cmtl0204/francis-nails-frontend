@@ -81,7 +81,7 @@ export class CustomMessageService {
     }
 
     showError({ summary, detail }: { summary: string; detail: string }) {
-        this._modalLife = detail.length * 100;
+        this._modalLife = detail.length * 150;
         this._messageService.add({ severity: 'error', summary, detail });
     }
 
@@ -99,7 +99,7 @@ export class CustomMessageService {
 
     showHttpError(error: string | string[] | any) {
         if (error) {
-            this._modalLife = error.message.length * 100;
+            this._modalLife = error.message.length * 150;
 
             if (Array.isArray(error.message)) {
                 this._modalLife = error.message.length * 5000;
@@ -119,7 +119,7 @@ export class CustomMessageService {
 
         this._isModalVisible.set(true);
         this._modalAcceptSeverity = 'info';
-        this._modalIcon = PrimeIcons.TIMES;
+        this._modalIcon = PrimeIcons.TIMES_CIRCLE;
         this._modalIconColor = 'red';
         this._modalTitle = 'Falta completar o existen errores en los siguientes campos';
         this._modalMessage = message;
@@ -137,7 +137,7 @@ export class CustomMessageService {
     showModalError({ summary, detail }: { summary: string; detail: string }): void {
         this._isModalVisible.set(true);
         this._modalAcceptSeverity = 'danger';
-        this._modalTitleIcon = PrimeIcons.TIMES;
+        this._modalTitleIcon = PrimeIcons.TIMES_CIRCLE;
         this._modalIconColor = 'var(--p-red-500)';
         this._modalTitle = summary;
         this._modalMessage = detail;

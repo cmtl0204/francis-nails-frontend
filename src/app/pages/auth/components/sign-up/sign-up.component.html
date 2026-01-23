@@ -3,9 +3,10 @@
         <!-- backButton -->
         <div class="custom-field-form md:col-span-12">
             <p-button
-                label="Regresar"
+                pTooltip="Regresar"
                 [icon]="PrimeIcons.ARROW_LEFT"
                 severity="warn"
+                [text]="true"
                 [routerLink]="[MY_ROUTES.authPages.signIn.absolute]" />
         </div>
 
@@ -39,7 +40,7 @@
                     label="Correo electrónico"
                     [required]="emailField"></label>
 
-                <input pInputText id="email" type="text" formControlName="email" />
+                <input pInputText type="email" id="email" formControlName="email" />
 
                 <p-message
                     appErrorMessage
@@ -133,9 +134,8 @@
 
             <!-- securityQuestionsField -->
             <div formArrayName="securityQuestions" class="custom-field-form md:col-span-12">
-                @for (securityQuestion of securityQuestionsField.controls; track securityQuestion) {
+                @for (securityQuestion of securityQuestionsField.controls; track securityQuestion.value.code) {
                     <div [formGroupName]="$index" class="custom-field-form md:col-span-12">
-
                         <label
                             appLabel
                             [for]="$index"
@@ -143,11 +143,11 @@
                             {{ securityQuestion.get('question')?.value }}
                         </label>
 
-                        <input
-                            pInputText
-                            type="text"
+                        <p-password
                             [id]="$index"
-                            formControlName="answer" />
+                            [formControl]="$any(securityQuestion.get('answer'))"
+                            [toggleMask]="true"
+                            [feedback]="false" />
 
                         <p-message
                             appErrorMessage
@@ -167,13 +167,11 @@
                         [binary]="true"
                         (click)="openTerms()" />
 
-                    <label
-                        appLabel
-                        for="termsAcceptedAt"
-                        [required]="termsAcceptedAtField"
-                        class="ml-2">
-                        He leído y acepto los Términos y Condiciones
-                    </label>
+                    <p-button
+                        label="He leído y acepto los Términos y Condiciones"
+                        [link]="true"
+                        (onClick)="openTerms()"
+                    />
                 </div>
 
                 <p-message
@@ -189,7 +187,6 @@
                     label="Crear Cuenta"
                     [icon]="PrimeIcons.USER_PLUS"
                     severity="success"
-                    [disabled]="passwordField.invalid"
                     (onClick)="onSubmit()" />
             </div>
         }

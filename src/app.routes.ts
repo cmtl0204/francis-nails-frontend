@@ -4,12 +4,14 @@ import { AppLayoutMain } from '@layout/component/app.layout-main';
 import { AppLayoutBlank } from '@layout/component/app.layout-blank';
 import { AppLayoutAuth } from '@layout/component/app.layout-auth';
 import { tokenGuard } from '@/guards/token.guard';
+import { securityQuestionsGuard } from '@/guards/security-questions.guard';
+import SecurityQuestionComponent from '@/pages/auth/components/security-question/security-question.component';
 
 export const appRoutes: Routes = [
     {
         path: MY_ROUTES.main,
         component: AppLayoutMain,
-        canActivate: [tokenGuard],
+        canActivate: [tokenGuard,securityQuestionsGuard],
         children: [
             { path: MY_ROUTES.dashboards.base, loadChildren: () => import('./app/pages/dashboards/dashboard.routes') },
             { path: MY_ROUTES.adminPages.base, loadChildren: () => import('./app/pages/admin/admin.routes') },
@@ -33,6 +35,12 @@ export const appRoutes: Routes = [
         path: MY_ROUTES.publicPages.base,
         component: AppLayoutBlank,
         children: [{ path: '', loadChildren: () => import('./app/pages/public/public.routes') }]
+    },
+
+    {
+        path: 'security-questions',
+        component: SecurityQuestionComponent,
+        canActivate: [tokenGuard]
     },
 
     { path: '', redirectTo: '/main/dashboards', pathMatch: 'full' },

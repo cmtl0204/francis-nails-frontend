@@ -1,6 +1,6 @@
-import { Component, inject, output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,24 +13,41 @@ import { CoreService } from '@utils/services/core.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { MY_ROUTES } from '@routes';
 import { LabelDirective } from '@utils/directives/label.directive';
-import { JsonPipe } from '@angular/common';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { Message } from 'primeng/message';
+import { CatalogueTypeEnum } from '@utils/enums';
+import { CatalogueService } from '@utils/services/catalogue.service';
+import { AuthHttpService } from '@/pages/auth/auth-http.service';
+import { Fluid } from 'primeng/fluid';
+import { CatalogueInterface } from '@utils/interfaces';
+import { AuthService } from '@/pages/auth/auth.service';
+import { Dialog } from 'primeng/dialog';
+import { InputOtp } from 'primeng/inputotp';
+import { JsonPipe, Location } from '@angular/common';
 
 @Component({
     selector: 'app-security-question',
     templateUrl: './security-question.component.html',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, LabelDirective, JsonPipe, ErrorMessageDirective, Message]
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, LabelDirective, ErrorMessageDirective, Message, Fluid, Dialog, InputOtp, JsonPipe]
 })
-export default class SecurityQuestionComponent {
+export default class SecurityQuestionComponent implements OnInit {
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly environment = environment;
     protected readonly coreService = inject(CoreService);
     protected readonly PrimeIcons = PrimeIcons;
     protected form!: FormGroup;
+    protected allSecurityQuestions: CatalogueInterface[] = [];
+    protected selectedSecurityQuestions: CatalogueInterface[] = [];
+    protected showOtpModal = false;
+    protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required, Validators.minLength(6)]);
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
+    private readonly router = inject(Router);
+    private readonly location = inject(Location);
+    private readonly catalogueService = inject(CatalogueService);
+    private readonly authHttpService = inject(AuthHttpService);
+    protected readonly authService = inject(AuthService);
 
     constructor() {
         this.buildForm();
@@ -40,30 +57,15 @@ export default class SecurityQuestionComponent {
         return this.form.controls['securityQuestions'] as FormArray;
     }
 
-    addQuestion(question: any): void {
-        const group = this.formBuilder.group({
-            question: [question, Validators.required],
-            answer: ['', Validators.required]
-        });
+    async ngOnInit() {
+        await this.loadSecurityQuestions();
 
-        this.securityQuestionsField.push(group);
+        if (this.authService.auth.securityQuestionAcceptedAt) {
+            this.requestTransactionalCode();
+        }
     }
 
-    protected watchFormChanges() {}
-
-    private buildForm() {
-        this.form = this.formBuilder.group({
-            securityQuestions: this.formBuilder.array([])
-        });
-
-        this.addQuestion({ id: '1', name: 'Primera pregunta' });
-        this.addQuestion({ id: '2', name: 'Segunda pregunta' });
-        this.addQuestion({ id: '3', name: 'Tercera pregunta' });
-
-        this.watchFormChanges();
-    }
-
-    public getFormErrors() {
+    public validateForm() {
         const errors: string[] = [];
 
         const invalid = this.securityQuestionsField.controls.some((ctrl) => ctrl.get('answer')?.invalid);
@@ -72,8 +74,97 @@ export default class SecurityQuestionComponent {
 
         if (errors.length > 0) {
             this.form.markAllAsTouched();
+            this.customMessageService.showFormErrors(errors);
+            return false;
         }
 
-        return errors;
+        return true;
+    }
+
+    protected onSubmit() {
+        if (this.validateForm()) {
+            this.create();
+        }
+    }
+
+    protected create() {
+        this.authHttpService.createSecurityQuestions(this.form.value).subscribe({
+            next: (_) => {
+                const auth = this.authService.auth;
+                auth.securityQuestionAcceptedAt = new Date();
+                this.authService.auth = auth;
+                this.router.navigate([MY_ROUTES.adminPages.user.profile.absolute], { replaceUrl: true });
+            }
+        });
+    }
+
+    protected requestTransactionalCode() {
+        this.transactionalCodeControl.reset();
+        this.transactionalCodeControl.disable();
+        this.form.disable();
+
+        this.authHttpService.requestTransactionalPasswordResetCode(this.authService.auth.identification!).subscribe({
+            next: (_) => {
+                this.showOtpModal = true;
+                this.transactionalCodeControl.enable();
+            }
+        });
+    }
+
+    protected verifyTransactionalCode() {
+        this.authHttpService.verifyTransactionalCode(this.transactionalCodeControl.value!, this.authService.auth.identification!).subscribe({
+            next: (_) => {
+                this.transactionalCodeControl.reset();
+                this.transactionalCodeControl.disable();
+                this.form.enable();
+                this.showOtpModal = false;
+            }
+        });
+    }
+
+    protected async loadSecurityQuestions() {
+        this.allSecurityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
+
+        this.generateSecurityQuestions();
+    }
+
+    protected generateSecurityQuestions() {
+        this.selectedSecurityQuestions = this.allSecurityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
+
+        this.securityQuestionsField.clear();
+        this.securityQuestionsField.reset();
+        this.securityQuestionsField.updateValueAndValidity();
+
+        this.selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
+
+        console.log(this.securityQuestionsField.value);
+    }
+
+    protected addQuestion(question: any): void {
+        const group = this.formBuilder.group({
+            code: [question.code, Validators.required],
+            question: [question.name, Validators.required],
+            answer: [null, Validators.required]
+        });
+
+        this.securityQuestionsField.push(group);
+    }
+
+    protected watchFormChanges() {
+        this.transactionalCodeControl.valueChanges.subscribe((value) => {
+            if (this.transactionalCodeControl.valid) this.verifyTransactionalCode();
+        });
+    }
+
+    protected back() {
+        this.location.back();
+    }
+
+    private buildForm() {
+        this.form = this.formBuilder.group({
+            securityQuestions: this.formBuilder.array([])
+        });
+
+        this.watchFormChanges();
     }
 }

@@ -48,6 +48,7 @@
             <p-button
                 label="Ingresar"
                 [icon]="PrimeIcons.SIGN_IN"
+                [loading]="coreService.loading()"
                 (onClick)="onSubmit()" />
         </div>
 
@@ -56,6 +57,7 @@
                 label="Crear Cuenta"
                 [icon]="PrimeIcons.USER_PLUS"
                 severity="success"
+                [text]="true"
                 [routerLink]="MY_ROUTES.authPages.signUp.absolute" />
         </div>
 
@@ -64,6 +66,7 @@
                 label="Recuperar Cuenta"
                 [icon]="PrimeIcons.LOCK_OPEN"
                 severity="help"
+                [text]="true"
                 [routerLink]="MY_ROUTES.authPages.passwordReset.absolute" />
         </div>
     </form>
@@ -74,6 +77,8 @@
           [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
           [style]="{ width: '25vw' }"
           [draggable]="false"
+          [closable]="false"
+          [dismissableMask]="false"
           (onHide)="closeRoleSelect()"
           [resizable]="false">
     <ng-template #header>
@@ -84,15 +89,26 @@
 
     <p-fluid class="custom-card-form">
         <div class="custom-grid-form">
+            <div class="custom-field-form md:col-span-12">
+                <p class="text-muted-color">
+                    Continuar como...
+                </p>
+            </div>
+
             @for (role of roles; track role.id) {
                 <div class="custom-field-form md:col-span-12">
                     <p-button
                         variant="text"
+                        [icon]="role.icon"
                         [raised]="true"
                         [label]="role.name"
                         (onClick)="selectRole(role)" />
                 </div>
             }
+
+            <div class="custom-field-form md:col-span-12">
+                <p-button label="Cerrar Sesión" [text]="true" severity="danger" (onClick)="signOut()"/>
+            </div>
         </div>
     </p-fluid>
 </p-dialog>

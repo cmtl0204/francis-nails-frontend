@@ -28,6 +28,7 @@
                 <!-- title -->
                 <div class="md:col-span-12 custom-section-title-form">
                     Datos Personales:
+                    <p-divider/>
                 </div>
 
                 <!-- avatarField -->
@@ -266,7 +267,8 @@
             <form [formGroup]="form" class="custom-grid-form">
                 <!-- title -->
                 <div class="md:col-span-12 custom-section-title-form">
-                    Cambio de Contraseña:
+                    Cambio de contraseña:
+                    <p-divider/>
                 </div>
 
                 <!-- passwordField -->
@@ -323,7 +325,51 @@
             <form [formGroup]="form" class="custom-grid-form">
                 <!-- title -->
                 <div class="md:col-span-12 custom-section-title-form">
+                    Preguntas de seguridad:
+                    <p-divider/>
+                </div>
+
+                <!-- securityQuestions -->
+                <div class="md:col-span-12 custom-field-form">
+                    <label
+                        appLabel
+                        for="securityQuestions">
+                        <p>
+                            Última modificación:
+                            <strong>
+                                {{ authService.auth.securityQuestionAcceptedAt | dateLong:true }}
+                            </strong>
+                        </p>
+
+                        <p>
+                            <small style="color: var(--primary-color)">
+                                Estas preguntas se utilizan para verificar tu identidad.
+                            </small>
+                        </p>
+
+                        <small style="color: var(--primary-color)">
+                            Para cambiarlas, deberás validar un código de seguridad.
+                        </small>
+                    </label>
+                </div>
+
+                <div class="md:col-span-12 custom-field-form">
+                    <p-button
+                        label="Cambiar Preguntas"
+                        severity="info"
+                        [icon]="PrimeIcons.PEN_TO_SQUARE"
+                        (onClick)="goToSecurityQuestions()"
+                    />
+                </div>
+            </form>
+        </p-fluid>
+
+        <p-fluid class="custom-card-form">
+            <form [formGroup]="form" class="custom-grid-form">
+                <!-- title -->
+                <div class="md:col-span-12 custom-section-title-form">
                     Información Adicional:
+                    <p-divider/>
                 </div>
 
                 <!-- bloodTypeField -->

@@ -11,7 +11,7 @@ import { InputText } from 'primeng/inputtext';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { Message } from 'primeng/message';
 import { Button } from 'primeng/button';
-import { invalidEmailValidator, passwordPolicesValidator, userExistValidator, userUpdatedValidator } from '@utils/form-validators/custom-validator';
+import { invalidEmailValidator, passwordPolicesValidator, userUpdatedValidator } from '@utils/form-validators/custom-validator';
 import { Password } from 'primeng/password';
 import { generatePassword } from '@utils/helpers/password-generate.helper';
 import { RoleInterface } from '@/pages/auth/interfaces';
@@ -32,10 +32,12 @@ import { environment } from '@env/environment';
 import { uploadFileValidator } from '@utils/helpers/file.helper';
 import { Toolbar } from 'primeng/toolbar';
 import { Textarea } from 'primeng/textarea';
+import { DatePipe } from '@angular/common';
+import { DateLongPipe } from '@utils/pipes/date-long.pipe';
 
 @Component({
     selector: 'app-user-profile',
-    imports: [Button, Divider, ErrorMessageDirective, Fluid, FormsModule, InputText, LabelDirective, Message, Password, ReactiveFormsModule, Tag, ToggleSwitch, DatePicker, Select, Avatar, Tooltip, Toolbar, Textarea],
+    imports: [Button, Divider, ErrorMessageDirective, Fluid, FormsModule, InputText, LabelDirective, Message, Password, ReactiveFormsModule, Tag, ToggleSwitch, DatePicker, Select, Avatar, Tooltip, Toolbar, Textarea, DatePipe, DateLongPipe],
     templateUrl: './user-profile.component.html',
     styleUrl: './user-profile.component.scss'
 })
@@ -55,7 +57,7 @@ export default class UserProfileComponent implements OnInit {
     protected sexes: CatalogueInterface[] = [];
     protected passwordActivated = new FormControl(false);
     protected avatarUrl!: string;
-    private readonly authService = inject(AuthService);
+    protected readonly authService = inject(AuthService);
     private readonly authHttpService = inject(AuthHttpService);
     private readonly userHttpService = inject(UserHttpService);
     private readonly breadcrumbService = inject(BreadcrumbService);
@@ -282,6 +284,10 @@ export default class UserProfileComponent implements OnInit {
         }
 
         return true;
+    }
+
+    goToSecurityQuestions() {
+        this.router.navigate(['/security-questions']);
     }
 
     async autoGeneratePassword() {

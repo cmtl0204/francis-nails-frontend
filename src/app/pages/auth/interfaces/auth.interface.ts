@@ -11,4 +11,5 @@ export interface AuthInterface {
     identification?: string;
     username: string;
     termsConditions?: boolean;
+    securityQuestionAcceptedAt?: Date;
 }
