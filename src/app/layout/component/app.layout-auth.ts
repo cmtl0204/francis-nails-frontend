@@ -11,11 +11,13 @@ import { Message } from 'primeng/message';
 import { environment } from '@env/environment';
 import { MY_ROUTES } from '@routes';
 import { FontAwesome } from '@/api/font-awesome';
+import { Button } from 'primeng/button';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, RouterModule, Divider, FormsModule, Message, ReactiveFormsModule],
+    imports: [CommonModule, RouterModule, Divider, FormsModule, Message, ReactiveFormsModule, Button, Tooltip],
     styles: [
         `
             .login-page {
@@ -51,6 +53,8 @@ import { FontAwesome } from '@/api/font-awesome';
                     <!-- Aquí renderizas varios componentes -->
                     <ng-content select="[left-content]">
                         <router-outlet />
+                        <p-button [label]="environment.VERSION" pTooltip="Versión del sistema"
+                                  [icon]="FontAwesome.CODE_BRANCH_SOLID" [text]="true" />
                     </ng-content>
                 </div>
 

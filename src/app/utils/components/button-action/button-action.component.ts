@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LabelButtonActionEnum } from '@utils/enums';
-import { MenuItem, PrimeIcons } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { format } from 'date-fns';
 import { Drawer } from 'primeng/drawer';
 import { Ripple } from 'primeng/ripple';
-import { NgClass } from '@angular/common';
 import { Button } from 'primeng/button';
 import { PanelMenu } from 'primeng/panelmenu';
 import { environment } from '@env/environment';
@@ -14,7 +13,7 @@ import { FontAwesome } from '@/api/font-awesome';
     selector: 'app-button-action',
     templateUrl: './button-action.component.html',
     styleUrls: ['./button-action.component.scss'],
-    imports: [Drawer, Ripple, NgClass, Button, PanelMenu],
+    imports: [Drawer, Ripple, Button, PanelMenu],
     standalone: true
 })
 export class ButtonActionComponent {

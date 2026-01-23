@@ -1,5 +1,5 @@
-import { Component, EventEmitter, inject, input, OnInit, output, signal } from '@angular/core';
-import { MenuItem, PrimeIcons } from 'primeng/api';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 import { format } from 'date-fns';
 import { Button } from 'primeng/button';
 import { PaginationInterface } from '@utils/interfaces';
@@ -9,7 +9,6 @@ import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
-import { Tooltip } from 'primeng/tooltip';
 import { InputText } from 'primeng/inputtext';
 import { Paginator, PaginatorState } from 'primeng/paginator';
 import { CoreService } from '@utils/services';
@@ -23,7 +22,7 @@ import { FontAwesome } from '@/api/font-awesome';
     selector: 'app-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.scss'],
-    imports: [Button, ButtonActionComponent, Fluid, IconField, InputIcon, ReactiveFormsModule, TableModule, Tooltip, InputText, Paginator, DatePipe, Tag],
+    imports: [Button, ButtonActionComponent, Fluid, IconField, InputIcon, ReactiveFormsModule, TableModule, InputText, Paginator, DatePipe, Tag],
     standalone: true
 })
 export class ListComponent implements OnInit {
@@ -41,10 +40,10 @@ export class ListComponent implements OnInit {
     onSearch = output<any>();
     onPagination = output<any>();
 
-
     protected readonly coreService = inject(CoreService);
     protected searchControl: FormControl = new FormControl(null);
     protected currentYear: string;
+    protected readonly FontAwesome = FontAwesome;
 
     constructor() {
         this.currentYear = format(new Date(), 'yyyy');
@@ -74,6 +73,4 @@ export class ListComponent implements OnInit {
     onPageChange(event: PaginatorState) {
         if (event?.page || event.page === 0) this.onPagination.emit(event.page + 1);
     }
-
-    protected readonly FontAwesome = FontAwesome;
 }
