@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
 import { MY_ROUTES } from '@routes';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-not-found',
@@ -66,7 +67,7 @@ import { MY_ROUTES } from '@routes';
                             </a>
 
                             <p-button label="Regresar" (onClick)="back()"
-                                      [icon]="PrimeIcons.ARROW_LEFT" />
+                                      [icon]="FontAwesome.CHEVRON_LEFT_SOLID" />
                         </div>
                     </div>
                 </div>
@@ -74,11 +75,13 @@ import { MY_ROUTES } from '@routes';
         `
 })
 export class NotFoundComponent {
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected readonly MY_ROUTES = MY_ROUTES;
     private readonly _location = inject(Location);
 
     back() {
         this._location.back();
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

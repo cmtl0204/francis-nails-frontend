@@ -12,6 +12,7 @@ import { InputText } from 'primeng/inputtext';
 import { CoreService } from '@utils/services';
 import { ColInterface } from '@utils/interfaces/col.interface';
 import { DatePipe } from '@angular/common';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-list-basic',
@@ -34,7 +35,7 @@ export class ListBasicComponent implements OnInit {
     onDelete = output<any>();
     onSelect = output<any>();
 
-    protected readonly PrimeIcons = PrimeIcons;
+
 
     protected readonly coreService = inject(CoreService);
     protected selectedItem = new EventEmitter<any>();
@@ -60,4 +61,6 @@ export class ListBasicComponent implements OnInit {
         const value = (event.target as HTMLInputElement).value.trim();
         this.dt.filterGlobal(value, 'contains');
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

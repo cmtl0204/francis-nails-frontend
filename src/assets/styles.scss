@@ -3,8 +3,9 @@
 @use './layout/layout.scss';
 @use 'primeicons/primeicons.css';
 @use './demo/demo.scss';
+@use './primeng-zindex';
+@use "@fortawesome/fontawesome-free/css/all.css";
 
-@import './primeng-zindex';
 
 .custom-grid-form {
     @apply grid grid-cols-1 md:grid-cols-12 gap-6;

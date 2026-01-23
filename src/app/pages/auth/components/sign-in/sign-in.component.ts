@@ -20,6 +20,7 @@ import { MY_ROUTES } from '@routes';
 import { RoleInterface } from '@modules/auth/interfaces';
 import { Fluid } from 'primeng/fluid';
 import { CoreService } from '@utils/services';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-sign-in',
@@ -30,7 +31,7 @@ import { CoreService } from '@utils/services';
 export default class SignInComponent {
     protected readonly environment = environment;
     protected readonly coreService = inject(CoreService);
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected form!: FormGroup;
     protected roles: RoleInterface[] = [];
     protected roleControl = new FormControl(null);
@@ -116,4 +117,6 @@ export default class SignInComponent {
             }
         });
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

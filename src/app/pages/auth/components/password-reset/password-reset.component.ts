@@ -23,6 +23,7 @@ import { Tooltip } from 'primeng/tooltip';
 import { Dialog } from 'primeng/dialog';
 import EmailResetComponent from '@/pages/auth/components/email-reset/email-reset.component';
 import { CatalogueInterface } from '@utils/interfaces';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-password-reset',
@@ -52,7 +53,7 @@ export default class PasswordResetComponent {
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly environment = environment;
     protected readonly coreService = inject(CoreService);
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected form!: FormGroup;
     protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
     protected securityQuestionsModal = false;
@@ -222,4 +223,6 @@ export default class PasswordResetComponent {
 
         return true;
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

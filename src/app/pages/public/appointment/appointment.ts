@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { environment } from '@env/environment';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-registration',
@@ -22,7 +23,7 @@ import { es } from 'date-fns/locale';
 export class Appointment implements OnInit {
     submitted = signal(false);
     protected readonly CoreEnum = CoreEnum;
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected mainData: WritableSignal<Record<string, any>> = signal({});
     protected modelId?: string;
     protected dataIn!: any;
@@ -106,4 +107,6 @@ export class Appointment implements OnInit {
 
         return true;
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

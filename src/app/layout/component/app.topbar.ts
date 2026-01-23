@@ -10,6 +10,7 @@ import { Button } from 'primeng/button';
 import { Tooltip } from 'primeng/tooltip';
 import { MY_ROUTES } from '@routes';
 import { AuthHttpService } from '@/pages/auth/auth-http.service';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-topbar',
@@ -34,11 +35,11 @@ import { AuthHttpService } from '@/pages/auth/auth-http.service';
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
                     @if (authService.auth && authService.role) {
-                        <p-button type="button" (onClick)="redirectProfile()" [text]="true" [raised]="true" [rounded]="true" [label]="authService.auth.username" pTooltip="Mi Perfil" [icon]="PrimeIcons.USER" />
+                        <p-button type="button" (onClick)="redirectProfile()" [text]="true" [raised]="true" [rounded]="true" [label]="authService.auth.username" pTooltip="Mi Perfil" [icon]="FontAwesome.ID_CARD_CLIP_SOLID" />
 
-                        <p-button type="button" [icon]="PrimeIcons.VERIFIED" [text]="true" [raised]="true" [rounded]="true" severity="warn" [label]="authService.role.name" pTooltip="Mi Rol" />
+                        <p-button type="button" [icon]="authService.role.icon" [text]="true" [raised]="true" [rounded]="true" severity="warn" [label]="authService.role.name" pTooltip="Mi Rol" />
                     }
-                    <p-button (onClick)="signOut()" type="button" [raised]="true" [rounded]="true" severity="danger" pTooltip="Cerrar Sesión" [icon]="PrimeIcons.POWER_OFF" />
+                    <p-button (onClick)="signOut()" type="button" [raised]="true" [rounded]="true" severity="danger" pTooltip="Cerrar Sesión" [icon]="FontAwesome.POWER_OFF_SOLID" />
                 </div>
             </div>
         </div>
@@ -57,7 +58,6 @@ export class AppTopbar {
     }
 
     protected readonly environment = environment;
-    protected readonly PrimeIcons = PrimeIcons;
 
     signOut() {
         this.authHttpService.signOut().subscribe();
@@ -66,4 +66,6 @@ export class AppTopbar {
     redirectProfile() {
         this.router.navigate([MY_ROUTES.adminPages.user.profile.absolute]);
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

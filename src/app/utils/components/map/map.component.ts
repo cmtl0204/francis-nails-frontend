@@ -19,7 +19,7 @@ export class MapComponent implements OnInit, OnChanges {
     @Input({ required: true }) longitude: number = -78.52495;
     @Output() dataOut: EventEmitter<Coordinate> = new EventEmitter<Coordinate>(false);
 
-    protected readonly PrimeIcons = PrimeIcons;
+
 
     protected zoom = 15;
     protected center: Coordinate = { lat: -0.22985, lng: -78.52495 };

@@ -14,7 +14,7 @@
                 <div class="md:col-span-4 flex flex-col gap-2">
                     <p-iconfield>
                         <p-inputicon>
-                            <i [class]="PrimeIcons.SEARCH"></i>
+                            <i [class]="FontAwesome.MAGNIFYING_GLASS_SOLID"></i>
                         </p-inputicon>
 
                         <input pInputText [formControl]="searchControl"
@@ -27,19 +27,29 @@
 
     <ng-template #header let-columns>
         <tr>
+            <th>
+                <p-button pTooltip="Crear" [icon]="FontAwesome.PLUS_SOLID" severity="success" (onClick)="create()" />
+            </th>
+
             @for (col of columns; track col) {
                 <th>
                     {{ col.header }}
                 </th>
             }
-            <th>
-                <p-button pTooltip="Crear" [icon]="PrimeIcons.PLUS" severity="success" (onClick)="create()" />
-            </th>
         </tr>
     </ng-template>
 
     <ng-template #body let-item let-columns="columns" let-rowIndex="rowIndex">
         <tr>
+            <td>
+                <app-button-action
+                    [buttonActions]="buttonActions()"
+                    [enabled]="isButtonActionsEnabled()"
+                    (isHide)="isButtonActionsEnabled.set($event)"
+                    (click)="selectItem(item,rowIndex)">
+                </app-button-action>
+            </td>
+
             @for (col of columns; track col) {
                 @switch (col?.type) {
                     @case ('object') {
@@ -64,15 +74,6 @@
                     }
                 }
             }
-
-            <td>
-                <app-button-action
-                    [buttonActions]="buttonActions()"
-                    [enabled]="isButtonActionsEnabled()"
-                    (isHide)="isButtonActionsEnabled.set($event)"
-                    (click)="selectItem(item,rowIndex)">
-                </app-button-action>
-            </td>
         </tr>
     </ng-template>
 

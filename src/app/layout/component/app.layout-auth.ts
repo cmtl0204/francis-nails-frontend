@@ -9,8 +9,8 @@ import { Divider } from 'primeng/divider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Message } from 'primeng/message';
 import { environment } from '@env/environment';
-import { PrimeIcons } from 'primeng/api';
 import { MY_ROUTES } from '@routes';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-layout',
@@ -86,7 +86,7 @@ import { MY_ROUTES } from '@routes';
                                 <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/steps.pdf'">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
-                                            <i [class]="PrimeIcons.LIST_CHECK" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                            <i [class]="FontAwesome.LIST_UL_SOLID" style="font-size: 3rem;color:var(--primary-color)"></i>
                                         </div>
                                         <div class="md:col-span-10 flex flex-col gap-2">
                                             <h6 class="mb-5" style="color: #01579B">1 PASO</h6>
@@ -99,7 +99,7 @@ import { MY_ROUTES } from '@routes';
                                 <a target="_blank" [routerLink]="[MY_ROUTES.guessPages.simulator.absolute]">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
-                                            <i [class]="PrimeIcons.DESKTOP" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                            <i [class]="FontAwesome.DESKTOP_SOLID" style="font-size: 3rem;color:var(--primary-color)"></i>
                                         </div>
                                         <div class="md:col-span-10 flex flex-col gap-2">
                                             <h6 class="mb-5" style="color: #01579B">Reñas</h6>
@@ -115,7 +115,7 @@ import { MY_ROUTES } from '@routes';
                                             <!--                                    <img [src]="environment.PATH_ASSETS+'/images/auth/manual_usuario.svg'"-->
                                             <!--                                         alt="cabecera">-->
 
-                                            <i [class]="PrimeIcons.BOOK" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                            <i [class]="FontAwesome.BOOK_SOLID" style="font-size: 3rem;color:var(--primary-color)"></i>
                                         </div>
                                         <div class="md:col-span-10 flex flex-col gap-2">
                                             <h6 class="mb-5" style="color: #01579B">Servicios</h6>
@@ -128,7 +128,7 @@ import { MY_ROUTES } from '@routes';
                                 <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/terms_conditions.pdf'">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
-                                            <i [class]="PrimeIcons.VERIFIED" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                            <i [class]="FontAwesome.FILE_CONTRACT_SOLID" style="font-size: 3rem;color:var(--primary-color)"></i>
                                         </div>
                                         <div class="md:col-span-10 flex flex-col gap-2">
                                             <h6 class="mb-5" style="color: #01579B">TÉRMINOS Y CONDICIONES</h6>
@@ -150,7 +150,6 @@ export class AppLayoutAuth {
     @ViewChild(AppSidebar) appSidebar!: AppSidebar;
     @ViewChild(AppTopbar) appTopBar!: AppTopbar;
     protected readonly environment = environment;
-    protected readonly PrimeIcons = PrimeIcons;
     protected readonly MY_ROUTES = MY_ROUTES;
 
     constructor(
@@ -229,4 +228,6 @@ export class AppLayoutAuth {
             this.menuOutsideClickListener();
         }
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

@@ -8,12 +8,12 @@
                 @if (mainData()) {
                     <p-button
                         label="Agendar cita"
-                        [icon]="PrimeIcons.CALENDAR" (onClick)="onSubmit()" />
+                        [icon]="FontAwesome.CALENDAR_SOLID" (onClick)="onSubmit()" />
                 }
             </div>
 
             <div class="sm:col-span-12 custom-field-form">
-                <p-button type="button" label="Regresar" severity="warn" [icon]="PrimeIcons.ARROW_LEFT"
+                <p-button type="button" label="Regresar" severity="warn" [icon]="FontAwesome.CHEVRON_LEFT_SOLID"
                           (onClick)="ladingPage()" />
             </div>
         </div>

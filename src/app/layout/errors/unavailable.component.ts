@@ -71,5 +71,5 @@ import { PrimeIcons } from 'primeng/api';
         `
 })
 export class UnavailableComponent {
-    protected readonly PrimeIcons = PrimeIcons;
+
 }

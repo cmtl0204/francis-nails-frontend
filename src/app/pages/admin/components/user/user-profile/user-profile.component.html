@@ -6,7 +6,7 @@
         <!-- roles -->
         @for (role of roles; track role.id) {
             <div class="ml-2">
-                <p-tag [value]="role.name" severity="secondary" [icon]="PrimeIcons.VERIFIED" />
+                <p-tag [value]="role.name" severity="secondary" [icon]="role.icon" />
             </div>
         }
     </ng-template>
@@ -15,7 +15,7 @@
     </ng-template>
     <ng-template #end>
         <!-- actions -->
-        <p-button label="Guardar" [icon]="PrimeIcons.SAVE" (onClick)="onSubmit()" />
+        <p-button label="Guardar" [icon]="FontAwesome.FLOPPY_DISK_SOLID" (onClick)="onSubmit()" />
     </ng-template>
 </p-toolbar>
 
@@ -42,7 +42,7 @@
 
                     <p-avatar
                         [image]="avatarUrl ? avatarUrl:undefined"
-                        [icon]="avatarUrl ? undefined:PrimeIcons.USER"
+                        [icon]="avatarUrl ? undefined:FontAwesome.USER_SOLID"
                         size="xlarge"
                         shape="circle"
                         (click)="fileInput.click()"
@@ -311,7 +311,7 @@
                         <div class="md:col-span-4 custom-field-form mt-8">
                             <p-button
                                 label="Auto Generar"
-                                [icon]="PrimeIcons.SYNC"
+                                [icon]="FontAwesome.KEY_SOLID"
                                 severity="info"
                                 [disabled]="passwordField.disabled"
                                 (onClick)="autoGeneratePassword()" />
@@ -357,7 +357,7 @@
                     <p-button
                         label="Cambiar Preguntas"
                         severity="info"
-                        [icon]="PrimeIcons.PEN_TO_SQUARE"
+                        [icon]="FontAwesome.PENCIL_SOLID"
                         (onClick)="goToSecurityQuestions()"
                     />
                 </div>

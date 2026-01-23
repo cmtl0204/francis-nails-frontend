@@ -1,5 +1,13 @@
 import { Component, inject, input, OnInit, output } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    AbstractControl,
+    FormArray,
+    FormBuilder,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -20,13 +28,13 @@ import { Fluid } from 'primeng/fluid';
 import { AuthService } from '@/pages/auth/auth.service';
 import { CatalogueInterface } from '@utils/interfaces';
 import { invalidEmailValidator } from '@utils/form-validators/custom-validator';
-import { JsonPipe } from '@angular/common';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-email-reset',
     templateUrl: './email-reset.component.html',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, LabelDirective, ErrorMessageDirective, Message, Fluid, JsonPipe]
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, LabelDirective, ErrorMessageDirective, Message, Fluid]
 })
 export default class EmailResetComponent implements OnInit {
     onSubmitted = output<string>();
@@ -36,7 +44,7 @@ export default class EmailResetComponent implements OnInit {
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly environment = environment;
     protected readonly coreService = inject(CoreService);
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected form!: FormGroup;
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
@@ -124,4 +132,6 @@ export default class EmailResetComponent implements OnInit {
 
         this.watchFormChanges();
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

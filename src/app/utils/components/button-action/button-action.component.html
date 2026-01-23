@@ -1,18 +1,23 @@
-<p-button [icon]="PrimeIcons.ELLIPSIS_V" />
+<p-button [icon]="FontAwesome.ELLIPSIS_VERTICAL_SOLID" />
 
 <p-drawer [(visible)]="enabled" position="right" (onHide)="close()">
     <ng-template #headless>
         <div class="flex flex-col h-full">
             <div class="flex items-center justify-between px-6 pt-4 shrink-0">
                 <span class="inline-flex items-center gap-2">
-                    <i [ngClass]="[PrimeIcons.ELLIPSIS_V,'text-primary']"></i>
+                    <i [ngClass]="[FontAwesome.ELLIPSIS_VERTICAL_SOLID,'text-primary']"></i>
                     <span class="font-semibold text-2xl text-primary">
                         Acciones
                     </span>
                 </span>
                 <span>
-                    <p-button type="button" (click)="close()" icon="pi pi-times" rounded="true" outlined="true"
-                              styleClass="h-8 w-8"></p-button>
+                    <p-button
+                        type="button"
+                        (click)="close()"
+                        [icon]="FontAwesome.XMARK_SOLID"
+                        [rounded]="true"
+                        [outlined]="true"
+                        styleClass="h-8 w-8"></p-button>
                 </span>
             </div>
             <div class="overflow-y-auto">
@@ -25,7 +30,7 @@
                 <a pRipple
                    class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
                     <span class="font-bold">
-                                &copy; {{environment.APP_SHORT_NAME}} {{ currentYear }}
+                                &copy; {{ environment.APP_SHORT_NAME }} {{ currentYear }}
                     </span>
                 </a>
             </div>

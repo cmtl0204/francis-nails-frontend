@@ -5,6 +5,7 @@ export const environment = {
     APP_NAME: 'Sistema de Turismo Inteligente',
     APP_SHORT_NAME: 'Francis Nails',
     PATH_ASSETS: 'production',
+    PATH_BACKEND_ASSETS: 'http://localhost:3000/assets',
     firebase: {
         apiKey: 'AIzaSyB5ONJ6HaDAHkIg9HHCrEdzebfBYm8VpLs',
         authDomain: 'francis-nails-bf9d2.firebaseapp.com',

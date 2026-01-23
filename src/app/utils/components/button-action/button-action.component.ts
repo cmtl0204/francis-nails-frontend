@@ -8,6 +8,7 @@ import { NgClass } from '@angular/common';
 import { Button } from 'primeng/button';
 import { PanelMenu } from 'primeng/panelmenu';
 import { environment } from '@env/environment';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-button-action',
@@ -20,7 +21,7 @@ export class ButtonActionComponent {
     @Input() enabled: boolean = false;
     @Input() buttonActions: MenuItem[] = [];
     @Output() isHide: EventEmitter<boolean> = new EventEmitter<boolean>(false);
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected readonly LabelButtonActionEnum = LabelButtonActionEnum;
     protected currentYear: string;
 
@@ -33,4 +34,5 @@ export class ButtonActionComponent {
     }
 
     protected readonly environment = environment;
+    protected readonly FontAwesome = FontAwesome;
 }

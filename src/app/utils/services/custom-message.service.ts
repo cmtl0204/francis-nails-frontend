@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { MessageService, PrimeIcons } from 'primeng/api';
+import { MessageService } from 'primeng/api';
+import { FontAwesome } from '@/api/font-awesome';
 
 type Severity = 'success' | 'info' | 'warn' | 'danger' | 'help' | 'primary' | 'secondary' | 'contrast' | null | undefined;
 
@@ -119,7 +120,7 @@ export class CustomMessageService {
 
         this._isModalVisible.set(true);
         this._modalAcceptSeverity = 'info';
-        this._modalIcon = PrimeIcons.TIMES_CIRCLE;
+        this._modalIcon = FontAwesome.CIRCLE_XMARK_REGULAR;
         this._modalIconColor = 'red';
         this._modalTitle = 'Falta completar o existen errores en los siguientes campos';
         this._modalMessage = message;
@@ -128,7 +129,7 @@ export class CustomMessageService {
     showModalInfo({ summary, detail }: { summary: string; detail: string }): void {
         this._isModalVisible.set(true);
         this._modalAcceptSeverity = 'info';
-        this._modalTitleIcon = PrimeIcons.INFO_CIRCLE;
+        this._modalTitleIcon = FontAwesome.CIRCLE_INFO_SOLID;
         this._modalIconColor = 'var(--primary-color)';
         this._modalTitle = summary;
         this._modalMessage = detail;
@@ -137,7 +138,7 @@ export class CustomMessageService {
     showModalError({ summary, detail }: { summary: string; detail: string }): void {
         this._isModalVisible.set(true);
         this._modalAcceptSeverity = 'danger';
-        this._modalTitleIcon = PrimeIcons.TIMES_CIRCLE;
+        this._modalTitleIcon = FontAwesome.CIRCLE_XMARK_REGULAR;
         this._modalIconColor = 'var(--p-red-500)';
         this._modalTitle = summary;
         this._modalMessage = detail;
@@ -146,7 +147,7 @@ export class CustomMessageService {
     showModalWarn({ summary, detail }: { summary: string; detail: string }): void {
         this._isModalVisible.set(true);
         this._modalAcceptSeverity = 'info';
-        this._modalTitleIcon = PrimeIcons.EXCLAMATION_TRIANGLE;
+        this._modalTitleIcon = FontAwesome.CIRCLE_XMARK_REGULAR;
         this._modalIconColor = 'var(--primary-color)';
         this._modalTitle = summary;
         this._modalMessage = detail;

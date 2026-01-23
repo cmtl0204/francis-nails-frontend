@@ -47,7 +47,7 @@
         <div class="custom-field-form md:col-span-12">
             <p-button
                 label="Ingresar"
-                [icon]="PrimeIcons.SIGN_IN"
+                [icon]="FontAwesome.ARROW_RIGHT_TO_BRACKET_SOLID"
                 [loading]="coreService.loading()"
                 (onClick)="onSubmit()" />
         </div>
@@ -55,7 +55,7 @@
         <div class="custom-field-form md:col-span-6">
             <p-button
                 label="Crear Cuenta"
-                [icon]="PrimeIcons.USER_PLUS"
+                [icon]="FontAwesome.USER_PLUS_SOLID"
                 severity="success"
                 [text]="true"
                 [routerLink]="MY_ROUTES.authPages.signUp.absolute" />
@@ -64,7 +64,7 @@
         <div class="custom-field-form md:col-span-6">
             <p-button
                 label="Recuperar Cuenta"
-                [icon]="PrimeIcons.LOCK_OPEN"
+                [icon]="FontAwesome.UNLOCK_KEYHOLE_SOLID"
                 severity="help"
                 [text]="true"
                 [routerLink]="MY_ROUTES.authPages.passwordReset.absolute" />

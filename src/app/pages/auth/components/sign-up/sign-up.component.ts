@@ -22,6 +22,7 @@ import { Fluid } from 'primeng/fluid';
 import { CatalogueService } from '@utils/services/catalogue.service';
 import { CatalogueTypeEnum } from '@utils/enums';
 import { Tooltip } from 'primeng/tooltip';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-sign-up',
@@ -31,7 +32,7 @@ import { Tooltip } from 'primeng/tooltip';
 })
 export default class SignUpComponent implements OnInit {
     protected readonly environment = environment;
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected form!: FormGroup;
     protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
     protected readonly MY_ROUTES = MY_ROUTES;
@@ -213,4 +214,6 @@ export default class SignUpComponent implements OnInit {
 
         return true;
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

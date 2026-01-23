@@ -1,5 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    FormArray,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -8,7 +16,6 @@ import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { CustomMessageService } from '@utils/services/custom-message.service';
 import { environment } from '@env/environment';
-import { PrimeIcons } from 'primeng/api';
 import { CoreService } from '@utils/services/core.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { MY_ROUTES } from '@routes';
@@ -23,19 +30,20 @@ import { CatalogueInterface } from '@utils/interfaces';
 import { AuthService } from '@/pages/auth/auth.service';
 import { Dialog } from 'primeng/dialog';
 import { InputOtp } from 'primeng/inputotp';
-import { JsonPipe, Location } from '@angular/common';
+import { Location } from '@angular/common';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-security-question',
     templateUrl: './security-question.component.html',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, LabelDirective, ErrorMessageDirective, Message, Fluid, Dialog, InputOtp, JsonPipe]
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, LabelDirective, ErrorMessageDirective, Message, Fluid, Dialog, InputOtp]
 })
 export default class SecurityQuestionComponent implements OnInit {
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly environment = environment;
     protected readonly coreService = inject(CoreService);
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected form!: FormGroup;
     protected allSecurityQuestions: CatalogueInterface[] = [];
     protected selectedSecurityQuestions: CatalogueInterface[] = [];
@@ -167,4 +175,6 @@ export default class SecurityQuestionComponent implements OnInit {
 
         this.watchFormChanges();
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

@@ -4,14 +4,26 @@ import { PrimeIcons } from 'primeng/api';
 import { BreadcrumbService } from '@layout/service';
 import { CustomMessageService } from '@utils/services';
 import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    AbstractControl,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators
+} from '@angular/forms';
 import { Fluid } from 'primeng/fluid';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { InputText } from 'primeng/inputtext';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { Message } from 'primeng/message';
 import { Button } from 'primeng/button';
-import { invalidEmailValidator, passwordPolicesValidator, userUpdatedValidator } from '@utils/form-validators/custom-validator';
+import {
+    invalidEmailValidator,
+    passwordPolicesValidator,
+    userUpdatedValidator
+} from '@utils/form-validators/custom-validator';
 import { Password } from 'primeng/password';
 import { generatePassword } from '@utils/helpers/password-generate.helper';
 import { RoleInterface } from '@/pages/auth/interfaces';
@@ -32,17 +44,17 @@ import { environment } from '@env/environment';
 import { uploadFileValidator } from '@utils/helpers/file.helper';
 import { Toolbar } from 'primeng/toolbar';
 import { Textarea } from 'primeng/textarea';
-import { DatePipe } from '@angular/common';
 import { DateLongPipe } from '@utils/pipes/date-long.pipe';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-user-profile',
-    imports: [Button, Divider, ErrorMessageDirective, Fluid, FormsModule, InputText, LabelDirective, Message, Password, ReactiveFormsModule, Tag, ToggleSwitch, DatePicker, Select, Avatar, Tooltip, Toolbar, Textarea, DatePipe, DateLongPipe],
+    imports: [Button, Divider, ErrorMessageDirective, Fluid, FormsModule, InputText, LabelDirective, Message, Password, ReactiveFormsModule, Tag, ToggleSwitch, DatePicker, Select, Avatar, Tooltip, Toolbar, Textarea, DateLongPipe],
     templateUrl: './user-profile.component.html',
     styleUrl: './user-profile.component.scss'
 })
 export default class UserProfileComponent implements OnInit {
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected readonly catalogueService = inject(CatalogueService);
     protected readonly customMessageService = inject(CustomMessageService);
     protected readonly router = inject(Router);
@@ -295,4 +307,6 @@ export default class UserProfileComponent implements OnInit {
         await navigator.clipboard.writeText(this.passwordField.value);
         this.customMessageService.showSuccess({ summary: 'Contraseña copiada', detail: this.passwordField.value });
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

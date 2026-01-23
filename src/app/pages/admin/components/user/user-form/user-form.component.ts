@@ -24,6 +24,7 @@ import { Divider } from 'primeng/divider';
 import { AutoFocus } from 'primeng/autofocus';
 import { Tag } from 'primeng/tag';
 import { Toolbar } from 'primeng/toolbar';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-user-form',
@@ -32,7 +33,7 @@ import { Toolbar } from 'primeng/toolbar';
     styleUrl: './user-form.component.scss'
 })
 export default class UserFormComponent implements OnInit {
-    protected readonly PrimeIcons = PrimeIcons;
+
 
     protected readonly router = inject(Router);
     protected readonly customMessageService = inject(CustomMessageService);
@@ -218,4 +219,6 @@ export default class UserFormComponent implements OnInit {
         await navigator.clipboard.writeText(this.passwordField.value);
         this.customMessageService.showSuccess({ summary: 'Contraseña copiada', detail: this.passwordField.value });
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

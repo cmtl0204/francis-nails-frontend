@@ -1,13 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { MenuItem, PrimeIcons } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { MY_ROUTES } from '@routes';
 import { Ripple } from 'primeng/ripple';
 import { AuthService } from '@modules/auth/auth.service';
 import { RoleEnum } from '@utils/enums';
 import { AuthHttpService } from '@/pages/auth/auth-http.service';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-menu',
@@ -31,9 +32,8 @@ import { AuthHttpService } from '@/pages/auth/auth-http.service';
         <div class="mt-auto">
             <hr class="mb-4 mx-4 border-t border-0 border-surface" />
 
-            <a (click)="signOut()" pRipple
-               class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
-                <i [class]="PrimeIcons.POWER_OFF" style="color:red "></i>
+            <a (click)="signOut()" pRipple class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
+                <i [class]="FontAwesome.POWER_OFF_SOLID" style="color:red "></i>
                 <span class="font-bold" style="color: red"> Cerrar Sesión </span>
             </a>
         </div>
@@ -42,7 +42,7 @@ import { AuthHttpService } from '@/pages/auth/auth-http.service';
 export class AppMenu implements OnInit {
     protected readonly authService = inject(AuthService);
     protected readonly authHttpService = inject(AuthHttpService);
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected model: MenuItem[] = [];
     private readonly router = inject(Router);
 
@@ -61,9 +61,9 @@ export class AppMenu implements OnInit {
         return [
             {
                 label: 'Usuarios',
-                icon: PrimeIcons.USERS,
+                icon: FontAwesome.USERS_SOLID,
                 routerLink: [MY_ROUTES.adminPages.user.absolute]
-            },
+            }
         ];
     }
 
@@ -71,7 +71,7 @@ export class AppMenu implements OnInit {
         return [
             {
                 label: 'Citas',
-                icon: PrimeIcons.CALENDAR,
+                icon: FontAwesome.CALENDAR_SOLID,
                 routerLink: [MY_ROUTES.corePages.owner.appointments.absolute]
             }
         ];
@@ -82,10 +82,10 @@ export class AppMenu implements OnInit {
             {
                 label: 'Menú',
                 items: [
-                    { label: 'Dashboard', icon: PrimeIcons.HOME, routerLink: ['/'] },
+                    { label: 'Dashboard', icon: FontAwesome.HOUSE_REGULAR, routerLink: ['/'] },
                     {
                         label: this.authService.auth.username,
-                        icon: PrimeIcons.USER,
+                        icon: FontAwesome.ID_CARD_CLIP_SOLID,
                         routerLink: [MY_ROUTES.adminPages.user.profile.absolute]
                     },
                     ...this.loadMenu
@@ -97,4 +97,6 @@ export class AppMenu implements OnInit {
     signOut() {
         this.authHttpService.signOut().subscribe();
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

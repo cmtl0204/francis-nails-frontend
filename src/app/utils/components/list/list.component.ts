@@ -17,6 +17,7 @@ import { ColInterface } from '@utils/interfaces/col.interface';
 import { DatePipe } from '@angular/common';
 import { debounceTime } from 'rxjs';
 import { Tag } from 'primeng/tag';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-list',
@@ -40,7 +41,7 @@ export class ListComponent implements OnInit {
     onSearch = output<any>();
     onPagination = output<any>();
 
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected readonly coreService = inject(CoreService);
     protected searchControl: FormControl = new FormControl(null);
     protected currentYear: string;
@@ -73,4 +74,6 @@ export class ListComponent implements OnInit {
     onPageChange(event: PaginatorState) {
         if (event?.page || event.page === 0) this.onPagination.emit(event.page + 1);
     }
+
+    protected readonly FontAwesome = FontAwesome;
 }

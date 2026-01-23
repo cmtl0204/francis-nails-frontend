@@ -48,7 +48,7 @@ export class AppointmentForm implements OnInit, OnDestroy {
     public submitted: InputSignal<boolean> = input.required<boolean>();
     public dataOut: OutputEmitterRef<any> = output<any>();
 
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected readonly environment = environment;
 
     protected readonly catalogueService = inject(CatalogueService);

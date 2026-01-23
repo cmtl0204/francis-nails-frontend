@@ -10,8 +10,8 @@
 
     <ng-template #end>
         <!-- actions -->
-        <p-button label="Cancelar" [icon]="PrimeIcons.ARROW_LEFT" severity="warn" (onClick)="return()" />
-        <p-button type="button" label="Guardar" [icon]="PrimeIcons.SAVE" class="ml-2" (onClick)="onSubmit()" />
+        <p-button label="Cancelar" [icon]="FontAwesome.CHEVRON_LEFT_SOLID" severity="warn" (onClick)="return()" />
+        <p-button type="button" label="Guardar" [icon]="FontAwesome.FLOPPY_DISK_SOLID" class="ml-2" (onClick)="onSubmit()" />
     </ng-template>
 </p-toolbar>
 
@@ -184,7 +184,7 @@
                 <div class="md:col-span-2 custom-field-form mt-8">
                     <p-button
                         label="Auto Generar"
-                        [icon]="PrimeIcons.KEY"
+                        [icon]="FontAwesome.KEY_SOLID"
                         severity="info"
                         [disabled]="passwordField.disabled"
                         (onClick)="autoGeneratePassword()" />

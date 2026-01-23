@@ -8,7 +8,7 @@
                 </div>
                 <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border"
                      style="width: 2.5rem; height: 2.5rem">
-                    <i class="pi pi-users text-blue-500 text-xl!"></i>
+                    <i [ngClass]="[FontAwesome.USERS_SOLID,'text-blue-500','text-xl!'] "></i>
                 </div>
             </div>
             <span class="text-primary font-medium">24 usuarios registrados </span>
@@ -24,7 +24,7 @@
                 </div>
                 <div class="flex items-center justify-center bg-red-100 dark:bg-red-400/10 rounded-border"
                      style="width: 2.5rem; height: 2.5rem">
-                    <i class="pi pi-ban text-red-500 text-xl!"></i>
+                    <i [ngClass]="[FontAwesome.BAN_SOLID, 'text-red-500','text-xl!']"></i>
                 </div>
             </div>
             <span class="text-primary font-medium">2 usuarios bloqueados</span>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="flex items-center justify-center bg-yellow-100 dark:bg-yellow-400/10 rounded-border"
                      style="width: 2.5rem; height: 2.5rem">
-                    <i class="pi pi-times-circle text-yellow-500 text-xl!"></i>
+                    <i [ngClass]="[FontAwesome.CIRCLE_XMARK_REGULAR,'text-yellow-500','text-xl!']"></i>
                 </div>
             </div>
             <span class="text-primary font-medium">2 usuarios suspendidos</span>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="flex items-center justify-center bg-green-100 dark:bg-green-400/10 rounded-border"
                      style="width: 2.5rem; height: 2.5rem">
-                    <i class="pi pi-clock text-green-500 text-xl!"></i>
+                    <i [ngClass]="[FontAwesome.CLOCK_SOLID, 'text-green-500','text-xl!']"></i>
                 </div>
             </div>
             <span class="text-primary font-medium">85 usuarios activos</span>

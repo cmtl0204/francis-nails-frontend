@@ -4,7 +4,7 @@
             @if (this.authService.auth.securityQuestionAcceptedAt) {
                 <p-button
                     label="Regresar"
-                    [icon]="PrimeIcons.ARROW_LEFT"
+                    [icon]="FontAwesome.CHEVRON_LEFT_SOLID"
                     severity="warn"
                     [text]="true"
                     (onClick)="back()" />
@@ -56,12 +56,12 @@
                                     label="Elejir otras preguntas"
                                     severity="info"
                                     [text]="true"
-                                    [icon]="PrimeIcons.SYNC"
+                                    [icon]="FontAwesome.ARROWS_ROTATE_SOLID"
                                     (onClick)="loadSecurityQuestions()" />
                             </div>
 
                             <div class="custom-field-form md:col-span-6">
-                                <p-button type="submit" label="Guardar y Continuar" [icon]="PrimeIcons.ARROW_RIGHT" />
+                                <p-button type="submit" label="Guardar y Continuar" [icon]="FontAwesome.CHEVRON_RIGHT_SOLID" />
                             </div>
 
                         </form>
@@ -110,8 +110,8 @@
             <div class="custom-field-form md:col-span-12">
                 <p-button
                     label="Regresar"
-                    [icon]="PrimeIcons.ARROW_LEFT"
-                    severity="warn"
+                    [icon]="FontAwesome.CHEVRON_LEFT_SOLID"
+                    severity="secondary"
                     [text]="true"
                     (onClick)="back()" />
             </div>

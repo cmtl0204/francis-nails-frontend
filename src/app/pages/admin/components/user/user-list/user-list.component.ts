@@ -11,6 +11,7 @@ import { MY_ROUTES } from '@routes';
 import { UserInterface } from '@/pages/auth/interfaces';
 import { AuthService } from '@/pages/auth/auth.service';
 import { Fluid } from 'primeng/fluid';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-user-list',
@@ -19,7 +20,7 @@ import { Fluid } from 'primeng/fluid';
     styleUrl: './user-list.component.scss'
 })
 export default class UserListComponent implements OnInit {
-    protected readonly PrimeIcons = PrimeIcons;
+
 
     protected cols: ColInterface[] = [];
     protected items: UserInterface[] = [];
@@ -103,7 +104,7 @@ export default class UserListComponent implements OnInit {
         this.confirmationService.confirm({
             message: '¿Está seguro de eliminar?',
             header: 'Eliminar',
-            icon: PrimeIcons.TRASH,
+            icon: FontAwesome.TRASH_CAN_SOLID,
             rejectButtonStyleClass: 'p-button-text',
             rejectButtonProps: {
                 label: 'Cancelar',
@@ -128,7 +129,7 @@ export default class UserListComponent implements OnInit {
         this.confirmationService.confirm({
             message: '¿Está seguro de suspender al usuario?',
             header: 'Suspender',
-            icon: PrimeIcons.BAN,
+            icon: FontAwesome.BAN_SOLID,
             rejectButtonStyleClass: 'p-button-text',
             rejectButtonProps: {
                 label: 'Cancelar',

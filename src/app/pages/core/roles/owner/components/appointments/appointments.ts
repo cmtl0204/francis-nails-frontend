@@ -19,6 +19,7 @@ import { Textarea } from 'primeng/textarea';
 import { Button } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
 import { CatalogueInterface } from '@utils/interfaces';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-appointments',
@@ -45,7 +46,7 @@ export class Appointments implements OnInit {
     protected form!: FormGroup;
     protected services: string[] = ['Manicura', 'Depilado de cejas'];
     protected currentDate = new Date();
-    protected readonly PrimeIcons = PrimeIcons;
+
     protected readonly onsubmit = onsubmit;
     private customMessageService = inject(CustomMessageService);
     private appointmentHttpService = inject(AppointmentHttpService);
@@ -226,4 +227,6 @@ export class Appointments implements OnInit {
     confirm() {}
 
     cancel() {}
+
+    protected readonly FontAwesome = FontAwesome;
 }

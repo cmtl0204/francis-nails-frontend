@@ -4,7 +4,7 @@
         <div class="custom-field-form md:col-span-12">
             <p-button
                 pTooltip="Regresar"
-                [icon]="PrimeIcons.ARROW_LEFT"
+                [icon]="FontAwesome.ARROW_LEFT_SOLID"
                 severity="warn"
                 [text]="true"
                 [routerLink]="[MY_ROUTES.authPages.signIn.absolute]" />
@@ -53,7 +53,7 @@
             <div class="custom-field-form md:col-span-12">
                 <p-button
                     label="Solicitar código"
-                    [icon]="PrimeIcons.ENVELOPE"
+                    [icon]="FontAwesome.PAPER_PLANE_REGULAR"
                     severity="help"
                     [disabled]="emailField.invalid"
                     (onClick)="requestTransactionalCode()" />
@@ -185,7 +185,7 @@
             <div class="custom-field-form md:col-span-12">
                 <p-button
                     label="Crear Cuenta"
-                    [icon]="PrimeIcons.USER_PLUS"
+                    [icon]="FontAwesome.USER_PLUS_SOLID"
                     severity="success"
                     (onClick)="onSubmit()" />
             </div>
