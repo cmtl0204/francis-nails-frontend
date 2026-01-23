@@ -38,7 +38,8 @@ import { FontAwesome } from '@/api/font-awesome';
     ],
     template: `
         <div class="login-page min-h-screen flex items-center justify-center bg-gray-50 px-4">
-            <div class="box w-full max-w-6xl bg-white rounded-xl shadow-md overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+            <div
+                class="box w-full max-w-6xl bg-white rounded-xl shadow-md overflow-hidden grid grid-cols-1 lg:grid-cols-2">
                 <!-- COLUMNA IZQUIERDA -->
                 <div class="p-6 lg:p-10 flex flex-col justify-center">
                     <!-- Logo / Header -->
@@ -54,7 +55,7 @@ import { FontAwesome } from '@/api/font-awesome';
                 </div>
 
                 <!-- COLUMNA DERECHA -->
-                <div class="bg-surface-50 p-6 lg:p-10 flex flex-col justify-center">
+                <div class="bg-surface-100 p-6 lg:p-10 flex flex-col justify-center">
                     <!-- Bloque informativo superior -->
                     <div class="mb-6">
                         <ng-content select="[right-header]">
@@ -62,7 +63,7 @@ import { FontAwesome } from '@/api/font-awesome';
 
                             <p-divider />
 
-                            <p-message>
+                            <p-message severity="secondary">
                                 <div class="text-sm font-semibold">
                                     <p>
                                         <b>Importante:</b>
@@ -86,11 +87,12 @@ import { FontAwesome } from '@/api/font-awesome';
                                 <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/steps.pdf'">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
-                                            <i [class]="FontAwesome.LIST_UL_SOLID" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                            <i [class]="FontAwesome.CALENDAR_CHECK_REGULAR"
+                                               style="font-size: 2rem;color:var(--text-color-secondary)"></i>
                                         </div>
                                         <div class="md:col-span-10 flex flex-col gap-2">
-                                            <h6 class="mb-5" style="color: #01579B">1 PASO</h6>
-                                            <p>Pasos para poder agendar.....</p>
+                                            <h6 class="mb-5" style="var(--text-color-secondary)">¿Quieres Agendar?</h6>
+                                            <p>Agendar</p>
                                         </div>
                                     </div>
                                 </a>
@@ -99,10 +101,11 @@ import { FontAwesome } from '@/api/font-awesome';
                                 <a target="_blank" [routerLink]="[MY_ROUTES.guessPages.simulator.absolute]">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
-                                            <i [class]="FontAwesome.DESKTOP_SOLID" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                            <i [class]="FontAwesome.MESSAGE_REGULAR"
+                                               style="font-size: 2rem;color:var(--text-color-secondary)"></i>
                                         </div>
                                         <div class="md:col-span-10 flex flex-col gap-2">
-                                            <h6 class="mb-5" style="color: #01579B">Reñas</h6>
+                                            <h6 class="mb-5" style="var(--text-color-secondary)">Reseñas</h6>
                                             <p>Ver reseñas.</p>
                                         </div>
                                     </div>
@@ -112,26 +115,27 @@ import { FontAwesome } from '@/api/font-awesome';
                                 <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/external_manual.pdf'">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
-                                            <!--                                    <img [src]="environment.PATH_ASSETS+'/images/auth/manual_usuario.svg'"-->
-                                            <!--                                         alt="cabecera">-->
-
-                                            <i [class]="FontAwesome.BOOK_SOLID" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                            <i [class]="FontAwesome.LIST_UL_SOLID"
+                                               style="font-size: 2rem;color:var(--text-color-secondary)"></i>
                                         </div>
                                         <div class="md:col-span-10 flex flex-col gap-2">
-                                            <h6 class="mb-5" style="color: #01579B">Servicios</h6>
+                                            <h6 class="mb-5" style="var(--text-color-secondary)">Servicios</h6>
                                             <p>Catalogo de Servicios</p>
                                         </div>
                                     </div>
                                 </a>
                                 <p-divider />
 
-                                <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/terms_conditions.pdf'">
+                                <a target="_blank"
+                                   [href]="environment.PATH_ASSETS + '/files/auth/terms_conditions.pdf'">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
-                                            <i [class]="FontAwesome.FILE_CONTRACT_SOLID" style="font-size: 3rem;color:var(--primary-color)"></i>
+                                            <i [class]="FontAwesome.FILE_CONTRACT_SOLID"
+                                               style="font-size: 2rem;color:var(--text-color-secondary)"></i>
                                         </div>
                                         <div class="md:col-span-10 flex flex-col gap-2">
-                                            <h6 class="mb-5" style="color: #01579B">TÉRMINOS Y CONDICIONES</h6>
+                                            <h6 class="mb-5" style="var(--text-color-secondary)">TÉRMINOS Y
+                                                CONDICIONES</h6>
                                             <p>Términos y Condiciones del Sistema</p>
                                         </div>
                                     </div>
