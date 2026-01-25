@@ -9,7 +9,6 @@ import { RippleModule } from 'primeng/ripple';
 import { CustomMessageService } from '@utils/services/custom-message.service';
 import { AuthHttpService } from '../../auth-http.service';
 import { environment } from '@env/environment';
-import { PrimeIcons } from 'primeng/api';
 import { DatePickerModule } from 'primeng/datepicker';
 import { Message } from 'primeng/message';
 import { LabelDirective } from '@utils/directives/label.directive';
@@ -20,9 +19,10 @@ import { KeyFilter } from 'primeng/keyfilter';
 import { MY_ROUTES } from '@routes';
 import { Fluid } from 'primeng/fluid';
 import { CatalogueService } from '@utils/services/catalogue.service';
-import { CatalogueTypeEnum } from '@utils/enums';
+import { CatalogueTypeEnum, CoreEnum } from '@utils/enums';
 import { Tooltip } from 'primeng/tooltip';
 import { FontAwesome } from '@/api/font-awesome';
+import { CatalogueHttpService, CoreSessionStorageService } from '@utils/services';
 
 @Component({
     selector: 'app-sign-up',
@@ -36,8 +36,11 @@ export default class SignUpComponent implements OnInit {
     protected form!: FormGroup;
     protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
     protected readonly MY_ROUTES = MY_ROUTES;
+    protected readonly FontAwesome = FontAwesome;
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
+    private readonly coreSessionStorageService = inject(CoreSessionStorageService);
+    private readonly catalogueHttpService = inject(CatalogueHttpService);
     private readonly catalogueService = inject(CatalogueService);
     private readonly authHttpService = inject(AuthHttpService);
     private readonly router = inject(Router);
@@ -79,11 +82,17 @@ export default class SignUpComponent implements OnInit {
     }
 
     protected async loadSecurityQuestions() {
-        let allSecurityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
+        this.catalogueHttpService.findCache().subscribe({
+            next: async (response) => {
+                await this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response);
 
-        const selectedSecurityQuestions = allSecurityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
+                let allSecurityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
 
-        selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
+                const selectedSecurityQuestions = allSecurityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
+
+                selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
+            }
+        });
     }
 
     protected openTerms() {
@@ -212,6 +221,4 @@ export default class SignUpComponent implements OnInit {
 
         return true;
     }
-
-    protected readonly FontAwesome = FontAwesome;
 }

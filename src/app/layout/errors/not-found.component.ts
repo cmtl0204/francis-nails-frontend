@@ -67,6 +67,7 @@ import { FontAwesome } from '@/api/font-awesome';
                             </a>
 
                             <p-button label="Regresar" (onClick)="back()"
+                                      [raised]="true"
                                       [icon]="FontAwesome.CHEVRON_LEFT_SOLID" />
                         </div>
                     </div>

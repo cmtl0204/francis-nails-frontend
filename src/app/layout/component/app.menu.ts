@@ -44,6 +44,7 @@ export class AppMenu implements OnInit {
     protected readonly authHttpService = inject(AuthHttpService);
 
     protected model: MenuItem[] = [];
+    protected readonly FontAwesome = FontAwesome;
     private readonly router = inject(Router);
 
     get loadMenu(): MenuItem[] {
@@ -52,6 +53,8 @@ export class AppMenu implements OnInit {
                 return this.adminMenu;
             case RoleEnum.OWNER:
                 return this.ownerMenu;
+            case RoleEnum.CUSTOMER:
+                return this.customerMenu;
             default:
                 return [];
         }
@@ -77,6 +80,21 @@ export class AppMenu implements OnInit {
         ];
     }
 
+    get customerMenu(): MenuItem[] {
+        return [
+            {
+                label: 'Mis Citas',
+                icon: FontAwesome.CALENDAR_SOLID,
+                routerLink: [MY_ROUTES.corePages.owner.appointments.absolute]
+            },
+            {
+                label: 'Cancelar Cita',
+                icon: FontAwesome.CALENDAR_XMARK_SOLID,
+                routerLink: [MY_ROUTES.corePages.owner.appointments.absolute]
+            }
+        ];
+    }
+
     ngOnInit() {
         this.model = [
             {
@@ -97,6 +115,4 @@ export class AppMenu implements OnInit {
     signOut() {
         this.authHttpService.signOut().subscribe();
     }
-
-    protected readonly FontAwesome = FontAwesome;
 }

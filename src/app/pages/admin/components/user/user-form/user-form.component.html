@@ -10,8 +10,10 @@
 
     <ng-template #end>
         <!-- actions -->
-        <p-button label="Cancelar" [icon]="FontAwesome.CHEVRON_LEFT_SOLID" severity="warn" (onClick)="return()" />
-        <p-button type="button" label="Guardar" [icon]="FontAwesome.FLOPPY_DISK_SOLID" class="ml-2" (onClick)="onSubmit()" />
+        <p-button label="Cancelar" [icon]="FontAwesome.CHEVRON_LEFT_SOLID" [raised]="true" severity="warn"
+                  (onClick)="return()" />
+        <p-button type="button" label="Guardar" [icon]="FontAwesome.FLOPPY_DISK_SOLID" class="ml-2"
+                  (onClick)="onSubmit()" />
     </ng-template>
 </p-toolbar>
 
