@@ -185,7 +185,7 @@ export default class SignUpComponent implements OnInit {
                     asyncValidators: [unavailableUserValidator(this.authHttpService)]
                 }
             ],
-            securityQuestions: this.formBuilder.array([])
+            securityQuestions: this.formBuilder.array([], [Validators.required, Validators.minLength(3)])
         });
 
         this.emailField.disable();
@@ -214,7 +214,7 @@ export default class SignUpComponent implements OnInit {
         if (this.termsAcceptedAtField.invalid) errors.push('Términos y Condiciones');
 
         const invalidSecurityQuestions = this.securityQuestionsField.controls.some((ctrl) => ctrl.get('answer')?.invalid);
-        if (invalidSecurityQuestions) errors.push('Preguntas de seguridad');
+        if (invalidSecurityQuestions || this.securityQuestionsField.invalid) errors.push('Preguntas de seguridad');
 
         if (errors.length > 0) {
             this.form.markAllAsTouched();
