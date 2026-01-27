@@ -1,159 +1,168 @@
-<p-fluid>
-    <div class="form-wrapper">
-        <form [formGroup]="form" class="custom-card-form">
-            <!-- logo -->
-            <div class="custom-field-form text-center">
-                <img (click)="ladingPage()" [src]="environment.PATH_ASSETS + '/logo_w.png'" alt="Logo">
-            </div>
+<p-fluid class="custom-card-form mx-auto max-w-3xl">
+    <form [formGroup]="form" class="custom-grid-form">
+        <div class="custom-field-form md:col-span-2">
+            <p-button
+                type="button"
+                pTooltip="Regresar"
+                severity="warn"
+                [text]="true"
+                [raised]="true"
+                [icon]="FontAwesome.CHEVRON_LEFT_SOLID"
+                (onClick)="ladingPage()" />
+        </div>
 
-            <!-- title -->
-            <div class="custom-field-form text-center">
-                <div class="custom-section-title-form">Agenda tu cita:</div>
-            </div>
+        <!-- logo -->
+        <div class="custom-field-form md:col-span-12 text-center">
+            <img (click)="ladingPage()" [src]="environment.PATH_ASSETS + '/logo_w.png'" alt="Logo">
+        </div>
 
-            <!-- identification -->
-            <div class="sm:col-span-12 custom-field-form">
+        <!-- title -->
+        <div class="custom-field-form md:col-span-12 text-center">
+            <div class="custom-section-title-form">Agenda tu cita:</div>
+        </div>
+
+        <!-- identification -->
+        <div class="custom-field-form md:col-span-12 ">
+            <label
+                appLabel
+                for="name"
+                [required]="identificationField"
+                label="Identificación">
+            </label>
+
+            <input pInputText id="identification" formControlName="identification"
+                   placeholder="Ingrese su número de cédula, RUC o Pasaporte">
+
+            <p-message
+                appErrorMessage
+                [errors]="identificationField.errors"
+                [touched]="identificationField.touched"
+                [dirty]="identificationField.dirty" />
+        </div>
+
+        @if (identificationField.valid) {
+            <!-- name -->
+            <div class="custom-field-form md:col-span-12">
                 <label
                     appLabel
                     for="name"
-                    [required]="identificationField"
-                    label="Identificación">
+                    [required]="nameField"
+                    label="Nombre del cliente">
                 </label>
 
-                <input pInputText id="identification" formControlName="identification"
-                       placeholder="Ingrese su número de cédula, RUC o Pasaporte">
+                <input pInputText id="name" formControlName="name">
 
                 <p-message
                     appErrorMessage
-                    [errors]="identificationField.errors"
-                    [touched]="identificationField.touched"
-                    [dirty]="identificationField.dirty" />
+                    [errors]="nameField.errors"
+                    [touched]="nameField.touched"
+                    [dirty]="nameField.dirty" />
             </div>
 
-            @if (identificationField.valid) {
-                <!-- name -->
-                <div class="md:col-span-12 custom-field-form">
-                    <label
-                        appLabel
-                        for="name"
-                        [required]="nameField"
-                        label="Nombre del cliente">
-                    </label>
+            <!-- email -->
+            <div class="custom-field-form md:col-span-12">
+                <label
+                    appLabel
+                    for="email"
+                    [required]="emailField"
+                    label="Correo">
+                </label>
 
-                    <input pInputText id="name" formControlName="name">
+                <input pInputText type="email" id="email" formControlName="email">
 
-                    <p-message
-                        appErrorMessage
-                        [errors]="nameField.errors"
-                        [touched]="nameField.touched"
-                        [dirty]="nameField.dirty" />
-                </div>
+                <p-message
+                    appErrorMessage
+                    [errors]="emailField.errors"
+                    [touched]="emailField.touched"
+                    [dirty]="emailField.dirty" />
+            </div>
 
-                <!-- email -->
-                <div class="md:col-span-12 custom-field-form">
-                    <label
-                        appLabel
-                        for="email"
-                        [required]="emailField"
-                        label="Correo">
-                    </label>
+            <!-- cellPhone -->
+            <div class="custom-field-form md:col-span-12">
+                <label
+                    appLabel
+                    for="cellPhone"
+                    [required]="cellPhoneField"
+                    label="Teléfono">
+                </label>
 
-                    <input pInputText type="email" id="email" formControlName="email">
+                <input pInputText id="cellPhone" formControlName="cellPhone">
 
-                    <p-message
-                        appErrorMessage
-                        [errors]="emailField.errors"
-                        [touched]="emailField.touched"
-                        [dirty]="emailField.dirty" />
-                </div>
+                <p-message
+                    appErrorMessage
+                    [errors]="cellPhoneField.errors"
+                    [touched]="cellPhoneField.touched"
+                    [dirty]="cellPhoneField.dirty" />
+            </div>
 
-                <!-- phone -->
-                <div class="md:col-span-12 custom-field-form">
-                    <label
-                        appLabel
-                        for="phone"
-                        [required]="phoneField"
-                        label="Teléfono">
-                    </label>
+            <!-- service -->
+            <div class="custom-field-form md:col-span-12">
+                <label
+                    appLabel
+                    for="service"
+                    [required]="serviceField"
+                    label="Servicio">
+                </label>
 
-                    <input pInputText id="phone" formControlName="phone">
+                <p-select
+                    id="service"
+                    formControlName="service"
+                    [options]="services"
+                    [filter]="true"
+                    appendTo="body"
+                    placeholder="Seleccione" />
 
-                    <p-message
-                        appErrorMessage
-                        [errors]="phoneField.errors"
-                        [touched]="phoneField.touched"
-                        [dirty]="phoneField.dirty" />
-                </div>
+                <p-message
+                    appErrorMessage
+                    [errors]="serviceField.errors"
+                    [touched]="serviceField.touched"
+                    [dirty]="serviceField.dirty" />
+            </div>
 
-                <!-- service -->
-                <div class="md:col-span-12 custom-field-form">
-                    <label
-                        appLabel
-                        for="service"
-                        [required]="serviceField"
-                        label="Servicio">
-                    </label>
+            <!-- date -->
+            <div class="custom-field-form md:col-span-12">
+                <label
+                    appLabel
+                    for="date"
+                    [required]="dateField"
+                    label="Fecha de la cita">
+                </label>
 
-                    <p-select
-                        id="service"
-                        formControlName="service"
-                        [options]="services"
-                        [filter]="true"
-                        appendTo="body"
-                        placeholder="Seleccione" />
+                <p-datepicker
+                    id="date"
+                    formControlName="date"
+                    [showIcon]="true"
+                    inputId="buttondisplay"
+                    [showOnFocus]="false"
+                    [showTime]="true"
+                    [minDate]="currentDate"
+                    appendTo="body">
+                </p-datepicker>
 
-                    <p-message
-                        appErrorMessage
-                        [errors]="serviceField.errors"
-                        [touched]="serviceField.touched"
-                        [dirty]="serviceField.dirty" />
-                </div>
+                <p-message
+                    appErrorMessage
+                    [errors]="dateField.errors"
+                    [touched]="dateField.touched"
+                    [dirty]="dateField.dirty" />
+            </div>
 
-                <!-- date -->
-                <div class="md:col-span-12 custom-field-form">
-                    <label
-                        appLabel
-                        for="date"
-                        [required]="dateField"
-                        label="Fecha de la cita">
-                    </label>
+            <!-- notes -->
+            <div class="custom-field-form md:col-span-12">
+                <label
+                    appLabel
+                    for="notes"
+                    [required]="notesField"
+                    label="Nota">
+                </label>
 
-                    <p-datepicker
-                        id="date"
-                        formControlName="date"
-                        [showIcon]="true"
-                        inputId="buttondisplay"
-                        [showOnFocus]="false"
-                        [showTime]="true"
-                        [minDate]="currentDate"
-                        appendTo="body">
-                    </p-datepicker>
+                <textarea pTextarea id="notes" formControlName="notes" rows="5" cols="30"></textarea>
 
-                    <p-message
-                        appErrorMessage
-                        [errors]="dateField.errors"
-                        [touched]="dateField.touched"
-                        [dirty]="dateField.dirty" />
-                </div>
-
-                <!-- notes -->
-                <div class="md:col-span-12 custom-field-form">
-                    <label
-                        appLabel
-                        for="notes"
-                        [required]="notesField"
-                        label="Nota">
-                    </label>
-
-                    <textarea pTextarea id="notes" formControlName="notes" rows="5" cols="30" ></textarea>
-
-                    <p-message
-                        appErrorMessage
-                        [errors]="notesField.errors"
-                        [touched]="notesField.touched"
-                        [dirty]="notesField.dirty" />
-                </div>
-            }
-        </form>
-    </div>
+                <p-message
+                    appErrorMessage
+                    [errors]="notesField.errors"
+                    [touched]="notesField.touched"
+                    [dirty]="notesField.dirty" />
+            </div>
+        }
+    </form>
 </p-fluid>

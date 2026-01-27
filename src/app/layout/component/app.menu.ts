@@ -9,11 +9,14 @@ import { AuthService } from '@modules/auth/auth.service';
 import { RoleEnum } from '@utils/enums';
 import { AuthHttpService } from '@/pages/auth/auth-http.service';
 import { FontAwesome } from '@/api/font-awesome';
+import { Button } from 'primeng/button';
+import { Tooltip } from 'primeng/tooltip';
+import { environment } from '@env/environment';
 
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, AppMenuitem, RouterModule, Ripple],
+    imports: [CommonModule, AppMenuitem, RouterModule, Ripple, Button, Tooltip],
     template: `
         <ul class="layout-menu">
             @for (item of model; track item.id) {
@@ -32,9 +35,18 @@ import { FontAwesome } from '@/api/font-awesome';
         <div class="mt-auto">
             <hr class="mb-4 mx-4 border-t border-0 border-surface" />
 
-            <a (click)="signOut()" pRipple class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
+            <a (click)="signOut()" pRipple
+               class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
                 <i [class]="FontAwesome.POWER_OFF_SOLID" style="color:red "></i>
                 <span class="font-bold" style="color: red"> Cerrar Sesión </span>
+            </a>
+
+            <a pTooltip="Versión del Sistema"
+               class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
+                <i [class]="FontAwesome.CODE_BRANCH_SOLID" style="color: var(--primary-color)"> </i>
+                <span class="font-bold" style="color: var(--primary-color)">
+                    {{ environment.VERSION }}
+                </span>
             </a>
         </div>
     `
@@ -115,4 +127,6 @@ export class AppMenu implements OnInit {
     signOut() {
         this.authHttpService.signOut().subscribe();
     }
+
+    protected readonly environment = environment;
 }

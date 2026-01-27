@@ -88,7 +88,12 @@ export default class SignUpComponent implements OnInit {
 
                 let allSecurityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
 
-                const selectedSecurityQuestions = allSecurityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
+                console.log(allSecurityQuestions);
+                const selectedSecurityQuestions = allSecurityQuestions
+                    .map((value) => ({ value, sort: Math.random() })) // 1. Asignamos un valor aleatorio a cada uno
+                    .sort((a, b) => a.sort - b.sort) // 2. Ordenamos por ese valor aleatorio
+                    .map(({ value }) => value) // 3. Recuperamos el objeto original
+                    .slice(0, 3); // 4. Tomamos los 3 primeros
 
                 selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
             }
@@ -96,9 +101,7 @@ export default class SignUpComponent implements OnInit {
     }
 
     protected openTerms() {
-        if (!this.termsAcceptedAtField.value) {
-            window.open(`${environment.PATH_ASSETS}/auth/files/terms.pdf`, '_blank');
-        }
+        window.open(`${environment.PATH_ASSETS}/auth/files/legal.pdf`, '_blank');
     }
 
     protected addQuestion(question: any): void {

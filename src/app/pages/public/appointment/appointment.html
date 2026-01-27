@@ -1,21 +1,14 @@
-<app-appointment-form (dataOut)="saveForm($event)" [submitted]="submitted()"/>
+<app-appointment-form (dataOut)="saveForm($event)" [submitted]="submitted()" />
 
 <!-- submit -->
-<p-fluid>
-    <div class="form-wrapper">
-        <div class="custom-card-form">
-            <div class="sm:col-span-12 custom-field-form">
-                @if (mainData()) {
-                    <p-button
-                        label="Agendar cita"
-                        [icon]="FontAwesome.CALENDAR_SOLID" (onClick)="onSubmit()" />
-                }
-            </div>
-
-            <div class="sm:col-span-12 custom-field-form">
-                <p-button type="button" label="Regresar" severity="warn" [icon]="FontAwesome.CHEVRON_LEFT_SOLID"
-                          (onClick)="ladingPage()" />
-            </div>
+<p-fluid class="custom-card-form mx-auto max-w-3xl">
+    <div class="custom-grid-form">
+        <div class="custom-field-form md:col-span-12">
+            @if (mainData()) {
+                <p-button
+                    label="Agendar"
+                    [icon]="FontAwesome.FLOPPY_DISK_SOLID" (onClick)="onSubmit()" />
+            }
         </div>
     </div>
 </p-fluid>

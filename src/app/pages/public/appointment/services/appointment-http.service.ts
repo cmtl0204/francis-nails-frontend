@@ -2,13 +2,25 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { CoreService, CustomMessageService } from '@utils/services';
+import { HttpResponseInterface } from '@/pages/auth/interfaces';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppointmentHttpService {
-    private readonly _httpClient = inject(HttpClient);
-    private readonly _apiUrl = `${environment.API_URL}/core/external/process-parks`;
-    private readonly _customMessageService = inject(CustomMessageService);
+    private readonly httpClient = inject(HttpClient);
+    private readonly apiUrl = `${environment.API_URL}/core/customer/appointments`;
+    private readonly customMessageService = inject(CustomMessageService);
     private readonly coreService = inject(CoreService);
+
+    verifyRegisteredUser(identification: string) {
+        const url = `${this.apiUrl}/${identification}/registered`;
+
+        return this.httpClient.get<HttpResponseInterface>(url).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
 }

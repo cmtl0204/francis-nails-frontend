@@ -10,7 +10,6 @@ import {
     OutputEmitterRef
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PrimeIcons } from 'primeng/api';
 import { CustomMessageService } from '@utils/services/custom-message.service';
 import { CatalogueService } from '@utils/services/catalogue.service';
 import { Fluid } from 'primeng/fluid';
@@ -22,10 +21,12 @@ import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { environment } from '@env/environment';
 import { AppointmentHttpService } from '@/pages/public/appointment/services';
-import { debounceTime, distinctUntilChanged, filter, from, Subject, switchMap, takeUntil } from 'rxjs';
-import { finalize, map, tap } from 'rxjs/operators';
+import { debounceTime, Subject } from 'rxjs';
 import { CoreService } from '@utils/services';
 import { Textarea } from 'primeng/textarea';
+import { Button } from 'primeng/button';
+import { FontAwesome } from '@/api/font-awesome';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-appointment-form',
@@ -38,7 +39,9 @@ import { Textarea } from 'primeng/textarea';
         InputText,
         DatePicker,
         Select,
-        Textarea
+        Textarea,
+        Button,
+        Tooltip
     ],
     templateUrl: './appointment-form.html',
     styleUrl: './appointment-form.scss',
@@ -54,10 +57,11 @@ export class AppointmentForm implements OnInit, OnDestroy {
     protected readonly catalogueService = inject(CatalogueService);
     protected readonly customMessageService = inject(CustomMessageService);
     protected readonly coreService = inject(CoreService);
-    private readonly formBuilder = inject(FormBuilder);
     protected form!: FormGroup;
     protected services: string[] = ['Manicura','Depilado de cejas'];
     protected currentDate = new Date();
+    protected readonly FontAwesome = FontAwesome;
+    private readonly formBuilder = inject(FormBuilder);
     private readonly appointmentHttpService = inject(AppointmentHttpService);
     private destroy$ = new Subject<void>();
 
@@ -82,8 +86,8 @@ export class AppointmentForm implements OnInit, OnDestroy {
         return this.form.controls['email'];
     }
 
-    get phoneField(): AbstractControl {
-        return this.form.controls['phone'];
+    get cellPhoneField(): AbstractControl {
+        return this.form.controls['cellPhone'];
     }
 
     get serviceField(): AbstractControl {
@@ -123,7 +127,7 @@ export class AppointmentForm implements OnInit, OnDestroy {
             identification: [null, [Validators.required, Validators.minLength(9)]],
             name: [null, [Validators.required]],
             email: [null, [Validators.email]],
-            phone: [null, [Validators.required]],
+            cellPhone: [null, [Validators.required]],
             service: [null, [Validators.required]],
             date: [null, [Validators.required]],
             notes: [null],
@@ -137,44 +141,27 @@ export class AppointmentForm implements OnInit, OnDestroy {
             this.dataOut.emit(this.form.value);
         });
 
-        // this.identificationField.valueChanges.pipe(
-        //     debounceTime(300),
-        //     map(v => v?.trim() ?? ''),
-        //     distinctUntilChanged(),
-        //     filter(v => v.length >=9),
-        //
-        //     tap(() => {
-        //         this.coreService.showProcessing();
-        //     }),
-        //
-        //     switchMap(v =>
-        //         from(this.appointmentHttpService.findByIdentification(v)).pipe(
-        //             finalize(() => {
-        //                 this.coreService.hideProcessing();
-        //             })
-        //         )
-        //     ),
-        //
-        //     tap(customer => {
-        //         if (!customer) {
-        //             this.form.patchValue({
-        //                 name: null,
-        //                 email: null,
-        //                 phone: null
-        //             });
-        //             return;
-        //         }
-        //
-        //         this.form.patchValue({
-        //             name: customer['name'] ?? null,
-        //             email: customer['email'] ?? null,
-        //             phone: customer['phone'] ?? null
-        //         });
-        //     }),
-        //
-        //     takeUntil(this.destroy$)
-        // ).subscribe();
-
+        this.identificationField.valueChanges.pipe(
+            debounceTime(300),
+        ).subscribe(value => {
+            if(this.identificationField.valid) {
+            this.appointmentHttpService.verifyRegisteredUser(value).subscribe({
+                next: response => {
+                    if (!response) {
+                        console.log('1')
+                        this.nameField.reset();
+                        this.emailField.reset();
+                        this.cellPhoneField.reset();
+                    }else{
+                        console.log('2')
+                        this.nameField.setValue(response.name);
+                        this.emailField.setValue(response.email);
+                        this.cellPhoneField.setValue(response.cellPhone);
+                    }
+                }
+            });
+            }
+        });
     }
 
     getFormErrors(): string[] {
@@ -184,7 +171,7 @@ export class AppointmentForm implements OnInit, OnDestroy {
         if(this.identificationField.valid){
         if(this.nameField.invalid) errors.push('Nombre del cliente');
         if(this.emailField.invalid) errors.push('Correo');
-        if(this.phoneField.invalid) errors.push('Teléfono');
+        if(this.cellPhoneField.invalid) errors.push('Teléfono');
         if(this.serviceField.invalid) errors.push('Servicio');
         if(this.dateField.invalid) errors.push('Fecha de la cita');
         }

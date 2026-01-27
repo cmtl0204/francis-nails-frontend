@@ -21,16 +21,23 @@ import { Tooltip } from 'primeng/tooltip';
     styles: [
         `
             .login-page {
+                /* 1. Asegurar que ocupe toda la pantalla */
+                position: fixed; /* Faltaba esto para que top/left funcionen */
+                width: 100%;
+                height: 100%;
                 top: 0;
                 left: 0;
-                right: 0;
-                bottom: 0;
-                overflow: hidden;
+
+                /* 2. Imagen y comportamiento */
                 background-image: url('/development/auth/images/background.png');
-                -webkit-background-size: cover;
-                -moz-background-size: cover;
-                -o-background-size: cover;
+                background-repeat: no-repeat; /* Evita que se repita si la pantalla es gigante */
+                background-position: center center; /* CLAVE: Mantiene el centro de la imagen visible siempre */
+
+                /* 3. Responsividad (Tu ya tenías esto, es correcto) */
                 background-size: cover;
+
+                /* Opcional: Para evitar scrollbars si el contenido se sale */
+                overflow: hidden;
             }
 
             .box {
@@ -69,12 +76,15 @@ import { Tooltip } from 'primeng/tooltip';
 
                             <p-message severity="secondary">
                                 <div class="text-sm font-semibold">
-                                    <p>
-                                        <b>Importante:</b>
-                                        Estimado Usuario, si su ......
-                                    </p>
                                     <p><b>Dirección:</b> Nela Martínez y Antonio Castelo.</p>
-                                    <p><b>Teléfono:</b> 097 8627 513</p>
+                                    <p>
+                                        <b>Teléfono:</b>
+                                        <a href="https://api.whatsapp.com/message/ADZVUOCMU742B1"
+                                           target="_blank"
+                                           class="hover:var(--primary-color) transition-250">
+                                            +593 97 862 7513
+                                        </a>
+                                    </p>
                                     <p>
                                         <b>Correo electrónico:</b>
                                         <a href="mailto:info@francis-nails.com"> info&#64;francis-nails.com</a>
@@ -88,7 +98,7 @@ import { Tooltip } from 'primeng/tooltip';
                     <div class="space-y-6">
                         <ng-content select="[right-content]">
                             <div class="flex flex-col gap-2">
-                                <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/steps.pdf'">
+                                <a target="_blank" [routerLink]="[MY_ROUTES.publicPages.appointments.absolute]">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
                                             <i [class]="FontAwesome.CALENDAR_CHECK_REGULAR"
@@ -102,21 +112,7 @@ import { Tooltip } from 'primeng/tooltip';
                                 </a>
                                 <p-divider />
 
-                                <a target="_blank" [routerLink]="[MY_ROUTES.guessPages.simulator.absolute]">
-                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                                        <div class="md:col-span-2 flex flex-col gap-2">
-                                            <i [class]="FontAwesome.MESSAGE_REGULAR"
-                                               style="font-size: 2rem;color:var(--text-color-secondary)"></i>
-                                        </div>
-                                        <div class="md:col-span-10 flex flex-col gap-2">
-                                            <h6 class="mb-5" style="var(--text-color-secondary)">Reseñas</h6>
-                                            <p>Ver reseñas.</p>
-                                        </div>
-                                    </div>
-                                </a>
-                                <p-divider />
-
-                                <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/external_manual.pdf'">
+                                <a target="_blank" [href]="environment.PATH_ASSETS + '/files/auth/services.pdf'">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
                                             <i [class]="FontAwesome.LIST_UL_SOLID"
@@ -130,8 +126,7 @@ import { Tooltip } from 'primeng/tooltip';
                                 </a>
                                 <p-divider />
 
-                                <a target="_blank"
-                                   [href]="environment.PATH_ASSETS + '/files/auth/terms_conditions.pdf'">
+                                <a target="_blank" [href]="environment.PATH_ASSETS + '/auth/files/legal.pdf'">
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                                         <div class="md:col-span-2 flex flex-col gap-2">
                                             <i [class]="FontAwesome.FILE_CONTRACT_SOLID"
