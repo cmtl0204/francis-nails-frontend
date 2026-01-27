@@ -21,27 +21,27 @@ import { Tooltip } from 'primeng/tooltip';
     styles: [
         `
             .login-page {
-                /* 1. Asegurar que ocupe toda la pantalla */
-                position: fixed; /* Faltaba esto para que top/left funcionen */
+                /* 1. Cambiamos fixed por relative o lo quitamos para que fluya */
+                position: relative;
                 width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
+                /* 2. Usamos min-height para que crezca con el contenido */
+                min-height: 100vh;
 
-                /* 2. Imagen y comportamiento */
+                /* 3. Imagen de fondo */
                 background-image: url('/development/auth/images/background.png');
-                background-repeat: no-repeat; /* Evita que se repita si la pantalla es gigante */
-                background-position: center center; /* CLAVE: Mantiene el centro de la imagen visible siempre */
-
-                /* 3. Responsividad (Tu ya tenías esto, es correcto) */
+                background-repeat: no-repeat;
+                background-position: center center;
                 background-size: cover;
+                background-attachment: fixed; /* Esto hace que el fondo se quede quieto mientras el formulario sube */
 
-                /* Opcional: Para evitar scrollbars si el contenido se sale */
-                overflow: hidden;
+                /* 4. IMPORTANTE: Cambiar hidden por auto o simplemente quitarlo */
+                overflow-y: auto;
             }
 
             .box {
-                opacity: 0.85; /* 50% de opacidad */
+                opacity: 0.95; /* Un poco más de opacidad ayuda a la lectura en formularios largos */
+                margin-top: 2rem;   /* Espacio opcional arriba y abajo */
+                margin-bottom: 2rem;
             }
         `
     ],
