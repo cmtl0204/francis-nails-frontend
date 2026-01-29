@@ -148,12 +148,10 @@ export class AppointmentForm implements OnInit, OnDestroy {
             this.appointmentHttpService.verifyRegisteredUser(value).subscribe({
                 next: response => {
                     if (!response) {
-                        console.log('1')
                         this.nameField.reset();
                         this.emailField.reset();
                         this.cellPhoneField.reset();
                     }else{
-                        console.log('2')
                         this.nameField.setValue(response.name);
                         this.emailField.setValue(response.email);
                         this.cellPhoneField.setValue(response.cellPhone);

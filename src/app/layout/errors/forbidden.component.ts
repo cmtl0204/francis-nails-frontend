@@ -21,7 +21,7 @@ import { NgClass } from '@angular/common';
         `
     ],
     template: `
-        <div class="mx-auto max-w-3xl py-20">
+        <div class="mx-auto max-w-3xl my-auto">
             <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, color-mix(in srgb, var(--p-red-600), transparent 50%) 10%, var(--surface-ground) 90%)">
                 <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 flex flex-col items-center" style="border-radius: 53px">
                     <p-fluid>

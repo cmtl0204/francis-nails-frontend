@@ -32,14 +32,35 @@ import { Dialog } from 'primeng/dialog';
 import { InputOtp } from 'primeng/inputotp';
 import { Location } from '@angular/common';
 import { FontAwesome } from '@/api/font-awesome';
+import { TransactionalCodeComponent } from '@utils/components/transactional-code/transactional-code.component';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-security-question',
     templateUrl: './security-question.component.html',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, LabelDirective, ErrorMessageDirective, Message, Fluid, Dialog, InputOtp]
+    imports: [
+        ButtonModule,
+        CheckboxModule,
+        InputTextModule,
+        PasswordModule,
+        FormsModule,
+        RouterModule,
+        RippleModule,
+        ReactiveFormsModule,
+        DatePickerModule,
+        LabelDirective,
+        ErrorMessageDirective,
+        Message,
+        Fluid,
+        Dialog,
+        InputOtp,
+        TransactionalCodeComponent,
+        Tooltip
+    ]
 })
 export default class SecurityQuestionComponent implements OnInit {
+    protected readonly FontAwesome = FontAwesome;
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly environment = environment;
     protected readonly coreService = inject(CoreService);
@@ -48,7 +69,7 @@ export default class SecurityQuestionComponent implements OnInit {
     protected allSecurityQuestions: CatalogueInterface[] = [];
     protected selectedSecurityQuestions: CatalogueInterface[] = [];
     protected showOtpModal = false;
-    protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required, Validators.minLength(6)]);
+    protected transactionalCodeControl = new FormControl({ value: '', disabled: true });
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
     private readonly router = inject(Router);
@@ -119,17 +140,6 @@ export default class SecurityQuestionComponent implements OnInit {
         });
     }
 
-    protected verifyTransactionalCode() {
-        this.authHttpService.verifyTransactionalCode(this.transactionalCodeControl.value!, this.authService.auth.identification!).subscribe({
-            next: (_) => {
-                this.transactionalCodeControl.reset();
-                this.transactionalCodeControl.disable();
-                this.form.enable();
-                this.showOtpModal = false;
-            }
-        });
-    }
-
     protected async loadSecurityQuestions() {
         this.allSecurityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
 
@@ -155,8 +165,13 @@ export default class SecurityQuestionComponent implements OnInit {
     }
 
     protected watchFormChanges() {
-        this.transactionalCodeControl.valueChanges.subscribe((value) => {
-            if (this.transactionalCodeControl.valid) this.verifyTransactionalCode();
+        this.transactionalCodeControl.statusChanges.subscribe((status) => {
+            if (status === 'VALID') {
+                this.transactionalCodeControl.reset();
+                this.transactionalCodeControl.disable();
+                this.form.enable();
+                this.showOtpModal = false;
+            }
         });
     }
 
@@ -171,6 +186,4 @@ export default class SecurityQuestionComponent implements OnInit {
 
         this.watchFormChanges();
     }
-
-    protected readonly FontAwesome = FontAwesome;
 }

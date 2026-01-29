@@ -92,8 +92,6 @@ export default class EmailResetComponent implements OnInit {
     }
 
     protected generateSecurityQuestions() {
-        console.log(this.allSecurityQuestions());
-
         this.selectedSecurityQuestions = this.allSecurityQuestions()
             .sort(() => Math.random() - 0.5)
             .slice(0, 1);
@@ -116,7 +114,6 @@ export default class EmailResetComponent implements OnInit {
     protected watchFormChanges() {}
 
     protected verifySecurityQuestionsAndResetEmail() {
-        console.log(this.form.value);
         this.authHttpService.verifySecurityQuestionsAndResetEmail(this.userId(), this.form.value).subscribe({
             next: (_) => {
                 this.onSubmitted.emit(this.emailField.value);

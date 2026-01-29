@@ -69,7 +69,5 @@ export default class FontAwesomeIcons implements OnInit {
     // Utilidad para copiar al portapapeles al hacer click
     copyCode(val: string) {
         navigator.clipboard.writeText(`FontAwesome.${val}`);
-        // Aquí podrías mostrar un toast de PrimeNG confirmando
-        console.log('Copiado:', val);
     }
 }

@@ -103,16 +103,13 @@ export default class SignInComponent {
 
     private signIn() {
         this.roleControl.reset();
-        console.log('1');
         this.authHttpService.signIn(this.form.value).subscribe({
             next: (data) => {
-                console.log('2');
                 if (data.roles.length === 1) {
                     this.router.navigate([MY_ROUTES.dashboards.absolute]);
                     return;
                 }
 
-                console.log('3');
                 this.isVisibleRoles = true;
                 this.roles = data.roles;
                 this.roleControl.setValidators([Validators.required]);

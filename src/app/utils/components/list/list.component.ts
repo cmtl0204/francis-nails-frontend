@@ -52,7 +52,7 @@ export class ListComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('ngOnInit', this.pagination);
+
     }
 
     checkValueChanges() {
