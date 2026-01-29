@@ -69,18 +69,17 @@
                     label="Código transaccional"
                     [required]="transactionalCodeControl"></label>
 
-                <p-inputOtp id="transactionalCode" [formControl]="transactionalCodeControl" [length]="6"
-                            [integerOnly]="true" />
+                <app-transactional-code [formControl]="transactionalCodeControl" [requester]="emailField.value" />
 
                 <p-message
                     appErrorMessage
-                    [errors]="identificationField.errors"
-                    [touched]="identificationField.touched"
-                    [dirty]="identificationField.dirty" />
+                    [errors]="transactionalCodeControl.errors"
+                    [touched]="transactionalCodeControl.touched"
+                    [dirty]="transactionalCodeControl.dirty" />
             </div>
         }
 
-        @if (passwordField.enabled) {
+        @if (passwordField.enabled && transactionalCodeControl.valid) {
             <!-- nameField -->
             <div class="custom-field-form md:col-span-12">
                 <label

@@ -9,8 +9,9 @@ import { AppConfigurator } from '@layout/component/app.configurator';
 import { FormsModule } from '@angular/forms';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { CatalogueHttpService, CoreSessionStorageService, DpaHttpService } from '@utils/services';
-import { switchMap, tap } from 'rxjs/operators';
+import { concatMap, map, switchMap } from 'rxjs/operators';
 import { CoreEnum } from '@utils/enums';
+import { from } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -56,13 +57,15 @@ export class AppComponent implements OnInit {
         this.catalogueHttpService
             .findCache()
             .pipe(
-                tap(async (response) => {
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response);
-                }),
+                concatMap((response) =>
+                    from(this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response)).pipe(
+                        map(() => response) // (Opcional) Pasa la respuesta por si la necesitas luego
+                    )
+                ),
+
                 switchMap(() => this.dpaHttpService.findCache()),
-                tap(async (response) => {
-                    await this.coreSessionStorageService.setEncryptedValue(CoreEnum.dpa, response);
-                })
+
+                concatMap((response) => from(this.coreSessionStorageService.setEncryptedValue(CoreEnum.dpa, response)).pipe(map(() => response)))
             )
             .subscribe();
     }

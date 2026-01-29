@@ -111,7 +111,7 @@ export default class SecurityQuestionComponent implements OnInit {
         this.transactionalCodeControl.disable();
         this.form.disable();
 
-        this.authHttpService.requestTransactionalPasswordResetCode(this.authService.auth.identification!).subscribe({
+        this.authHttpService.requestTransactionalCode().subscribe({
             next: (_) => {
                 this.showOtpModal = true;
                 this.transactionalCodeControl.enable();

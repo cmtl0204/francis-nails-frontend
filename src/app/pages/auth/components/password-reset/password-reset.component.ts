@@ -1,5 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    AbstractControl,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -9,21 +17,25 @@ import { RippleModule } from 'primeng/ripple';
 import { CustomMessageService } from '@utils/services/custom-message.service';
 import { AuthHttpService } from '../../auth-http.service';
 import { environment } from '@env/environment';
-import { PrimeIcons } from 'primeng/api';
 import { CoreService } from '@utils/services/core.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { Message } from 'primeng/message';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
-import { InputOtp } from 'primeng/inputotp';
 import { MY_ROUTES } from '@routes';
-import { invalidEmailMINTURValidator, invalidEmailValidator, passwordPolicesValidator, unregisteredUserValidator } from '@utils/form-validators/custom-validator';
+import {
+    invalidEmailMINTURValidator,
+    invalidEmailValidator,
+    passwordPolicesValidator,
+    unregisteredUserValidator
+} from '@utils/form-validators/custom-validator';
 import { Fluid } from 'primeng/fluid';
 import { Tooltip } from 'primeng/tooltip';
 import { Dialog } from 'primeng/dialog';
 import EmailResetComponent from '@/pages/auth/components/email-reset/email-reset.component';
 import { CatalogueInterface } from '@utils/interfaces';
 import { FontAwesome } from '@/api/font-awesome';
+import { TransactionalCodeComponent } from '@utils/components/transactional-code/transactional-code.component';
 
 @Component({
     selector: 'app-password-reset',
@@ -42,11 +54,11 @@ import { FontAwesome } from '@/api/font-awesome';
         Message,
         LabelDirective,
         ErrorMessageDirective,
-        InputOtp,
         Fluid,
         Tooltip,
         Dialog,
-        EmailResetComponent
+        EmailResetComponent,
+        TransactionalCodeComponent
     ]
 })
 export default class PasswordResetComponent {
@@ -55,7 +67,7 @@ export default class PasswordResetComponent {
     protected readonly coreService = inject(CoreService);
 
     protected form!: FormGroup;
-    protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
+    protected transactionalCodeControl = new FormControl({ value: '', disabled: true });
     protected securityQuestionsModal = false;
     protected allSecurityQuestions: CatalogueInterface[] = [];
     private readonly formBuilder = inject(FormBuilder);
@@ -121,9 +133,10 @@ export default class PasswordResetComponent {
             this.passwordField.disable();
         });
 
-        this.transactionalCodeControl.valueChanges.subscribe((value) => {
-            if (value?.length === 6) {
-                this.verifyTransactionalCode();
+        this.transactionalCodeControl.statusChanges.subscribe((status) => {
+            if (status === 'VALID') {
+                this.nameField.enable();
+                this.passwordField.enable();
             }
         });
     }
@@ -144,16 +157,6 @@ export default class PasswordResetComponent {
         this.authHttpService.requestTransactionalPasswordResetCode(this.identificationField.value).subscribe({
             next: (_) => {
                 this.transactionalCodeControl.enable();
-            }
-        });
-    }
-
-    protected verifyTransactionalCode() {
-        this.authHttpService.verifyTransactionalCode(this.transactionalCodeControl.value!, this.identificationField.value).subscribe({
-            next: (_) => {
-                this.transactionalCodeControl.reset();
-                this.transactionalCodeControl.disable();
-                this.passwordField.enable();
             }
         });
     }

@@ -13,8 +13,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { Message } from 'primeng/message';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
-import { invalidEmailMINTURValidator, invalidEmailValidator, passwordPolicesValidator, unavailableUserValidator } from '@utils/form-validators/custom-validator';
-import { InputOtp } from 'primeng/inputotp';
+import { invalidEmailValidator, passwordPolicesValidator, unavailableUserValidator } from '@utils/form-validators/custom-validator';
 import { KeyFilter } from 'primeng/keyfilter';
 import { MY_ROUTES } from '@routes';
 import { Fluid } from 'primeng/fluid';
@@ -23,18 +22,36 @@ import { CatalogueTypeEnum, CoreEnum } from '@utils/enums';
 import { Tooltip } from 'primeng/tooltip';
 import { FontAwesome } from '@/api/font-awesome';
 import { CatalogueHttpService, CoreSessionStorageService } from '@utils/services';
+import { TransactionalCodeComponent } from '@utils/components/transactional-code/transactional-code.component';
 
 @Component({
     selector: 'app-sign-up',
     templateUrl: './sign-up.component.html',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ReactiveFormsModule, DatePickerModule, Message, LabelDirective, ErrorMessageDirective, InputOtp, KeyFilter, Fluid, Tooltip]
+    imports: [
+        ButtonModule,
+        CheckboxModule,
+        InputTextModule,
+        PasswordModule,
+        FormsModule,
+        RouterModule,
+        RippleModule,
+        ReactiveFormsModule,
+        DatePickerModule,
+        Message,
+        LabelDirective,
+        ErrorMessageDirective,
+        KeyFilter,
+        Fluid,
+        Tooltip,
+        TransactionalCodeComponent
+    ]
 })
 export default class SignUpComponent implements OnInit {
     protected readonly environment = environment;
 
     protected form!: FormGroup;
-    protected transactionalCodeControl = new FormControl({ value: '', disabled: true }, [Validators.required]);
+    protected transactionalCodeControl = new FormControl({ value: '', disabled: true });
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly FontAwesome = FontAwesome;
     private readonly formBuilder = inject(FormBuilder);
@@ -88,7 +105,6 @@ export default class SignUpComponent implements OnInit {
 
                 let allSecurityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
 
-                console.log(allSecurityQuestions);
                 const selectedSecurityQuestions = allSecurityQuestions
                     .map((value) => ({ value, sort: Math.random() })) // 1. Asignamos un valor aleatorio a cada uno
                     .sort((a, b) => a.sort - b.sort) // 2. Ordenamos por ese valor aleatorio
@@ -131,9 +147,10 @@ export default class SignUpComponent implements OnInit {
             this.passwordField.disable();
         });
 
-        this.transactionalCodeControl.valueChanges.subscribe((value) => {
-            if (value?.length === 6) {
-                this.verifyTransactionalCode();
+        this.transactionalCodeControl.statusChanges.subscribe((status) => {
+            if (status === 'VALID') {
+                this.nameField.enable();
+                this.passwordField.enable();
             }
         });
     }
@@ -152,17 +169,6 @@ export default class SignUpComponent implements OnInit {
         });
     }
 
-    protected verifyTransactionalCode() {
-        this.authHttpService.verifyTransactionalCode(this.transactionalCodeControl.value!, this.emailField.value).subscribe({
-            next: (_) => {
-                this.transactionalCodeControl.reset();
-                this.transactionalCodeControl.disable();
-                this.nameField.enable();
-                this.passwordField.enable();
-            }
-        });
-    }
-
     protected onSubmit() {
         this.usernameField.setValue(this.identificationField.value);
 
@@ -173,7 +179,7 @@ export default class SignUpComponent implements OnInit {
 
     private buildForm() {
         this.form = this.formBuilder.group({
-            email: [null, [Validators.required, invalidEmailValidator(), invalidEmailMINTURValidator()]],
+            email: [null, [Validators.required, invalidEmailValidator()]],
             password: [null, [Validators.required, passwordPolicesValidator()]],
             name: [null, [Validators.required]],
             username: [null, [Validators.required]],

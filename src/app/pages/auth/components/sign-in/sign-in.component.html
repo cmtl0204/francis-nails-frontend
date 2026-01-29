@@ -1,5 +1,5 @@
 <p-fluid class="custom-card-form">
-    <form [formGroup]="form" class="custom-grid-form">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="custom-grid-form">
         <div class="custom-section-title-form md:col-span-12 text-center">
             Ingreso al Sistema
         </div>
@@ -46,10 +46,10 @@
 
         <div class="custom-field-form md:col-span-12">
             <p-button
+                type="submit"
                 label="Ingresar"
                 [icon]="FontAwesome.ARROW_RIGHT_TO_BRACKET_SOLID"
-                [loading]="coreService.loading()"
-                (onClick)="onSubmit()" />
+                [loading]="coreService.loading()" />
         </div>
 
         <div class="custom-field-form md:col-span-6">
@@ -109,7 +109,7 @@
             }
 
             <div class="custom-field-form md:col-span-12">
-                <p-button label="Cerrar Sesión" [text]="true" severity="danger" (onClick)="signOut()"/>
+                <p-button label="Cerrar Sesión" [text]="true" severity="danger" (onClick)="signOut()" />
             </div>
         </div>
     </p-fluid>

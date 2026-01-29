@@ -1,4 +1,4 @@
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -7,7 +7,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { Dialog } from 'primeng/dialog';
 import { RippleModule } from 'primeng/ripple';
-import { PrimeIcons } from 'primeng/api';
 import { DatePickerModule } from 'primeng/datepicker';
 import { Message } from 'primeng/message';
 import { CustomMessageService } from '@utils/services/custom-message.service';
@@ -38,6 +37,7 @@ export default class SignInComponent {
     protected isVisibleRoles = false;
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly Validators = Validators;
+    protected readonly FontAwesome = FontAwesome;
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
     private readonly authHttpService = inject(AuthHttpService);
@@ -103,20 +103,20 @@ export default class SignInComponent {
 
     private signIn() {
         this.roleControl.reset();
-
+        console.log('1');
         this.authHttpService.signIn(this.form.value).subscribe({
             next: (data) => {
+                console.log('2');
                 if (data.roles.length === 1) {
                     this.router.navigate([MY_ROUTES.dashboards.absolute]);
                     return;
                 }
 
+                console.log('3');
+                this.isVisibleRoles = true;
                 this.roles = data.roles;
                 this.roleControl.setValidators([Validators.required]);
-                this.isVisibleRoles = true;
             }
         });
     }
-
-    protected readonly FontAwesome = FontAwesome;
 }

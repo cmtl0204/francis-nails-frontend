@@ -1,75 +1,67 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { PrimeIcons } from 'primeng/api';
+import { environment } from '@env/environment';
+import { AuthService } from '@modules/auth/auth.service';
+import { MY_ROUTES } from '@routes';
+import { FontAwesome } from '@/api/font-awesome';
+import { Fluid } from 'primeng/fluid';
+import { Divider } from 'primeng/divider';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-unavailable',
     standalone: true,
-    imports: [RouterModule, ButtonModule],
-    template:
+    imports: [RouterModule, ButtonModule, Fluid, Divider, NgClass],
+    styles: [
         `
-            <div class="flex items-center justify-center min-h-screen overflow-hidden">
-                <div class="flex flex-col items-center justify-center">
-                    <div
-                        style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, color-mix(in srgb, var(--p-orange-600), transparent 50%) 10%, var(--surface-ground) 90%)">
-                        <div
-                            class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20 flex flex-col items-center"
-                            style="border-radius: 53px">
-                            <span class="text-orange-600 font-bold text-3xl">503</span>
-
-                            <h1 class="text-orange-600 dark:text-surface-0 font-bold text-3xl lg:text-5xl mb-2">
-                                En mantenimiento
-                            </h1>
-
-                            <div class="text-surface-600 dark:text-surface-200 mb-8">
-                                Lamentamos las molestias causadas
+            .icon-color {
+                color: var(--p-sky-600);
+            }
+        `
+    ],
+    template: `
+        <div class="mx-auto max-w-3xl py-20">
+            <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, color-mix(in srgb, var(--p-sky-600), transparent 50%) 10%, var(--surface-ground) 90%)">
+                <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 flex flex-col items-center" style="border-radius: 53px">
+                    <p-fluid>
+                        <div class="custom-grid-form">
+                            <div class="col-span-12 flex flex-row justify-center items-center gap-6 text-center">
+                                <i [ngClass]="[FontAwesome.ICON_5_SOLID, 'fa-6x', 'icon-color']"></i>
+                                <i [ngClass]="[FontAwesome.GEAR_SOLID, 'fa-6x', 'icon-color', 'fa-spin']" style="--fa-animation-duration: 10s;"></i>
+                                <i [ngClass]="[FontAwesome.ICON_3_SOLID, 'fa-6x', 'icon-color']"></i>
                             </div>
 
-                            <a routerLink="/"
-                               class="w-full flex items-center py-8 border-surface-300 dark:border-surface-500 border-b">
-                            <span
-                                class="flex justify-center items-center border-2 border-orange-500 text-orange-500 rounded-border"
-                                style="height: 3.5rem; width: 3.5rem">
-                                <i class="pi pi-fw pi-table !text-2xl"></i>
-                            </span>
-                                <span class="ml-6 flex flex-col">
-                                <span class="text-surface-900 dark:text-surface-0 lg:text-xl font-medium mb-0 block">Frequently Asked Questions</span>
-                                <span class="text-surface-600 dark:text-surface-200 lg:text-xl">Ultricies mi quis hendrerit dolor.</span>
-                            </span>
-                            </a>
+                            <div class="custom-field-form col-span-12 text-center">
+                                <p-divider />
+                                <h2 style="color: var(--p-sky-600);" class="mt-4 mb-4">Mantenimiento Programado</h2>
+                                <p-divider />
+                            </div>
 
-                            <a routerLink="/"
-                               class="w-full flex items-center py-8 border-surface-300 dark:border-surface-500 border-b">
-                            <span
-                                class="flex justify-center items-center border-2 border-orange-500 text-orange-500 rounded-border"
-                                style="height: 3.5rem; width: 3.5rem">
-                                <i class="pi pi-fw pi-question-circle !text-2xl"></i>
-                            </span>
-                                <span class="ml-6 flex flex-col">
-                                <span class="text-surface-900 dark:text-surface-0 lg:text-xl font-medium mb-0">Solution Center</span>
-                                <span class="text-surface-600 dark:text-surface-200 lg:text-xl">Phasellus faucibus scelerisque eleifend.</span>
-                            </span>
-                            </a>
+                            <div class="custom-field-form col-span-12 text-center mb-4">
+                                <h4 style="color: var(--p-gray-500);">Estamos actualizando la plataforma</h4>
+                                <p style="color: var(--p-gray-400);">¡Volvemos enseguida!</p>
+                                <p-divider />
+                            </div>
 
-                            <a routerLink="/"
-                               class="w-full flex items-center mb-8 py-8 border-surface-300 dark:border-surface-500 border-b">
-                            <span
-                                class="flex justify-center items-center border-2 border-orange-500 text-orange-500 rounded-border"
-                                style="height: 3.5rem; width: 3.5rem">
-                                <i class="pi pi-fw pi-unlock !text-2xl"></i>
-                            </span>
-                                <span class="ml-6 flex flex-col">
-                                <span class="text-surface-900 dark:text-surface-0 lg:text-xl font-medium mb-0">Permission Manager</span>
-                                <span class="text-surface-600 dark:text-surface-200 lg:text-xl">Accumsan in nisl nisi scelerisque</span>
-                            </span>
-                            </a>
+                            <div class="custom-field-form md:col-span-12">
+                                <p-button label="Comprobar" class="w-full" [icon]="FontAwesome.ARROW_ROTATE_RIGHT_SOLID" [raised]="true" severity="info" (onClick)="back()" />
+                            </div>
                         </div>
-                    </div>
+                    </p-fluid>
                 </div>
             </div>
-        `
+        </div>
+    `
 })
 export class UnavailableComponent {
+    protected readonly environment = environment;
+    protected readonly authService = inject(AuthService);
+    protected readonly MY_ROUTES = MY_ROUTES;
+    protected readonly FontAwesome = FontAwesome;
+    private readonly router = inject(Router);
 
+    back() {
+        this.router.navigate([MY_ROUTES.signIn]);
+    }
 }

@@ -11,14 +11,13 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class DpaHttpService {
-    private readonly _httpClient = inject(HttpClient);
-    private readonly _apiUrl = `${environment.API_URL}/common/dpa`;
-    private readonly _customMessageService = inject(CustomMessageService);
+    private readonly httpClient = inject(HttpClient);
+    private readonly apiUrl = `${environment.API_URL}/common/dpa`;
 
     findCache(): Observable<HttpResponseInterface> {
-        const url = `${this._apiUrl}/cache`;
+        const url = `${this.apiUrl}/cache`;
 
-        return this._httpClient.get<HttpResponseInterface>(url).pipe(
+        return this.httpClient.get<HttpResponseInterface>(url).pipe(
             map((response) => {
                 return response.data;
             })

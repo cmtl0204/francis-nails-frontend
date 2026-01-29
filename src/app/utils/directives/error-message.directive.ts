@@ -38,7 +38,8 @@ export class ErrorMessageDirective implements OnChanges {
         invalidPasswordPolicesUpper: this.fieldPasswordPolicesUpper,
         invalidPasswordPolicesLower: this.fieldPasswordPolicesLower,
         invalidPasswordPolicesNumber: this.fieldPasswordPolicesNumber,
-        invalidPasswordPolicesSpecialCharacter: this.fieldPasswordPolicesSpecialCharacter
+        invalidPasswordPolicesSpecialCharacter: this.fieldPasswordPolicesSpecialCharacter,
+        invalidTransactionalCode: this.fieldInvalidTransactionalCode,
     };
 
     constructor() {
@@ -189,5 +190,9 @@ export class ErrorMessageDirective implements OnChanges {
 
     private fieldPasswordPolicesSpecialCharacter(errors: ValidationErrors): string {
         return `La contraseña debe tener al menos  ${errors['invalidPasswordPolicesSpecialCharacter']['length']} caracter especial ${errors['invalidPasswordPolicesSpecialCharacter']['allowed']}`;
+    }
+
+    private get fieldInvalidTransactionalCode(): string {
+        return 'El códio no es válido';
     }
 }
