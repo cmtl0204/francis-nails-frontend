@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpResponseInterface, SignInInterface, UserInterface } from './interfaces';
 import { environment } from '@env/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { AuthService } from '@modules/auth/auth.service';
 import { SignInResponseInterface } from '@modules/auth/interfaces';
 import { from, Observable, of } from 'rxjs';
@@ -243,6 +243,26 @@ export class AuthHttpService {
         const url = `${this.apiUrl}/security-questions`;
 
         return this.httpClient.post<HttpResponseInterface>(url, payload).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
+    verifyEmail(token: string) {
+        const url = `${this.apiUrl}/verify-email`;
+
+        return this.httpClient.post<HttpResponseInterface>(url, { token }).pipe(
+            map((response) => {
+                return response.data;
+            })
+        );
+    }
+
+    requestVerifyEmail(username: string) {
+        const url = `${this.apiUrl}/request-verify-email`;
+
+        return this.httpClient.post<HttpResponseInterface>(url, { username }).pipe(
             map((response) => {
                 return response.data;
             })

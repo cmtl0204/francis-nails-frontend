@@ -50,6 +50,10 @@ export const MY_ROUTES = {
     publicPages: {
         base: 'public',
         absolute: '/public',
+        emailVerification: {
+            base: 'email-verifications',
+            absolute: '/public/email-verifications'
+        },
         appointments: {
             base: 'appointments',
             absolute: '/public/appointments'

@@ -1,13 +1,5 @@
 import { Component, inject, input, OnInit, output } from '@angular/core';
-import {
-    AbstractControl,
-    FormArray,
-    FormBuilder,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    Validators
-} from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -16,7 +8,6 @@ import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { CustomMessageService } from '@utils/services/custom-message.service';
 import { environment } from '@env/environment';
-import { PrimeIcons } from 'primeng/api';
 import { CoreService } from '@utils/services/core.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { MY_ROUTES } from '@routes';
@@ -26,7 +17,6 @@ import { Message } from 'primeng/message';
 import { AuthHttpService } from '@/pages/auth/auth-http.service';
 import { Fluid } from 'primeng/fluid';
 import { AuthService } from '@/pages/auth/auth.service';
-import { CatalogueInterface } from '@utils/interfaces';
 import { invalidEmailValidator } from '@utils/form-validators/custom-validator';
 import { FontAwesome } from '@/api/font-awesome';
 
@@ -40,12 +30,12 @@ export default class EmailResetComponent implements OnInit {
     onSubmitted = output<string>();
     userId = input.required<string>();
     allSecurityQuestions = input.required<any[]>();
-    protected selectedSecurityQuestions: CatalogueInterface[] = [];
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly environment = environment;
     protected readonly coreService = inject(CoreService);
 
     protected form!: FormGroup;
+    protected readonly FontAwesome = FontAwesome;
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
     private readonly router = inject(Router);
@@ -92,13 +82,13 @@ export default class EmailResetComponent implements OnInit {
     }
 
     protected generateSecurityQuestions() {
-        this.selectedSecurityQuestions = this.allSecurityQuestions()
+        let selectedSecurityQuestions = this.allSecurityQuestions()
             .sort(() => Math.random() - 0.5)
-            .slice(0, 1);
+            .slice(0, 2);
 
         this.securityQuestionsField.clear();
 
-        this.selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
+        selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
     }
 
     protected addQuestion(question: any): void {
@@ -129,6 +119,4 @@ export default class EmailResetComponent implements OnInit {
 
         this.watchFormChanges();
     }
-
-    protected readonly FontAwesome = FontAwesome;
 }

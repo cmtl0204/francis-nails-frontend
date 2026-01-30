@@ -135,7 +135,7 @@
 
             <!-- securityQuestionsField -->
             <div formArrayName="securityQuestions" class="custom-field-form md:col-span-12">
-                @for (securityQuestion of securityQuestionsField.controls; track securityQuestion.value.code) {
+                @for (securityQuestion of securityQuestionsField.controls; track $index) {
                     <div [formGroupName]="$index" class="custom-field-form md:col-span-12">
                         <label
                             appLabel

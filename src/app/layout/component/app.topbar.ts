@@ -19,7 +19,7 @@ import { FontAwesome } from '@/api/font-awesome';
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
-                <i class="pi pi-bars"></i>
+                <i [class]="FontAwesome.BARS_SOLID"></i>
             </button>
             <a class="layout-topbar-logo" routerLink="/">
                 <img [src]="environment.PATH_ASSETS + '/logo.png'" alt="Logo" width="50px" />
@@ -29,7 +29,7 @@ import { FontAwesome } from '@/api/font-awesome';
 
         <div class="layout-topbar-actions">
             <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
-                <i class="pi pi-ellipsis-v"></i>
+                <i [class]="FontAwesome.ELLIPSIS_SOLID"></i>
             </button>
 
             <div class="layout-topbar-menu hidden lg:block">

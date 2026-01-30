@@ -1,13 +1,5 @@
 import { Component, inject } from '@angular/core';
-import {
-    AbstractControl,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -23,12 +15,7 @@ import { Message } from 'primeng/message';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { MY_ROUTES } from '@routes';
-import {
-    invalidEmailMINTURValidator,
-    invalidEmailValidator,
-    passwordPolicesValidator,
-    unregisteredUserValidator
-} from '@utils/form-validators/custom-validator';
+import { invalidEmailMINTURValidator, invalidEmailValidator, passwordPolicesValidator, unregisteredUserValidator } from '@utils/form-validators/custom-validator';
 import { Fluid } from 'primeng/fluid';
 import { Tooltip } from 'primeng/tooltip';
 import { Dialog } from 'primeng/dialog';
@@ -70,6 +57,7 @@ export default class PasswordResetComponent {
     protected transactionalCodeControl = new FormControl({ value: '', disabled: true });
     protected securityQuestionsModal = false;
     protected allSecurityQuestions: CatalogueInterface[] = [];
+    protected readonly FontAwesome = FontAwesome;
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
     private readonly authHttpService = inject(AuthHttpService);
@@ -226,6 +214,4 @@ export default class PasswordResetComponent {
 
         return true;
     }
-
-    protected readonly FontAwesome = FontAwesome;
 }

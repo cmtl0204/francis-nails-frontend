@@ -29,7 +29,6 @@ import { Fluid } from 'primeng/fluid';
 import { CatalogueInterface } from '@utils/interfaces';
 import { AuthService } from '@/pages/auth/auth.service';
 import { Dialog } from 'primeng/dialog';
-import { InputOtp } from 'primeng/inputotp';
 import { Location } from '@angular/common';
 import { FontAwesome } from '@/api/font-awesome';
 import { TransactionalCodeComponent } from '@utils/components/transactional-code/transactional-code.component';
@@ -54,7 +53,6 @@ import { Tooltip } from 'primeng/tooltip';
         Message,
         Fluid,
         Dialog,
-        InputOtp,
         TransactionalCodeComponent,
         Tooltip
     ]

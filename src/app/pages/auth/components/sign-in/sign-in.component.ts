@@ -38,6 +38,7 @@ export default class SignInComponent {
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly Validators = Validators;
     protected readonly FontAwesome = FontAwesome;
+    protected requestEmailVerificationModal: boolean = false;
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
     private readonly authHttpService = inject(AuthHttpService);
@@ -79,6 +80,19 @@ export default class SignInComponent {
         this.authHttpService.signOut().subscribe();
     }
 
+    protected resendEmailVerification() {
+        this.authHttpService.requestVerifyEmail(this.usernameField.value!).subscribe({
+            next: (response) => {
+                this.requestEmailVerificationModal = false;
+
+                this.customMessageService.showModalInfo({
+                    summary: `¡Solicitud recibida!`,
+                    detail: 'Si la identificación está registrada en nuestro sistema, se ha enviado un correo con el nuevo enlace'
+                });
+            }
+        });
+    }
+
     private buildForm() {
         this.form = this.formBuilder.group({
             username: [null, [Validators.required]],
@@ -103,6 +117,7 @@ export default class SignInComponent {
 
     private signIn() {
         this.roleControl.reset();
+
         this.authHttpService.signIn(this.form.value).subscribe({
             next: (data) => {
                 if (data.roles.length === 1) {
@@ -113,6 +128,11 @@ export default class SignInComponent {
                 this.isVisibleRoles = true;
                 this.roles = data.roles;
                 this.roleControl.setValidators([Validators.required]);
+            },
+            error: (err) => {
+                if (err.error.error === 'ACCOUNT_UNVERIFIED_EMAIL') {
+                    this.requestEmailVerificationModal = true;
+                }
             }
         });
     }

@@ -1,0 +1,179 @@
+<p-fluid class="custom-card-form">
+    <form [formGroup]="form" class="custom-grid-form">
+        <!-- title -->
+        <div class="md:col-span-10 custom-section-title-form">
+            Información Adicional:
+            <p-divider />
+        </div>
+
+        <!-- save action -->
+        <div class="md:col-span-2 custom-section-title-form">
+            <p-button pTooltip="Guardar" [icon]="FontAwesome.FLOPPY_DISK_SOLID" (onClick)="onSubmit()" />
+        </div>
+
+        <!-- bloodTypeField -->
+        <div class="md:col-span-6 custom-field-form">
+            <label
+                appLabel
+                for="bloodType"
+                [required]="bloodTypeField"
+                label="Tipo de sangre">
+            </label>
+
+            <p-select
+                id="bloodType"
+                dataKey="id"
+                [options]="bloodTypes"
+                formControlName="bloodType"
+                optionLabel="name"
+                appendTo="body" />
+
+            <p-message
+                appErrorMessage
+                [errors]="bloodTypeField.errors"
+                [touched]="bloodTypeField.touched"
+                [dirty]="bloodTypeField.dirty" />
+        </div>
+
+        <!-- ethnicOriginField -->
+        <div class="md:col-span-6 custom-field-form">
+            <label
+                appLabel
+                for="ethnicOrigin"
+                [required]="ethnicOriginField"
+                label="Etnia">
+            </label>
+
+            <p-select
+                id="ethnicOrigin"
+                dataKey="id"
+                [options]="ethnicOrigins"
+                formControlName="ethnicOrigin"
+                optionLabel="name"
+                appendTo="body" />
+
+            <p-message
+                appErrorMessage
+                [errors]="ethnicOriginField.errors"
+                [touched]="ethnicOriginField.touched"
+                [dirty]="ethnicOriginField.dirty" />
+        </div>
+
+        <!-- genderField -->
+        <div class="md:col-span-6 custom-field-form">
+            <label
+                appLabel
+                for="gender"
+                [required]="genderField"
+                label="Género">
+            </label>
+
+            <p-select
+                id="gender"
+                dataKey="id"
+                [options]="genders"
+                formControlName="gender"
+                optionLabel="name"
+                appendTo="body" />
+
+            <p-message
+                appErrorMessage
+                [errors]="genderField.errors"
+                [touched]="genderField.touched"
+                [dirty]="genderField.dirty" />
+        </div>
+
+        <!-- sexField -->
+        <div class="md:col-span-6 custom-field-form">
+            <label
+                appLabel
+                for="sex"
+                [required]="sexField"
+                label="Sexo">
+            </label>
+
+            <p-select
+                id="sex"
+                dataKey="id"
+                [options]="sexes"
+                formControlName="sex"
+                optionLabel="name"
+                appendTo="body" />
+
+            <p-message
+                appErrorMessage
+                [errors]="sexField.errors"
+                [touched]="sexField.touched"
+                [dirty]="sexField.dirty" />
+        </div>
+
+        <!-- maritalStatusField -->
+        <div class="md:col-span-6 custom-field-form">
+            <label
+                appLabel
+                for="maritalStatus"
+                [required]="maritalStatusField"
+                label="Estado civil">
+            </label>
+
+            <p-select
+                id="maritalStatus"
+                dataKey="id"
+                [options]="maritalStatuses"
+                formControlName="maritalStatus"
+                optionLabel="name"
+                appendTo="body" />
+
+            <p-message
+                appErrorMessage
+                [errors]="maritalStatusField.errors"
+                [touched]="maritalStatusField.touched"
+                [dirty]="maritalStatusField.dirty" />
+        </div>
+
+        <!-- nationalityField -->
+        <div class="md:col-span-6 custom-field-form">
+            <label
+                appLabel
+                for="nationality"
+                [required]="nationalityField"
+                label="Nacionalidad">
+            </label>
+
+            <p-select
+                id="nationality"
+                dataKey="id"
+                [options]="nationalities"
+                formControlName="nationality"
+                [filter]="true"
+                filterBy="name"
+                optionLabel="name"
+                appendTo="body" />
+
+            <p-message
+                appErrorMessage
+                [errors]="nationalityField.errors"
+                [touched]="nationalityField.touched"
+                [dirty]="nationalityField.dirty" />
+        </div>
+
+        <!-- allergiesField -->
+        <div class="md:col-span-12 custom-field-form">
+            <label
+                appLabel
+                for="allergies"
+                [required]="nationalityField"
+                label="Alergias">
+            </label>
+
+            <textarea rows="4" cols="30" pTextarea formControlName="allergies"
+                      placeholder="Colocar ninguna, si no las tiene."></textarea>
+
+            <p-message
+                appErrorMessage
+                [errors]="nationalityField.errors"
+                [touched]="nationalityField.touched"
+                [dirty]="nationalityField.dirty" />
+        </div>
+    </form>
+</p-fluid>

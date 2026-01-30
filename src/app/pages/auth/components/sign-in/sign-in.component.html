@@ -114,3 +114,28 @@
         </div>
     </p-fluid>
 </p-dialog>
+
+<p-dialog [(visible)]="requestEmailVerificationModal"
+          [modal]="true"
+          [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+          [style]="{ width: '25vw' }"
+          [draggable]="false"
+          [resizable]="false">
+    <ng-template #header>
+        <div class="custom-section-title-form">
+            Solicitar enlace de verificación
+        </div>
+    </ng-template>
+
+    <p-fluid class="custom-card-form">
+        <div class="custom-grid-form">
+            <div class="custom-field-form md:col-span-12">
+                <p-button
+                    label="Solicitar nuevo enlace"
+                    [icon]="FontAwesome.ENVELOPE_OPEN_SOLID"
+                    [raised]="true"
+                    (onClick)="resendEmailVerification()" />
+            </div>
+        </div>
+    </p-fluid>
+</p-dialog>

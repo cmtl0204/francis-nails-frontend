@@ -23,6 +23,7 @@ import { Tooltip } from 'primeng/tooltip';
 import { FontAwesome } from '@/api/font-awesome';
 import { CatalogueHttpService, CoreSessionStorageService } from '@utils/services';
 import { TransactionalCodeComponent } from '@utils/components/transactional-code/transactional-code.component';
+import { CatalogueInterface } from '@utils/interfaces';
 
 @Component({
     selector: 'app-sign-up',
@@ -54,6 +55,7 @@ export default class SignUpComponent implements OnInit {
     protected transactionalCodeControl = new FormControl({ value: '', disabled: true });
     protected readonly MY_ROUTES = MY_ROUTES;
     protected readonly FontAwesome = FontAwesome;
+    protected allSecurityQuestions: CatalogueInterface[] = [];
     private readonly formBuilder = inject(FormBuilder);
     private readonly customMessageService = inject(CustomMessageService);
     private readonly coreSessionStorageService = inject(CoreSessionStorageService);
@@ -103,17 +105,17 @@ export default class SignUpComponent implements OnInit {
             next: async (response) => {
                 await this.coreSessionStorageService.setEncryptedValue(CoreEnum.catalogues, response);
 
-                let allSecurityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
-
-                const selectedSecurityQuestions = allSecurityQuestions
-                    .map((value) => ({ value, sort: Math.random() })) // 1. Asignamos un valor aleatorio a cada uno
-                    .sort((a, b) => a.sort - b.sort) // 2. Ordenamos por ese valor aleatorio
-                    .map(({ value }) => value) // 3. Recuperamos el objeto original
-                    .slice(0, 3); // 4. Tomamos los 3 primeros
-
-                selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
+                this.allSecurityQuestions = await this.catalogueService.findByType(CatalogueTypeEnum.users_security_question);
             }
         });
+    }
+
+    protected generateSecurityQuestions() {
+        const selectedSecurityQuestions = this.allSecurityQuestions.sort(() => Math.random() - 0.5).slice(0, 3);
+
+        this.securityQuestionsField.clear();
+
+        selectedSecurityQuestions.forEach((q) => this.addQuestion(q));
     }
 
     protected openTerms() {
@@ -161,6 +163,8 @@ export default class SignUpComponent implements OnInit {
 
         this.transactionalCodeControl.reset();
         this.transactionalCodeControl.disable();
+
+        this.generateSecurityQuestions();
 
         this.authHttpService.requestTransactionalSignupCode(this.emailField.value).subscribe({
             next: (_) => {

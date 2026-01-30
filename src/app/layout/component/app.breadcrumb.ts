@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { Breadcrumb } from 'primeng/breadcrumb';
 import { BreadcrumbService } from '@layout/service';
+import { FontAwesome } from '@/api/font-awesome';
 
 @Component({
     selector: 'app-breadcrumb',
@@ -20,6 +21,6 @@ export class AppBreadcrumb implements OnInit {
     home!: MenuItem;
 
     ngOnInit() {
-        this.home = { icon: 'pi pi-home', routerLink: '/' };
+        this.home = { icon: FontAwesome.HOUSE_SOLID, routerLink: '/' };
     }
 }

@@ -57,6 +57,10 @@ export class UserHttpService {
         return this.httpClient.patch<HttpResponseInterface>(`${this.apiUrl}/${id}/profile`, payload);
     }
 
+    updateAdditionalInformation(id: string, payload: UpdateUserDto) {
+        return this.httpClient.patch<HttpResponseInterface>(`${this.apiUrl}/${id}/additional-information`, payload);
+    }
+
     updateAvatar(id: string, file: File) {
         const form = new FormData();
         form.append('avatar', file);

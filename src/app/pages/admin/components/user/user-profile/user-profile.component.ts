@@ -3,7 +3,7 @@ import { UserHttpService } from '@/pages/admin/user-http.service';
 import { BreadcrumbService } from '@layout/service';
 import { CustomMessageService } from '@utils/services';
 import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Fluid } from 'primeng/fluid';
 import { LabelDirective } from '@utils/directives/label.directive';
 import { InputText } from 'primeng/inputtext';
@@ -11,9 +11,7 @@ import { ErrorMessageDirective } from '@utils/directives/error-message.directive
 import { Message } from 'primeng/message';
 import { Button } from 'primeng/button';
 import { invalidEmailValidator, passwordPolicesValidator, userUpdatedValidator } from '@utils/form-validators/custom-validator';
-import { Password } from 'primeng/password';
 import { RoleInterface } from '@/pages/auth/interfaces';
-import { ToggleSwitch } from 'primeng/toggleswitch';
 import { Divider } from 'primeng/divider';
 import { AuthHttpService } from '@/pages/auth/auth-http.service';
 import { Tag } from 'primeng/tag';
@@ -28,36 +26,14 @@ import { Avatar } from 'primeng/avatar';
 import { Tooltip } from 'primeng/tooltip';
 import { environment } from '@env/environment';
 import { uploadFileValidator } from '@utils/helpers/file.helper';
-import { Toolbar } from 'primeng/toolbar';
-import { Textarea } from 'primeng/textarea';
 import { DateLongPipe } from '@utils/pipes/date-long.pipe';
 import { FontAwesome } from '@/api/font-awesome';
-import { TransactionalCodeComponent } from '@utils/components/transactional-code/transactional-code.component';
+import PasswordChangeComponent from '@/pages/admin/components/user/password-change/password-change.component';
+import AdditionalInformationComponent from '@/pages/admin/components/user/additional-informatio/additional-information.component';
 
 @Component({
     selector: 'app-user-profile',
-    imports: [
-        Button,
-        Divider,
-        ErrorMessageDirective,
-        Fluid,
-        FormsModule,
-        InputText,
-        LabelDirective,
-        Message,
-        Password,
-        ReactiveFormsModule,
-        Tag,
-        ToggleSwitch,
-        DatePicker,
-        Select,
-        Avatar,
-        Tooltip,
-        Toolbar,
-        Textarea,
-        DateLongPipe,
-        TransactionalCodeComponent
-    ],
+    imports: [Button, Divider, ErrorMessageDirective, Fluid, FormsModule, InputText, LabelDirective, Message, ReactiveFormsModule, Tag, DatePicker, Select, Avatar, Tooltip, DateLongPipe, PasswordChangeComponent, AdditionalInformationComponent],
     templateUrl: './user-profile.component.html',
     styleUrl: './user-profile.component.scss'
 })
@@ -69,16 +45,8 @@ export default class UserProfileComponent implements OnInit {
     protected form!: FormGroup;
     protected roles: RoleInterface[] = [];
     protected identificationTypes: CatalogueInterface[] = [];
-    protected bloodTypes: CatalogueInterface[] = [];
-    protected ethnicOrigins: CatalogueInterface[] = [];
-    protected genders: CatalogueInterface[] = [];
-    protected maritalStatuses: CatalogueInterface[] = [];
-    protected nationalities: CatalogueInterface[] = [];
-    protected sexes: CatalogueInterface[] = [];
-    protected passwordActivated = new FormControl(false);
     protected avatarUrl!: string;
     protected readonly authService = inject(AuthService);
-    protected transactionalCodeControl = new FormControl({ value: '', disabled: true });
     private readonly authHttpService = inject(AuthHttpService);
     private readonly userHttpService = inject(UserHttpService);
     private readonly breadcrumbService = inject(BreadcrumbService);
@@ -106,10 +74,6 @@ export default class UserProfileComponent implements OnInit {
         return this.form.controls['email'];
     }
 
-    get passwordField(): AbstractControl {
-        return this.form.controls['password'];
-    }
-
     get usernameField(): AbstractControl {
         return this.form.controls['username'];
     }
@@ -134,30 +98,6 @@ export default class UserProfileComponent implements OnInit {
         return this.form.controls['identificationType'];
     }
 
-    get bloodTypeField(): AbstractControl {
-        return this.form.controls['bloodType'];
-    }
-
-    get ethnicOriginField(): AbstractControl {
-        return this.form.controls['ethnicOrigin'];
-    }
-
-    get genderField(): AbstractControl {
-        return this.form.controls['gender'];
-    }
-
-    get maritalStatusField(): AbstractControl {
-        return this.form.controls['maritalStatus'];
-    }
-
-    get nationalityField(): AbstractControl {
-        return this.form.controls['nationality'];
-    }
-
-    get sexField(): AbstractControl {
-        return this.form.controls['sex'];
-    }
-
     get avatarField(): AbstractControl {
         return this.form.controls['avatar'];
     }
@@ -170,7 +110,6 @@ export default class UserProfileComponent implements OnInit {
         await this.loadCatalogues();
 
         if (this.authService.auth.id) {
-            this.passwordField.disable();
             this.find(this.authService.auth.id);
             this.identificationField.setAsyncValidators(userUpdatedValidator(this.authHttpService, this.authService.auth.id));
         }
@@ -178,12 +117,6 @@ export default class UserProfileComponent implements OnInit {
 
     async loadCatalogues() {
         this.identificationTypes = await this.catalogueService.findByType(CatalogueTypeEnum.users_identification_type);
-        this.bloodTypes = await this.catalogueService.findByType(CatalogueTypeEnum.users_blood_type);
-        this.ethnicOrigins = await this.catalogueService.findByType(CatalogueTypeEnum.users_ethnic_origin);
-        this.genders = await this.catalogueService.findByType(CatalogueTypeEnum.users_gender);
-        this.maritalStatuses = await this.catalogueService.findByType(CatalogueTypeEnum.users_marital_status);
-        this.nationalities = await this.catalogueService.findByType(CatalogueTypeEnum.users_nationality);
-        this.sexes = await this.catalogueService.findByType(CatalogueTypeEnum.users_sex);
     }
 
     buildForm() {
@@ -197,7 +130,6 @@ export default class UserProfileComponent implements OnInit {
                 }
             ],
             username: [null, [Validators.required]],
-            password: [null, [Validators.required, passwordPolicesValidator()]],
             name: [null, [Validators.required]],
             lastname: [null, [Validators.required, Validators.minLength(3)]],
             email: [null, [Validators.required, invalidEmailValidator()]],
@@ -206,14 +138,7 @@ export default class UserProfileComponent implements OnInit {
             birthdate: [null, [Validators.required]],
             personalEmail: [null],
             identificationType: [null, [Validators.required]],
-            bloodType: [null],
-            ethnicOrigin: [null],
-            gender: [null],
-            sex: [null],
-            maritalStatus: [null],
-            nationality: [null],
             avatar: [null],
-            allergies: [null],
             emailVerifiedAt: [{ value: null, disabled: true }]
         });
 
@@ -223,21 +148,6 @@ export default class UserProfileComponent implements OnInit {
     watchFormChanges() {
         this.identificationField.valueChanges.subscribe((value) => {
             this.usernameField.setValue(value);
-        });
-
-        this.transactionalCodeControl.statusChanges.subscribe((status) => {
-            if (status === 'VALID') {
-                this.passwordField.enable();
-            }
-        });
-
-        this.passwordActivated.valueChanges.subscribe((value) => {
-            if (!value) {
-                this.passwordField.disable();
-                this.passwordField.reset();
-                this.transactionalCodeControl.reset();
-                this.transactionalCodeControl.disable();
-            }
         });
     }
 
@@ -265,20 +175,7 @@ export default class UserProfileComponent implements OnInit {
     update() {
         this.userHttpService.updateProfile(this.authService.auth.id, this.form.value).subscribe({
             next: (_) => {
-                this.passwordActivated.setValue(false);
-                this.passwordField.setValue(null);
                 this.find(this.authService.auth.id);
-            }
-        });
-    }
-
-    changePassword() {
-        this.authHttpService.changePassword(this.passwordField.value).subscribe({
-            next: (_) => {
-                this.passwordActivated.reset();
-                this.transactionalCodeControl.reset();
-                this.transactionalCodeControl.disable();
-                this.passwordField.reset();
             }
         });
     }
@@ -300,19 +197,12 @@ export default class UserProfileComponent implements OnInit {
         if (this.identificationField.invalid) errors.push('Identificación');
         if (this.nameField.invalid) errors.push('Nombres');
         if (this.lastnameField.invalid) errors.push('Apellidos');
-        if (this.emailField.invalid) errors.push('Email');
-        if (this.passwordField.invalid && (this.passwordActivated || !this.authService.auth.id)) errors.push('Contraseña');
+        if (this.emailField.invalid) errors.push('Correo electrónico');
         if (this.cellPhoneField.invalid) errors.push('Teléfono celular');
         if (this.phoneField.invalid) errors.push('Teléfono');
         if (this.birthdateField.invalid) errors.push('Fecha de nacimiento');
         if (this.personalEmailField.invalid) errors.push('Correo personal');
         if (this.identificationTypeField.invalid) errors.push('Tipo de identificacion');
-        if (this.bloodTypeField.invalid) errors.push('Tipo de sangre');
-        if (this.ethnicOriginField.invalid) errors.push('Etnia');
-        if (this.genderField.invalid) errors.push('Género');
-        if (this.sexField.invalid) errors.push('Sexo');
-        if (this.maritalStatusField.invalid) errors.push('Estado civil');
-        if (this.nationalityField.invalid) errors.push('Nacionalidad');
 
         if (errors.length > 0) {
             this.form.markAllAsTouched();
@@ -325,14 +215,5 @@ export default class UserProfileComponent implements OnInit {
 
     goToSecurityQuestions() {
         this.router.navigate(['/security-questions']);
-    }
-
-    protected requestTransactionalCode() {
-        this.authHttpService.requestTransactionalCode().subscribe({
-            next: (_) => {
-                this.transactionalCodeControl.enable();
-                this.transactionalCodeControl.reset();
-            }
-        });
     }
 }

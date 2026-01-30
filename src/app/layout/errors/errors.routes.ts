@@ -6,8 +6,8 @@ import { ForbiddenComponent } from './forbidden.component';
 import { UnavailableComponent } from './unavailable.component';
 
 export default [
-    { path: MY_ROUTES.errorPages.unauthorized.base, component: UnauthorizedComponent },
-    { path: MY_ROUTES.errorPages.forbidden.base, component: ForbiddenComponent },
-    { path: MY_ROUTES.errorPages.notFound.base, component: NotFoundComponent },
-    { path: MY_ROUTES.errorPages.unavailable.base, component: UnavailableComponent }
+    { title: 'Unauthorized', path: MY_ROUTES.errorPages.unauthorized.base, component: UnauthorizedComponent },
+    { title: 'Forbidden', path: MY_ROUTES.errorPages.forbidden.base, component: ForbiddenComponent },
+    { title: 'Not Found', path: MY_ROUTES.errorPages.notFound.base, component: NotFoundComponent },
+    { title: 'Unavailable', path: MY_ROUTES.errorPages.unavailable.base, component: UnavailableComponent }
 ] as Routes;
