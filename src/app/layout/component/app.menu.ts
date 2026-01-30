@@ -1,50 +1,78 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { RouterModule } from '@angular/router';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { MY_ROUTES } from '@routes';
-import { Ripple } from 'primeng/ripple';
 import { AuthService } from '@modules/auth/auth.service';
 import { RoleEnum } from '@utils/enums';
 import { AuthHttpService } from '@/pages/auth/auth-http.service';
 import { FontAwesome } from '@/api/font-awesome';
 import { Tooltip } from 'primeng/tooltip';
 import { environment } from '@env/environment';
+import { Button } from 'primeng/button';
+import { Fluid } from 'primeng/fluid';
 
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, AppMenuitem, RouterModule, Ripple, Tooltip],
-    template: `
-        <ul class="layout-menu">
-            @for (item of model; track item.id) {
-                <ng-container>
-                    @if (!item.separator) {
-                        <li app-menuitem [item]="item" [index]="$index" [root]="true"></li>
-                    }
+    imports: [CommonModule, AppMenuitem, RouterModule, Tooltip, Button, Fluid],
+    styles: [
+        `
+            /* Contenedor real del sidebar */
+            .layout-sidebar,
+            .p-sidebar,
+            .p-drawer {
+                height: 100vh !important;
+                display: flex;
+                flex-direction: column;
+            }
 
-                    @if (item.separator) {
+            /* Contenido interno */
+            .sidebar-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-height: 0; /* MUY IMPORTANTE */
+            }
+
+            .sidebar-footer {
+                padding-bottom: 2rem;
+            }
+
+            .sidebar-footer .p-button {
+                width: 100%;
+                justify-content: center;
+            }
+        `
+    ],
+    template: `
+        <div class="flex flex-column h-full sidebar-content">
+            <!-- MENÚ -->
+            <ul class="layout-menu flex-1 overflow-y-auto">
+                @for (item of model; track item.label) {
+                    @if (!item.separator) {
+                        <li app-menuitem [item]="item" [root]="true"></li>
+                    } @else {
                         <li class="menu-separator"></li>
                     }
-                </ng-container>
-            }
-        </ul>
+                }
+            </ul>
 
-        <div class="mt-auto">
-            <hr class="mb-4 mx-4 border-t border-0 border-surface" />
+            <!-- FOOTER -->
+            <div class="sidebar-footer mt-auto">
+                <hr class="mx-4 my-3 border-surface" />
 
-            <a (click)="signOut()" pRipple class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
-                <i [class]="FontAwesome.POWER_OFF_SOLID" style="color:red "></i>
-                <span class="font-bold" style="color: red"> Cerrar Sesión </span>
-            </a>
+                <p-fluid>
+                    <div>
+                        <p-button text size="small" severity="secondary" [icon]="FontAwesome.CODE_BRANCH_SOLID" [label]="environment.VERSION" />
+                    </div>
 
-            <a pTooltip="Versión del Sistema" class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple">
-                <i [class]="FontAwesome.CODE_BRANCH_SOLID" style="color: var(--primary-color)"> </i>
-                <span class="font-bold" style="color: var(--primary-color)">
-                    {{ environment.VERSION }}
-                </span>
-            </a>
+                    <div>
+                        <p-button outlined size="small" severity="danger" [icon]="FontAwesome.POWER_OFF_SOLID" label="Cerrar Sesión" (onClick)="signOut()" />
+                    </div>
+                </p-fluid>
+            </div>
         </div>
     `
 })
@@ -54,7 +82,8 @@ export class AppMenu implements OnInit {
 
     protected model: MenuItem[] = [];
     protected readonly FontAwesome = FontAwesome;
-    private readonly router = inject(Router);
+    protected readonly environment = environment;
+    private readonly confirmationService = inject(ConfirmationService);
 
     get loadMenu(): MenuItem[] {
         switch (this.authService.role.code) {
@@ -75,7 +104,8 @@ export class AppMenu implements OnInit {
                 label: 'Usuarios',
                 icon: FontAwesome.USERS_SOLID,
                 routerLink: [MY_ROUTES.adminPages.user.absolute]
-            }
+            },
+
         ];
     }
 
@@ -107,23 +137,45 @@ export class AppMenu implements OnInit {
     ngOnInit() {
         this.model = [
             {
-                label: 'Menú',
+                label: 'Home',
                 items: [
                     { label: 'Dashboard', icon: FontAwesome.HOUSE_REGULAR, routerLink: ['/'] },
                     {
-                        label: this.authService.auth.username,
-                        icon: FontAwesome.ID_CARD_CLIP_SOLID,
+                        label: 'Mi Perfil',
+                        icon: FontAwesome.USER_REGULAR,
                         routerLink: [MY_ROUTES.adminPages.user.profile.absolute]
-                    },
-                    ...this.loadMenu
+                    }
                 ]
+            },
+            {
+                separator: true
+            },
+            {
+                label: 'Gestión',
+                items: [...this.loadMenu]
             }
         ];
     }
 
     signOut() {
-        this.authHttpService.signOut().subscribe();
+        this.confirmationService.confirm({
+            message: '¿Está seguro de salir del sistema?',
+            header: 'Salir del Sistema',
+            icon: FontAwesome.POWER_OFF_SOLID,
+            rejectButtonProps: {
+                label: 'Cancelar',
+                severity: 'secondary',
+                text: true
+            },
+            acceptButtonProps: {
+                label: 'Sí, Salir',
+                severity: 'danger',
+                outlined: true
+            },
+            accept: () => {
+                this.authHttpService.signOut().subscribe();
+            },
+            key: 'confirmdialog'
+        });
     }
-
-    protected readonly environment = environment;
 }

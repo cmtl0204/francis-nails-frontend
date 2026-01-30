@@ -1,5 +1,8 @@
 <div class="flex flex-col md:flex-row gap-2">
     <div class="flex flex-col w-1/1">
+
+        <app-password-change/>
+
         <p-fluid class="custom-card-form">
             <form [formGroup]="form" class="custom-grid-form">
                 <!-- title -->
@@ -146,7 +149,7 @@
                 </div>
 
                 <!-- personalEmailField -->
-                <div class="md:col-span-12 custom-field-form">
+                <div class="md:col-span-6 custom-field-form">
                     <label
                         appLabel
                         for="personalEmail"
@@ -161,6 +164,29 @@
                         [errors]="personalEmailField.errors"
                         [touched]="personalEmailField.touched"
                         [dirty]="personalEmailField.dirty" />
+                </div>
+
+                <!-- birthdateField -->
+                <div class="md:col-span-6 custom-field-form">
+                    <label
+                        appLabel
+                        for="birthdate"
+                        [required]="birthdateField"
+                        label="Fecha de nacimiento">
+                    </label>
+
+                    <p-datePicker
+                        id="birthdate"
+                        formControlName="birthdate"
+                        appendTo="body"
+                        [showIcon]="true"
+                        dateFormat="yy-mm-dd" />
+
+                    <p-message
+                        appErrorMessage
+                        [errors]="birthdateField.errors"
+                        [touched]="birthdateField.touched"
+                        [dirty]="birthdateField.dirty" />
                 </div>
 
                 <!-- cellPhoneField -->
@@ -198,37 +224,11 @@
                         [touched]="phoneField.touched"
                         [dirty]="phoneField.dirty" />
                 </div>
-
-                <!-- birthdateField -->
-                <div class="md:col-span-12 custom-field-form">
-                    <label
-                        appLabel
-                        for="birthdate"
-                        [required]="birthdateField"
-                        label="Fecha de nacimiento">
-                    </label>
-
-                    <p-datePicker
-                        id="birthdate"
-                        formControlName="birthdate"
-                        appendTo="body"
-                        [showIcon]="true"
-                        dateFormat="yy-mm-dd" />
-
-                    <p-message
-                        appErrorMessage
-                        [errors]="birthdateField.errors"
-                        [touched]="birthdateField.touched"
-                        [dirty]="birthdateField.dirty" />
-                </div>
             </form>
         </p-fluid>
-
-        <app-additional-information/>
     </div>
 
     <div class="flex flex-col w-1/1">
-        <app-password-change/>
 
         <p-fluid class="custom-card-form">
             <form [formGroup]="form" class="custom-grid-form">
@@ -272,5 +272,7 @@
                 </div>
             </form>
         </p-fluid>
+
+        <app-additional-information/>
     </div>
 </div>

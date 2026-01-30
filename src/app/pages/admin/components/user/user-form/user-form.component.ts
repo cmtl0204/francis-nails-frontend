@@ -25,16 +25,17 @@ import { AutoFocus } from 'primeng/autofocus';
 import { Tag } from 'primeng/tag';
 import { Toolbar } from 'primeng/toolbar';
 import { FontAwesome } from '@/api/font-awesome';
+import { Tooltip } from 'primeng/tooltip';
+import { InputGroup } from 'primeng/inputgroup';
+import { InputGroupAddon } from 'primeng/inputgroupaddon';
 
 @Component({
     selector: 'app-user-form',
-    imports: [Fluid, ReactiveFormsModule, LabelDirective, InputText, ErrorMessageDirective, Message, Button, Password, MultiSelect, ToggleSwitch, FormsModule, Divider, AutoFocus, Tag, Toolbar],
+    imports: [Fluid, ReactiveFormsModule, LabelDirective, InputText, ErrorMessageDirective, Message, Button, Password, MultiSelect, ToggleSwitch, FormsModule, Divider, AutoFocus, Tag, Toolbar, Tooltip, InputGroup, InputGroupAddon],
     templateUrl: './user-form.component.html',
     styleUrl: './user-form.component.scss'
 })
 export default class UserFormComponent implements OnInit {
-
-
     protected readonly router = inject(Router);
     protected readonly customMessageService = inject(CustomMessageService);
     protected id = input.required<string>();
@@ -88,6 +89,7 @@ export default class UserFormComponent implements OnInit {
 
     ngOnInit() {
         if (this.id()) {
+            this.passwordField.clearValidators();
             this.passwordField.disable();
             this.find(this.id());
             this.identificationField.setAsyncValidators(userUpdatedValidator(this.authHttpService, this.id()));
@@ -133,8 +135,10 @@ export default class UserFormComponent implements OnInit {
         this.passwordActivated.valueChanges.subscribe((value) => {
             if (value) {
                 this.passwordField.enable();
+                this.passwordField.setValidators([Validators.required, passwordPolicesValidator()]);
                 this.passwordChangedField.enable();
             } else {
+                this.passwordField.clearValidators();
                 this.passwordField.disable();
                 this.passwordField.reset();
                 this.passwordChangedField.reset();

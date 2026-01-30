@@ -1,43 +1,59 @@
 <div class="flex items-center justify-center min-h-screen p-4">
     <div class="w-full mx-auto max-w-3xl">
         <div
-            style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, color-mix(in srgb, {{color}}, transparent 50%) 10%, var(--surface-ground) 90%)">
+            style="border-radius: 56px; padding: 0.3rem;"
+            [style.background]="'linear-gradient(180deg, color-mix(in srgb, ' + uiState().color + ', transparent 50%) 10%, var(--surface-ground) 90%)'">
+
             <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 flex flex-col items-center"
                  style="border-radius: 53px">
                 <p-fluid>
                     <div class="custom-grid-form">
+
                         <div class="col-span-12 flex flex-row justify-center items-center gap-6 text-center">
-                            <i [ngClass]="[icon, 'fa-6x', iconColor]"
+                            <i [ngClass]="[uiState().icon, 'fa-6x', uiState().iconClass]"
                                style="--fa-animation-duration: 10s;"></i>
                         </div>
 
                         <div class="custom-field-form col-span-12 text-center">
-                            <h2 [style]="{'color': color}" class="mt-4 mb-4">{{ title }}</h2>
+                            <h2 [style.color]="uiState().color" class="mt-4 mb-4">
+                                {{ uiState().title }}
+                            </h2>
                         </div>
 
                         <div class="custom-field-form col-span-12 text-center mb-4">
-                            <p [style]="{'color': color}">{{ message }}</p>
-
+                            <p [style.color]="uiState().color">
+                                {{ uiState().message }}
+                            </p>
                         </div>
 
                         <div class="custom-field-form md:col-span-12">
-                            @if (error === '' || error == 'USED_TOKEN') {
+
+                            @if (currentStatus() === 'SUCCESS' || currentStatus() === 'USED') {
                                 <p-button
-                                    label="Redirigiendo al Login en {{counter}} ..."
+                                    label="Redirigiendo al Login en {{ counter() }} ..."
                                     class="w-full"
                                     [raised]="true"
-                                    [severity]="error?'help':'success'"
-                                    (onClick)="back()" />
+                                    [severity]="currentStatus() === 'USED' ? 'help' : 'success'"
+                                    (onClick)="backToSignIn()" />
                             }
 
-                            @if (error === 'EXPIRED_TOKEN') {
+                            @if (currentStatus() === 'EXPIRED') {
                                 <p-button
                                     label="Solicitar nuevo enlace"
                                     class="w-full"
                                     severity="warn"
                                     [icon]="FontAwesome.ENVELOPE_SOLID"
                                     [raised]="true"
-                                    (onClick)="requestEmailVerificationModal=true" />
+                                    (onClick)="requestEmailVerificationModal.set(true)" />
+                            }
+
+                            @if (currentStatus() === 'INVALID') {
+                                <p-button
+                                    label="Volver al inicio"
+                                    class="w-full"
+                                    severity="danger"
+                                    [outlined]="true"
+                                    (onClick)="backToSignIn()" />
                             }
                         </div>
                     </div>
@@ -48,27 +64,27 @@
 </div>
 
 <p-dialog
-    [(visible)]="requestEmailVerificationModal"
+    [visible]="requestEmailVerificationModal()"
+    (visibleChange)="requestEmailVerificationModal.set($event)"
     [modal]="true"
     [style]="{ width: '400px' }"
->
-    <ng-template #header>
-        <div class="custom-section-title-form">
-            Solicitar enlace de verificación
-        </div>
-    </ng-template>
+    header="Solicitar enlace de verificación">
 
     <p-fluid class="custom-card-form">
         <form class="custom-grid-form" (ngSubmit)="resendEmailVerification()">
-            <!-- emailField -->
+
             <div class="custom-field-form md:col-span-12">
                 <label
                     appLabel
                     for="transactionalCode"
                     [required]="usernameControl"
-                    label="Ingresa tu número de identificación asociado a tu cuenta para recibir un nuevo enlace de verificación"></label>
+                    label="Ingresa tu identificación para recibir un nuevo enlace"></label>
 
-                <input pInputText type="email" [formControl]="usernameControl" />
+                <input
+                    pInputText
+                    id="transactionalCode"
+                    type="email"
+                    [formControl]="usernameControl" />
 
                 <p-message
                     appErrorMessage
@@ -77,12 +93,13 @@
                     [dirty]="usernameControl.dirty" />
             </div>
 
-            <div class="custom-field-form md:col-span-12">
+            <div class="custom-field-form md:col-span-12 mt-4">
                 <p-button
+                    type="submit"
                     label="Solicitar nuevo enlace"
                     [icon]="FontAwesome.ENVELOPE_OPEN_SOLID"
                     [raised]="true"
-                    (onClick)="resendEmailVerification()" />
+                    [disabled]="usernameControl.invalid" />
             </div>
         </form>
     </p-fluid>
