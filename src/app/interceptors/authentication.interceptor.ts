@@ -20,7 +20,7 @@ export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
     const logout = () => {
         authService.removeLogin();
         authHttpService.signOut().subscribe({ error: () => {} });
-        router.navigate([MY_ROUTES.signIn]);
+        router.navigate([MY_ROUTES.authPages.signIn.absolute]);
     };
 
     return next(req).pipe(

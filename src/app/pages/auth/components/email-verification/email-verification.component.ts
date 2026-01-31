@@ -132,7 +132,7 @@ export default class EmailVerificationComponent implements OnInit {
     }
 
     backToSignIn() {
-        this.router.navigate([MY_ROUTES.signIn]);
+        this.router.navigate([MY_ROUTES.authPages.signIn.absolute]);
     }
 
     private startRedirectCountdown() {

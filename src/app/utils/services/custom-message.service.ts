@@ -101,16 +101,19 @@ export class CustomMessageService {
     showHttpError(error: string | string[] | any) {
         if (error) {
             this._modalLife = error.message.length * 150;
+            let detail = error.message;
 
             if (Array.isArray(error.message)) {
                 this._modalLife = error.message.length * 5000;
                 error.message.sort();
+
+                detail = error.message.join('\n');
             }
 
             this._messageService.add({
                 severity: 'error',
                 summary: this.errorMessages.get(error.error) ?? error.error,
-                detail: error.message
+                detail
             });
         }
     }

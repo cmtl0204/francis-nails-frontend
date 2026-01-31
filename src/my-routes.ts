@@ -76,6 +76,14 @@ export const MY_ROUTES = {
         passwordReset: {
             base: 'password-reset',
             absolute: '/auth/password-reset'
+        },
+        passwordChanged: {
+            base: 'password-changed',
+            absolute: '/auth/password-changed'
+        },
+        securityQuestions: {
+            base: 'security-questions',
+            absolute: '/auth/security-questions'
         }
     },
     adminPages: {
@@ -100,7 +108,6 @@ export const MY_ROUTES = {
             absolute: '/guess/simulators'
         }
     },
-    signIn: '/auth/sign-in',
     dashboards: {
         base: 'dashboards',
         absolute: '/main/dashboards'

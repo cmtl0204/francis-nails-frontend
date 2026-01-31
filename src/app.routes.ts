@@ -4,15 +4,16 @@ import { AppLayoutMain } from '@layout/component/app.layout-main';
 import { AppLayoutBlank } from '@layout/component/app.layout-blank';
 import { AppLayoutAuth } from '@layout/component/app.layout-auth';
 import { tokenGuard } from '@/guards/token.guard';
-import { securityQuestionsGuard } from '@/guards/security-questions.guard';
+import { accountGuard } from '@/guards/account.guard';
 import SecurityQuestionComponent from '@/pages/auth/components/security-question/security-question.component';
 import FontAwesomeIcons from '@/api/font-awesome-icons';
+import PasswordChangedComponent from '@/pages/auth/components/password-changed/password-changed.component';
 
 export const appRoutes: Routes = [
     {
         path: MY_ROUTES.main,
         component: AppLayoutMain,
-        canActivate: [tokenGuard, securityQuestionsGuard],
+        canActivate: [tokenGuard, accountGuard],
         children: [
             { path: MY_ROUTES.dashboards.base, loadChildren: () => import('./app/pages/dashboards/dashboard.routes') },
             { path: MY_ROUTES.adminPages.base, loadChildren: () => import('./app/pages/admin/admin.routes') },
@@ -45,8 +46,14 @@ export const appRoutes: Routes = [
     },
 
     {
+        path: 'password-changed',
+        component: PasswordChangedComponent,
+        canActivate: [tokenGuard]
+    },
+
+    {
         path: 'api',
-        component: FontAwesomeIcons,
+        component: FontAwesomeIcons
     },
 
     { path: '', redirectTo: '/main/dashboards', pathMatch: 'full' },

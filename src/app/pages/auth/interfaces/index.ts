@@ -7,3 +7,4 @@ export  * from './user.interface';
 export  * from './user-ldap.interface';
 export  * from './http-response.interface';
 export  * from './paginator.interface';
+export  * from './password-changed.interface';

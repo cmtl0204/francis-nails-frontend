@@ -138,7 +138,7 @@
                         label="Activar contraseña">
                     </label>
 
-                    <p-toggleswitch [formControl]="passwordActivated" />
+                    <app-toggle-switch [formControl]="passwordActivated" />
                 </div>
 
                 <!-- passwordChanged -->
@@ -150,7 +150,7 @@
                         label="Forzar cambio de contraseña al iniciar sesión">
                     </label>
 
-                    <p-toggleswitch id="passwordChanged" formControlName="passwordChanged" />
+                    <app-toggle-switch id="passwordChanged" formControlName="passwordChanged" />
 
                     <p-message
                         appErrorMessage

@@ -7,7 +7,7 @@ import { LabelDirective } from '@utils/directives/label.directive';
 import { ErrorMessageDirective } from '@utils/directives/error-message.directive';
 import { Message } from 'primeng/message';
 import { Button } from 'primeng/button';
-import { passwordPolicesValidator } from '@utils/form-validators/custom-validator';
+import { matchPasswords, passwordPolicesValidator } from '@utils/form-validators/custom-validator';
 import { Password } from 'primeng/password';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { Divider } from 'primeng/divider';
@@ -17,11 +17,12 @@ import { AuthService } from '@/pages/auth/auth.service';
 import { Tooltip } from 'primeng/tooltip';
 import { FontAwesome } from '@/api/font-awesome';
 import { TransactionalCodeComponent } from '@utils/components/transactional-code/transactional-code.component';
+import { ToggleSwitchComponent } from '@utils/components/toggle-switch/toggle-switch.component';
 
 @Component({
     selector: 'app-password-change',
-    imports: [Button, Divider, ErrorMessageDirective, Fluid, FormsModule, LabelDirective, Message, Password, ReactiveFormsModule, ToggleSwitch, Tooltip, TransactionalCodeComponent],
-    templateUrl: './password-change.component.html',
+    imports: [Button, Divider, ErrorMessageDirective, Fluid, FormsModule, LabelDirective, Message, Password, ReactiveFormsModule, ToggleSwitch, Tooltip, TransactionalCodeComponent, ToggleSwitchComponent],
+    templateUrl: './password-change.component.html'
 })
 export default class PasswordChangeComponent implements OnInit {
     protected readonly FontAwesome = FontAwesome;
@@ -42,12 +43,20 @@ export default class PasswordChangeComponent implements OnInit {
         return this.form.controls['password'];
     }
 
+    protected get passwordConfirmField(): AbstractControl {
+        return this.form.controls['passwordConfirm'];
+    }
+
     async ngOnInit() {}
 
     buildForm() {
-        this.form = this.formBuilder.group({
-            password: [null, [Validators.required, passwordPolicesValidator()]]
-        });
+        this.form = this.formBuilder.group(
+            {
+                password: [null, [Validators.required, passwordPolicesValidator()]],
+                passwordConfirm: [null, [Validators.required]]
+            },
+            { validators: [matchPasswords('password', 'passwordConfirm')] }
+        );
 
         this.watchFormChanges();
     }
@@ -86,12 +95,13 @@ export default class PasswordChangeComponent implements OnInit {
     }
 
     changePassword() {
-        this.authHttpService.changePassword(this.passwordField.value).subscribe({
+        this.authHttpService.changePassword(this.form.value).subscribe({
             next: (_) => {
                 this.passwordActivated.reset();
                 this.transactionalCodeControl.reset();
                 this.transactionalCodeControl.disable();
                 this.passwordField.reset();
+                this.passwordConfirmField.reset();
             }
         });
     }

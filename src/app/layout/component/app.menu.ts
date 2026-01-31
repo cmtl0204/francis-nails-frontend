@@ -8,7 +8,6 @@ import { AuthService } from '@modules/auth/auth.service';
 import { RoleEnum } from '@utils/enums';
 import { AuthHttpService } from '@/pages/auth/auth-http.service';
 import { FontAwesome } from '@/api/font-awesome';
-import { Tooltip } from 'primeng/tooltip';
 import { environment } from '@env/environment';
 import { Button } from 'primeng/button';
 import { Fluid } from 'primeng/fluid';
@@ -16,7 +15,7 @@ import { Fluid } from 'primeng/fluid';
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, AppMenuitem, RouterModule, Tooltip, Button, Fluid],
+    imports: [CommonModule, AppMenuitem, RouterModule, Button, Fluid],
     styles: [
         `
             /* Contenedor real del sidebar */
@@ -104,8 +103,7 @@ export class AppMenu implements OnInit {
                 label: 'Usuarios',
                 icon: FontAwesome.USERS_SOLID,
                 routerLink: [MY_ROUTES.adminPages.user.absolute]
-            },
-
+            }
         ];
     }
 

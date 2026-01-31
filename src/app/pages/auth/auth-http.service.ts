@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpResponseInterface, SignInInterface, UserInterface } from './interfaces';
+import { HttpResponseInterface, PasswordChangedInterface, SignInInterface, UserInterface } from './interfaces';
 import { environment } from '@env/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
@@ -92,7 +92,7 @@ export class AuthHttpService {
         if (!this.authService.accessToken) {
             localStorage.clear();
             sessionStorage.clear();
-            this.router.navigate([MY_ROUTES.signIn]);
+            this.router.navigate([MY_ROUTES.authPages.signIn.absolute]);
             return of();
         }
 
@@ -102,16 +102,16 @@ export class AuthHttpService {
             map((response) => {
                 localStorage.clear();
                 sessionStorage.clear();
-                this.router.navigate([MY_ROUTES.signIn]);
+                this.router.navigate([MY_ROUTES.authPages.signIn.absolute]);
                 return response.data;
             })
         );
     }
 
-    changePassword(password: string): Observable<HttpResponseInterface> {
+    changePassword(payload: PasswordChangedInterface): Observable<HttpResponseInterface> {
         const url = `${this.apiUrl}/passwords`;
 
-        return this.httpClient.patch<HttpResponseInterface>(url, { password }).pipe(
+        return this.httpClient.patch<HttpResponseInterface>(url, payload).pipe(
             map((response) => {
                 return response.data;
             })

@@ -153,3 +153,27 @@ export function passwordPolicesValidator(): ValidatorFn {
         return Object.keys(errors).length ? errors : null;
     };
 }
+
+export function matchPasswords(password: string, passwordConfirm: string): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+        const control = group.get(password);
+        const matchingControl = group.get(passwordConfirm);
+
+        // Si los controles no existen o si el campo de confirmación ya tiene otro error (ej. required),
+        // no hacemos nada para no sobrescribir validaciones previas.
+        if (!control || !matchingControl || (matchingControl.errors && !matchingControl.errors['mustMatch'])) {
+            return null;
+        }
+
+        // Comprobamos si los valores son diferentes
+        if (control.value !== matchingControl.value) {
+            // Si no coinciden, seteamos el error 'mustMatch' en el control de confirmación
+            matchingControl.setErrors({ noPasswordMatch: true });
+            return { noPasswordMatch: true };
+        } else {
+            // Si coinciden, limpiamos el error
+            matchingControl.setErrors(null);
+            return null;
+        }
+    };
+}

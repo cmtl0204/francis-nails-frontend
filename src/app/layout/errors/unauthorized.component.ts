@@ -64,6 +64,6 @@ export class UnauthorizedComponent {
     private readonly router = inject(Router);
 
     back() {
-        this.router.navigate([MY_ROUTES.signIn]);
+        this.router.navigate([MY_ROUTES.authPages.signIn.absolute]);
     }
 }

@@ -194,7 +194,7 @@ export default class PasswordResetComponent {
         this.authHttpService.resetPassword(this.identificationField.value, this.passwordField.value).subscribe({
             next: () => {
                 this.form.reset();
-                this.router.navigate([MY_ROUTES.signIn]);
+                this.router.navigate([MY_ROUTES.authPages.signIn.absolute]);
             }
         });
     }

@@ -1,7 +1,6 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PrimeIcons } from 'primeng/api';
 import { invalidEmailValidator, passwordPolicesValidator, userExistValidator, userUpdatedValidator } from '@utils/form-validators/custom-validator';
 import { generatePassword } from '@utils/helpers/password-generate.helper';
 import { MY_ROUTES } from '@routes';
@@ -20,18 +19,17 @@ import { Button } from 'primeng/button';
 import { Password } from 'primeng/password';
 import { MultiSelect } from 'primeng/multiselect';
 import { ToggleSwitch } from 'primeng/toggleswitch';
-import { Divider } from 'primeng/divider';
 import { AutoFocus } from 'primeng/autofocus';
 import { Tag } from 'primeng/tag';
 import { Toolbar } from 'primeng/toolbar';
 import { FontAwesome } from '@/api/font-awesome';
 import { Tooltip } from 'primeng/tooltip';
 import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { ToggleSwitchComponent } from '@utils/components/toggle-switch/toggle-switch.component';
 
 @Component({
     selector: 'app-user-form',
-    imports: [Fluid, ReactiveFormsModule, LabelDirective, InputText, ErrorMessageDirective, Message, Button, Password, MultiSelect, ToggleSwitch, FormsModule, Divider, AutoFocus, Tag, Toolbar, Tooltip, InputGroup, InputGroupAddon],
+    imports: [Fluid, ReactiveFormsModule, LabelDirective, InputText, ErrorMessageDirective, Message, Button, Password, MultiSelect, ToggleSwitch, FormsModule, AutoFocus, Tag, Toolbar, Tooltip, InputGroup, ToggleSwitchComponent],
     templateUrl: './user-form.component.html',
     styleUrl: './user-form.component.scss'
 })

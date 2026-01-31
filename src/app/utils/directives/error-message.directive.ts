@@ -193,6 +193,6 @@ export class ErrorMessageDirective implements OnChanges {
     }
 
     private get fieldInvalidTransactionalCode(): string {
-        return 'El códio no es válido';
+        return 'El código de seguridad no es válido';
     }
 }
